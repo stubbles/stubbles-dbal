@@ -80,12 +80,51 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function connectWithoutInitialQuery()
+    {
+        $this->mockPdo->expects($this->never())
+                      ->method('query');
+        $this->pdoConnection->connect();
+    }
+
+    /**
+     * @test
+     */
     public function connectExecutesInitialQuery()
     {
         $this->dbConfig->setInitialQuery('set names utf8');
         $this->mockPdo->expects($this->once())
                       ->method('query')
                       ->with($this->equalTo('set names utf8'));
+        $this->pdoConnection->connect();
+    }
+
+    /**
+     * @test
+     */
+    public function connectExecutesInitialQueryOnlyOnce()
+    {
+        $this->dbConfig->setInitialQuery('set names utf8');
+        $this->mockPdo->expects($this->once())
+                      ->method('query')
+                      ->with($this->equalTo('set names utf8'));
+        $this->pdoConnection->connect();
+        $this->pdoConnection->connect();
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
+     */
+    public function connectThrowsDatabaseExceptionWhenPdoFails()
+    {
+        $this->pdoConnection = new PdoDatabaseConnection($this->dbConfig,
+                                                         function()
+                                                         {
+                                                             throw new \PDOException('error');
+                                                         }
+                               );
         $this->pdoConnection->connect();
     }
 
@@ -141,8 +180,23 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
      */
     public function delegatesMethodCallsToPdoInstance($method, $returnValue, \Closure $assertion)
     {
-        $this->mockPdo->expects($this->once())->method($method)->will($this->returnValue($returnValue));
+        $this->mockPdo->expects($this->once())
+                      ->method($method)
+                      ->will($this->returnValue($returnValue));
         $assertion($this->pdoConnection);
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
+     */
+    public function delegatedMethodCallWrapsPdoExceptionToDatabaseException()
+    {
+        $this->mockPdo->expects($this->once())
+                      ->method('commit')
+                      ->will($this->throwException(new \PDOException('error')));
+        $this->pdoConnection->commit();
     }
 
     /**
@@ -162,10 +216,15 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
      */
-    public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected()
+    public function prepareThrowsDatabaseExceptionWhenStatementCreationFails()
     {
-        $this->pdoConnection->getLastInsertId();
+        $this->mockPdo->expects($this->once())
+                      ->method('prepare')
+                      ->with($this->equalTo('foo'), $this->equalTo(array()))
+                      ->will($this->throwException(new \PDOException('error')));
+        $this->pdoConnection->prepare('foo');
     }
 
     /**
@@ -272,5 +331,55 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', array('fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass', 'ctorargs' => array('foo')));
         $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
+     */
+    public function queryThrowsDatabaseExceptionOnFailure()
+    {
+        $this->mockPdo->expects($this->once())
+                      ->method('query')
+                      ->will($this->throwException(new \PDOException('error')));
+        $this->pdoConnection->query('foo');
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
+     */
+    public function execThrowsDatabaseExceptionOnFailure()
+    {
+        $this->mockPdo->expects($this->once())
+                      ->method('exec')
+                      ->will($this->throwException(new \PDOException('error')));
+        $this->pdoConnection->exec('foo');
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  Not connected: can not retrieve last insert id
+     */
+    public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected()
+    {
+        $this->pdoConnection->getLastInsertId();
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedExceptionMessage  error
+     */
+    public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails()
+    {
+        $this->mockPdo->expects($this->once())
+                      ->method('lastInsertId')
+                      ->will($this->throwException(new \PDOException('error')));
+        $this->pdoConnection->connect()
+                            ->getLastInsertId();
     }
 }

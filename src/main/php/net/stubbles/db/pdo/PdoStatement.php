@@ -112,7 +112,7 @@ class PdoStatement implements Statement
     public function execute(array $values = array())
     {
         try {
-            if (true === $this->pdoStatement->execute($values)) {
+            if ($this->pdoStatement->execute($values)) {
                 return new PdoQueryResult($this->pdoStatement);
             }
 

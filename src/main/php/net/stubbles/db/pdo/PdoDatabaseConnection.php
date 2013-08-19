@@ -46,12 +46,12 @@ class PdoDatabaseConnection implements DatabaseConnection
      * constructor
      *
      * @param   DatabaseConfiguration  $configuration  database configuration required to establish the connection
-     * @throws  RuntimeException
+     * @throws  RuntimeException  in case pdo extension not available
      */
     public function __construct(DatabaseConfiguration $configuration, \Closure $pdoCreator = null)
     {
         if (!extension_loaded('pdo')) {
-            throw new RuntimeException('Can not create ' . __CLASS__ . ', requires PHP-extension "pdo".');
+            throw new RuntimeException('Can not create ' . __CLASS__ . ', requires PHP extension "pdo"');
         }
 
         $this->configuration = $configuration;
@@ -69,12 +69,13 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * establishes the connection
      *
+     * @return  PdoDatabaseConnection
      * @throws  DatabaseException
      */
     public function connect()
     {
         if (null !== $this->pdo) {
-            return;
+            return $this;
         }
 
         try {
@@ -87,6 +88,8 @@ class PdoDatabaseConnection implements DatabaseConnection
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
+
+        return $this;
     }
 
     /**
@@ -276,12 +279,11 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * execute an SQL statement and return the number of affected rows
      *
-     * @param   string  $statement      the sql statement to execute
-     * @param   array   $driverOptions  optional  one or more driver specific options for the call to query()
+     * @param   string  $statement      the sql statement to execute d
      * @return  int     number of effected rows
      * @throws  DatabaseException
      */
-    public function exec($statement, array $driverOptions = array())
+    public function exec($statement)
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -304,7 +306,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     public function getLastInsertId($name = null)
     {
         if (null === $this->pdo) {
-            throw new DatabaseException('Not connected: can not retrieve last insert id.');
+            throw new DatabaseException('Not connected: can not retrieve last insert id');
         }
 
         try {

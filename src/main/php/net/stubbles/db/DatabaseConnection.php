@@ -18,6 +18,7 @@ interface DatabaseConnection
     /**
      * establishes the connection
      *
+     * @return  DatabaseConnection
      * @throws  DatabaseException
      */
     public function connect();
@@ -75,11 +76,10 @@ interface DatabaseConnection
      * execute an SQL statement and return the number of affected rows
      *
      * @param   string  $statement      the sql statement to execute
-     * @param   array   $driverOptions  optional  one or more driver specific options for the call to query()
      * @return  int     number of effected rows
      * @throws  DatabaseException
      */
-    public function exec($statement, array $driverOptions = array());
+    public function exec($statement);
 
     /**
      * returns the last insert id
