@@ -36,23 +36,6 @@ class PdoStatement implements Statement
     }
 
     /**
-     * redirects calls on non-existing methods to the pdo statement object
-     *
-     * @param   string  $method     name of the method to call
-     * @param   array   $arguments  list of arguments for the method call
-     * @return  mixed
-     * @throws  DatabaseException
-     */
-    public function __call($method, $arguments)
-    {
-        try {
-            return call_user_func_array(array($this->pdoStatement, $method), $arguments);
-        } catch (PDOException $pdoe) {
-            throw new DatabaseException($pdoe->getMessage(), $pdoe);
-        }
-    }
-
-    /**
      * bind a parameter of a prepared query to the specified variable
      *
      * The binding will be via reference, so it is evaluated at the time when

@@ -9,7 +9,7 @@
  */
 namespace net\stubbles\db\pdo;
 /**
- * Test for net\stubbles\db\pdo\PdoDatabaseConnection.
+ * Test for net\stubbles\db\pdo\PdoStatement.
  *
  * @group     db
  * @group     pdo
@@ -55,6 +55,19 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     */
+    public function failingBindParamThrowsDatabaseException()
+    {
+        $bar = 1;
+        $this->mockPdoStatement->expects($this->once())
+                               ->method('bindParam')
+                               ->will($this->throwException(new \PDOException('error')));
+        $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
+    }
+
+    /**
+     * @test
      */
     public function bindValuePassesValuesCorrectly()
     {
@@ -64,6 +77,18 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
                                ->will($this->onConsecutiveCalls(true, false));
         $this->assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
         $this->assertFalse($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     */
+    public function failingBindValueThrowsDatabaseException()
+    {
+        $this->mockPdoStatement->expects($this->once())
+                               ->method('bindValue')
+                               ->will($this->throwException(new \PDOException('error')));
+        $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
     }
 
     /**
@@ -83,13 +108,26 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
      * @test
      * @expectedException  net\stubbles\db\DatabaseException
      */
-    public function failingExecuteThrowsDatabaseException()
+    public function wrongExecuteThrowsDatabaseException()
     {
         $this->mockPdoStatement->expects($this->once())
                                ->method('execute')
                                ->with($this->equalTo(array()))
                                ->will($this->returnValue(false));
         $this->pdoStatement->execute(array());
+    }
+
+    /**
+     * @test
+     * @expectedException  net\stubbles\db\DatabaseException
+     */
+    public function failingExecuteThrowsDatabaseException()
+    {
+        $this->mockPdoStatement->expects($this->once())
+                               ->method('execute')
+                               ->with($this->equalTo(array()))
+                               ->will($this->throwException(new \PDOException('error')));
+        $this->pdoStatement->execute();
     }
 
     /**
