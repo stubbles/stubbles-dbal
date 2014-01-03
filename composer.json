@@ -3,9 +3,9 @@
     "type": "library",
     "homepage": "http://stubbles.net/",
     "license": "BSD-3-Clause",
-    "description": "Database abstraction layer..",
+    "description": "Database abstraction layer.",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "stubbles/core": "~3.1"
     },
     "require-dev": {
@@ -20,7 +20,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "2.1.x-dev"
         }
     }
 }
