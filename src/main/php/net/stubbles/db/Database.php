@@ -59,16 +59,19 @@ class Database
     }
 
     /**
-     * apply given function to all result rows
+     * map all result rows using given function
      *
-     * @param  string    $sql       sql query to apply function on it's results
+     * @param  string    $sql       sql query to map results of
      * @param  \Closure  $function  function to apply to each result row
      */
-    public function apply($sql, \Closure $function)
+    public function map($sql, \Closure $function)
     {
-        $result = $this->dbConnection->query($sql);
-        while ($row = $result->fetch()) {
-            $function($row);
+        $result      = [];
+        $queryResult = $this->dbConnection->query($sql);
+        while ($row = $queryResult->fetch()) {
+            $result[] = $function($row);
         }
+
+        return $result;
     }
 }

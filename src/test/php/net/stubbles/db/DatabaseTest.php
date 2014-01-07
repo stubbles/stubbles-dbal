@@ -84,7 +84,7 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function applyExecutesQueryAndAppliesFunctionToEachResultRow()
+    public function mapExecutesQueryAndAppliesFunctionToEachResultRow()
     {
         $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz');
         $mockQueryResult->expects($this->exactly(3))
@@ -93,16 +93,21 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
         $i = 0;
         $f = function($row) use (&$i)
         {
-            if (0 === $i) {
+            $i++;
+            if (1 === $i) {
                 $this->assertEquals(['foo' => 'bar'], $row);
-            } elseif (1 === $i) {
-                $this->assertEquals(['foo' => 'blubb'], $row);
-            } else {
-                $this->fail('Unexpected call for row ' . var_export($row));
+                return 303;
             }
 
-            $i++;
+            if (2 === $i) {
+                $this->assertEquals(['foo' => 'blubb'], $row);
+                return 313;
+            }
+
+            $this->fail('Unexpected call for row ' . var_export($row));
         };
-        $this->database->apply('SELECT foo FROM baz', $f);
+        $this->assertEquals([303, 313],
+                            $this->database->map('SELECT foo FROM baz', $f)
+        );
     }
 }
