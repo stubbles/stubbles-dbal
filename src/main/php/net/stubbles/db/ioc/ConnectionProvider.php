@@ -43,6 +43,16 @@ class ConnectionProvider implements InjectionProvider
     }
 
     /**
+     * returns list of available connection ids
+     *
+     * @return  string[]
+     */
+    public function availableConnections()
+    {
+        return $this->configReader->configIds();
+    }
+
+    /**
      * returns the connection to be injected
      *
      * If a name is provided and a connection with this name exists this

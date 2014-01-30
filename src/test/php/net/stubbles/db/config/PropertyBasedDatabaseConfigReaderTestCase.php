@@ -227,4 +227,20 @@ dsn="mysql:host=prod.example.com;dbname=example"')
                                                             ->getDsn()
         );
     }
+
+    /**
+     * @test
+     * @since  2.1.0
+     */
+    public function returnsListOfConfigIds()
+    {
+        $this->configFile->setContent('[default]
+dsn="mysql:host=localhost;dbname=example"
+
+[other]
+dsn="mysql:host=example.com;dbname=other"');
+        $this->assertEquals(['default', 'other'],
+                            $this->propertyBasedConfigReader->configIds()
+        );
+    }
 }

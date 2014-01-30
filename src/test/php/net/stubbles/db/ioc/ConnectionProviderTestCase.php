@@ -105,4 +105,18 @@ class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
                           $this->connectionProvider->get('foo')
         );
     }
+
+    /**
+     * @test
+     * @since  2.1.0
+     */
+    public function providesListOfAvailableConnectionIds()
+    {
+        $this->mockConfigReader->expects($this->once())
+                               ->method('configIds')
+                               ->will($this->returnValue(['default', 'other']));
+        $this->assertEquals(['default', 'other'],
+                            $this->connectionProvider->availableConnections()
+        );
+    }
 }

@@ -32,6 +32,14 @@ interface DatabaseConfigReader
     public function setFallback($fallback);
 
     /**
+     * returns list of available config ids
+     *
+     * @return  string[]
+     * @since   2.1.0
+     */
+    public function configIds();
+
+    /**
      * checks whether database configuration for given id exists
      *
      * @param   string  $id
