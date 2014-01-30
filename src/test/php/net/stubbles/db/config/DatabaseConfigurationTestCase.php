@@ -119,6 +119,27 @@ class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @since  2.1.0
+     */
+    public function hasNoDetailsByDefault()
+    {
+        $this->assertNull($this->dbConfig->getDetails());
+    }
+
+    /**
+     * @test
+     * @since  2.1.0
+     */
+    public function hasDetailsWhenSet()
+    {
+        $this->assertEquals('some interesting details about the db',
+                            $this->dbConfig->setDetails('some interesting details about the db')
+                                           ->getDetails()
+        );
+    }
+
+    /**
+     * @test
      */
     public function createFromArrayMinimalProperties()
     {
@@ -131,6 +152,7 @@ class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $dbConfig->getDriverOptions());
         $this->assertFalse($dbConfig->hasInitialQuery());
         $this->assertNull($dbConfig->getInitialQuery());
+        $this->assertNull($this->dbConfig->getDetails());
     }
 
     /**
@@ -142,7 +164,8 @@ class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
                                                      'dsn:bar',
                                                      array('username'      => 'root',
                                                            'password'      => 'secret',
-                                                           'initialQuery'  => 'SET names utf8'
+                                                           'initialQuery'  => 'SET names utf8',
+                                                           'details'       => 'some interesting details about the db'
                                                      )
                     );
         $this->assertEquals('foo', $dbConfig->getId());
@@ -153,5 +176,6 @@ class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $dbConfig->getDriverOptions());
         $this->assertTrue($dbConfig->hasInitialQuery());
         $this->assertEquals('SET names utf8', $dbConfig->getInitialQuery());
+        $this->assertEquals('some interesting details about the db', $dbConfig->getDetails());
     }
 }

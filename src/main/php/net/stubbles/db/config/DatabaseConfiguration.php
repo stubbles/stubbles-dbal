@@ -53,6 +53,12 @@ class DatabaseConfiguration
      * @type  string
      */
     private $initialQuery;
+    /**
+     * some details about the database
+     *
+     * @type  string
+     */
+    private $details;
 
     /**
      * create connection data instance from an array
@@ -78,6 +84,10 @@ class DatabaseConfiguration
 
         if (isset($properties['initialQuery'])) {
             $self->initialQuery = $properties['initialQuery'];
+        }
+
+        if (isset($properties['details'])) {
+            $self->details = $properties['details'];
         }
 
         return $self;
@@ -225,5 +235,29 @@ class DatabaseConfiguration
     public function getInitialQuery()
     {
         return $this->initialQuery;
+    }
+
+    /**
+     * sets details about the database
+     *
+     * @param   string  $details
+     * @return  DatabaseConfiguration
+     * @since   2.1.0
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
+        return $this;
+    }
+
+    /**
+     * returns details about the database
+     *
+     * @return  string
+     * @since   2.1.0
+     */
+    public function getDetails()
+    {
+        return $this->details;
     }
 }
