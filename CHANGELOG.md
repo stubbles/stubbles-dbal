@@ -1,4 +1,4 @@
-2.1.0 (2014-01-??)
+2.1.0 (2014-01-31)
 ------------------
 
   * added `net\stubbles\db\Database` to allow easier access to query results
