@@ -67,6 +67,28 @@ class PdoDatabaseConnection implements DatabaseConnection
     }
 
     /**
+     * returns dsn of connection
+     *
+     * @return  string
+     * @since   2.1.0
+     */
+    public function dsn()
+    {
+        return $this->configuration->getDsn();
+    }
+
+    /**
+     * returns details about the connection
+     *
+     * @return  string
+     * @since   2.1.0
+     */
+    public function details()
+    {
+        return $this->configuration->getDetails();
+    }
+
+    /**
      * establishes the connection
      *
      * @return  PdoDatabaseConnection

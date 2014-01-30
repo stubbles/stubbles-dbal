@@ -9,7 +9,9 @@
  */
 namespace net\stubbles\db\pdo;
 use net\stubbles\db\config\DatabaseConfiguration;
-
+/**
+ * Helper class for the test.
+ */
 class TestPDO extends \PDO
 {
     public function __construct($dsn, $username, $passwd, $options) {}
@@ -63,6 +65,27 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $this->pdoConnection->disconnect();
+    }
+
+    /**
+     * @test
+     * @since  2.1.0
+     */
+    public function dsnReturnsDsnFromConfiguration()
+    {
+        $this->assertEquals('dsn:bar', $this->pdoConnection->dsn());
+    }
+
+    /**
+     * @test
+     * @since  2.1.0
+     */
+    public function detailsReturnsDetailsFromConfiguration()
+    {
+        $this->dbConfig->setDetails('some interesting details about the db');
+        $this->assertEquals('some interesting details about the db',
+                            $this->pdoConnection->details()
+        );
     }
 
     /**

@@ -16,6 +16,22 @@ namespace net\stubbles\db;
 interface DatabaseConnection
 {
     /**
+     * returns dsn of connection
+     *
+     * @return  string
+     * @since   2.1.0
+     */
+    public function dsn();
+
+    /**
+     * returns details about the connection
+     *
+     * @return  string
+     * @since   2.1.0
+     */
+    public function details();
+
+    /**
      * establishes the connection
      *
      * @return  DatabaseConnection
