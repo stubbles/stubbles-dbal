@@ -59,6 +59,12 @@ class DatabaseConfiguration
      * @type  string
      */
     private $details;
+    /**
+     * list of other properties for this connection
+     *
+     * @type  array
+     */
+    private $properties = array();
 
     /**
      * create connection data instance from an array
@@ -76,20 +82,25 @@ class DatabaseConfiguration
         $self = new self($id, $dsn);
         if (isset($properties['username'])) {
             $self->userName = $properties['username'];
+            unset($properties['username']);
         }
 
         if (isset($properties['password'])) {
             $self->password = $properties['password'];
+            unset($properties['password']);
         }
 
         if (isset($properties['initialQuery'])) {
             $self->initialQuery = $properties['initialQuery'];
+            unset($properties['initialQuery']);
         }
 
         if (isset($properties['details'])) {
             $self->details = $properties['details'];
+            unset($properties['details']);
         }
 
+        $self->properties = $properties;
         return $self;
     }
 
@@ -259,5 +270,22 @@ class DatabaseConfiguration
     public function getDetails()
     {
         return $this->details;
+    }
+
+    /**
+     * returns property with given name or given default if property not set
+     *
+     * @param   string  $name
+     * @param   string  $default  optional  value to return if property not set
+     * @return  string
+     * @since   2.2.0
+     */
+    public function getProperty($name, $default = null)
+    {
+        if (isset($this->properties[$name])) {
+            return $this->properties[$name];
+        }
+
+        return $default;
     }
 }

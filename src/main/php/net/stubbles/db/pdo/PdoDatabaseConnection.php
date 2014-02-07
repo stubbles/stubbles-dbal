@@ -89,6 +89,19 @@ class PdoDatabaseConnection implements DatabaseConnection
     }
 
     /**
+     * returns property with given name or given default if property not set
+     *
+     * @param   string  $name
+     * @param   string  $default  optional  value to return if property not set
+     * @return  string
+     * @since   2.2.0
+     */
+    public function property($name, $default = null)
+    {
+        return $this->configuration->getProperty($name, $default);
+    }
+
+    /**
      * establishes the connection
      *
      * @return  PdoDatabaseConnection

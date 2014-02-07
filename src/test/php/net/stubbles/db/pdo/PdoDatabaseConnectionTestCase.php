@@ -50,7 +50,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $mockPdo = $this->mockPdo = $this->getMock('net\stubbles\db\pdo\TestPDO', array(), array('', '', '', array()));
-        $this->dbConfig      = new DatabaseConfiguration('foo', 'dsn:bar');
+        $this->dbConfig      = DatabaseConfiguration::fromArray('foo', 'dsn:bar', array('baz' => 'bar'));
         $this->pdoConnection = new PdoDatabaseConnection($this->dbConfig,
                                                          function() use ($mockPdo)
                                                          {
@@ -85,6 +85,17 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
         $this->dbConfig->setDetails('some interesting details about the db');
         $this->assertEquals('some interesting details about the db',
                             $this->pdoConnection->details()
+        );
+    }
+
+    /**
+     * @test
+     * @since  2.2.0
+     */
+    public function propertyReturnsPropertyFromConfiguration()
+    {
+        $this->assertEquals('bar',
+                            $this->pdoConnection->property('baz')
         );
     }
 

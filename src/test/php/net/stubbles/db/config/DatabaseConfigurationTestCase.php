@@ -178,4 +178,35 @@ class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals('SET names utf8', $dbConfig->getInitialQuery());
         $this->assertEquals('some interesting details about the db', $dbConfig->getDetails());
     }
+
+    /**
+     * @test
+     * @since  2.2.0
+     */
+    public function returnsNullIfPropertyNotSet()
+    {
+        $this->assertNull(DatabaseConfiguration::fromArray('foo', 'dsn:bar', array())->getProperty('baz'));
+    }
+
+    /**
+     * @test
+     * @since  2.2.0
+     */
+    public function returnsDefaultIfPropertyNotSet()
+    {
+        $this->assertEquals('bar',
+                            DatabaseConfiguration::fromArray('foo', 'dsn:bar', array())->getProperty('baz', 'bar')
+        );
+    }
+
+    /**
+     * @test
+     * @since  2.2.0
+     */
+    public function returnsValueIfPropertySet()
+    {
+        $this->assertEquals('example',
+                            DatabaseConfiguration::fromArray('foo', 'dsn:bar', array('baz' => 'example'))->getProperty('baz', 'bar')
+        );
+    }
 }
