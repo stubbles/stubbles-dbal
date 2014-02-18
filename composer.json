@@ -6,6 +6,7 @@
     "description": "Database abstraction layer.",
     "require": {
         "php": ">=5.4.0",
+        "ext-pdo": "*",
         "stubbles/core": "~3.1"
     },
     "require-dev": {
@@ -20,7 +21,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2.x-dev"
+            "dev-master": "2.3.x-dev"
         }
     }
 }

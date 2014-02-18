@@ -43,13 +43,18 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      * @param   string  $sql
      * @return  \PHPUnit_Framework_MockObject_MockObject
      */
-    private function createQueryResult($sql)
+    private function createQueryResult($sql, array $values)
     {
+        $mockStatement = $this->getMock('net\stubbles\db\Statement');
         $mockQueryResult = $this->getMock('net\stubbles\db\QueryResult');
         $this->mockDbConnection->expects($this->once())
-                               ->method('query')
+                               ->method('prepare')
                                ->with($sql)
-                               ->will($this->returnValue($mockQueryResult));
+                               ->will($this->returnValue($mockStatement));
+        $mockStatement->expects($this->once())
+                      ->method('execute')
+                      ->with($this->equalTo($values))
+                      ->will($this->returnValue($mockQueryResult));
         return $mockQueryResult;
     }
 
@@ -58,12 +63,12 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      */
     public function fetchAllExecutesQueryAndFetchesCompleteResult()
     {
-        $mockQueryResult = $this->createQueryResult('SELECT foo, blubb FROM baz');
+        $mockQueryResult = $this->createQueryResult('SELECT foo, blubb FROM baz WHERE col = :col', [':col' => 'yes']);
         $mockQueryResult->expects($this->once())
                         ->method('fetchAll')
                         ->will($this->returnValue([['foo' => 'bar', 'blubb' => '303']]));
         $this->assertEquals([['foo' => 'bar', 'blubb' => '303']],
-                            $this->database->fetchAll('SELECT foo, blubb FROM baz')
+                            $this->database->fetchAll('SELECT foo, blubb FROM baz WHERE col = :col', [':col' => 'yes'])
         );
     }
 
@@ -72,12 +77,12 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      */
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
     {
-        $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz');
+        $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz WHERE col = :col', [':col' => 'yes']);
         $mockQueryResult->expects($this->once())
                         ->method('fetchAll')
                         ->will($this->returnValue(['bar', 'blubb']));
         $this->assertEquals(['bar', 'blubb'],
-                            $this->database->fetchColumn('SELECT foo FROM baz')
+                            $this->database->fetchColumn('SELECT foo FROM baz WHERE col = :col', [':col' => 'yes'])
         );
     }
 
@@ -86,7 +91,7 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      */
     public function mapExecutesQueryAndAppliesFunctionToEachResultRow()
     {
-        $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz');
+        $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz WHERE col = :col', [':col' => 'yes']);
         $mockQueryResult->expects($this->exactly(3))
                         ->method('fetch')
                         ->will($this->onConsecutiveCalls(['foo' => 'bar'], ['foo' => 'blubb'], false));
@@ -107,7 +112,7 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
             $this->fail('Unexpected call for row ' . var_export($row));
         };
         $this->assertEquals([303, 313],
-                            $this->database->map('SELECT foo FROM baz', $f)
+                            $this->database->map('SELECT foo FROM baz WHERE col = :col', $f, [':col' => 'yes'])
         );
     }
 }

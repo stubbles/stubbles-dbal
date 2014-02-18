@@ -1,8 +1,15 @@
-2.2.0 (2014-02-??)
+2.3.0 (2014-02-18)
+------------------
+
+  * changed `net\stubbles\db\Database` methods to work with prepared statements
+
+
+2.2.0 (2014-02-07)
 ------------------
 
   * introduced concept of properties for database config, allows arbitrary values
      * added `net\stubbles\db\DatabaseConnection::property($name, $default)` to access connection config properties
+
 
 2.1.0 (2014-01-31)
 ------------------

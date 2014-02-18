@@ -43,13 +43,16 @@ class Database
      * Now $blockedUsers contains all rows from the query.
      *
      * @param   string  $sql            sql query to fetch data with
+     * @param   array   $values         map of values in case $sql contains a prepared statement
      * @param   int     $fetchMode      optional  the mode to use for fetching the data
      * @param   array   $driverOptions  optional  driver specific arguments
      * @return  array
      */
-    public function fetchAll($sql, $fetchMode = null, array $driverOptions = [])
+    public function fetchAll($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
     {
-        return $this->dbConnection->query($sql)->fetchAll($fetchMode, $driverOptions);
+        return $this->dbConnection->prepare($sql)
+                                  ->execute($values)
+                                  ->fetchAll($fetchMode, $driverOptions);
     }
 
     /**
@@ -61,12 +64,13 @@ class Database
      * </code>
      *
      * @param   string  $sql          sql query to fetch data with
+     * @param   array   $values       map of values in case $sql contains a prepared statement
      * @param   int     $columnIndex  number of column to fetch
      * @return  string[]
      */
-    public function fetchColumn($sql, $columnIndex = 0)
+    public function fetchColumn($sql, array $values = [], $columnIndex = 0)
     {
-        return $this->fetchAll($sql, \PDO::FETCH_COLUMN, ['columnIndex' => $columnIndex]);
+        return $this->fetchAll($sql, $values, \PDO::FETCH_COLUMN, ['columnIndex' => $columnIndex]);
     }
 
     /**
@@ -86,11 +90,12 @@ class Database
      *
      * @param  string    $sql       sql query to map results of
      * @param  \Closure  $function  function to apply to each result row
+     * @param  array     $values    map of values in case $sql contains a prepared statement
      */
-    public function map($sql, \Closure $function)
+    public function map($sql, \Closure $function, array $values = [])
     {
         $result      = [];
-        $queryResult = $this->dbConnection->query($sql);
+        $queryResult = $this->dbConnection->prepare($sql)->execute($values);
         while ($row = $queryResult->fetch()) {
             $result[] = $function($row);
         }
