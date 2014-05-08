@@ -74,6 +74,21 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @since  2.4.0
+     */
+    public function fetchRowExecutesQueryAndFetchesFirstResultRow()
+    {
+        $mockQueryResult = $this->createQueryResult('SELECT foo, blubb FROM baz WHERE col = :col', [':col' => 'yes']);
+        $mockQueryResult->expects($this->once())
+                        ->method('fetch')
+                        ->will($this->returnValue(['foo' => 'bar']));
+        $this->assertEquals(['foo' => 'bar'],
+                            $this->database->fetchRow('SELECT foo, blubb FROM baz WHERE col = :col', [':col' => 'yes'])
+        );
+    }
+
+    /**
+     * @test
      */
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
     {

@@ -34,7 +34,7 @@ class Database
     }
 
     /**
-     * return all rows from given result
+     * return all result rows for given sql query
      *
      * Allows to fetch all results for a query at once.
      * <code>
@@ -53,6 +53,23 @@ class Database
         return $this->dbConnection->prepare($sql)
                                   ->execute($values)
                                   ->fetchAll($fetchMode, $driverOptions);
+    }
+
+    /**
+     * returns first result row for given sql query
+     *
+     * @param   string  $sql            sql query to fetch data with
+     * @param   array   $values         map of values in case $sql contains a prepared statement
+     * @param   int     $fetchMode      optional  the mode to use for fetching the data
+     * @param   array   $driverOptions  optional  driver specific arguments
+     * @return  array
+     * @since   2.4.0
+     */
+    public function fetchRow($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
+    {
+        return $this->dbConnection->prepare($sql)
+                                  ->execute($values)
+                                  ->fetch($fetchMode, $driverOptions);
     }
 
     /**
