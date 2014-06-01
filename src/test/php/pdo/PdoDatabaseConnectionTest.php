@@ -23,7 +23,7 @@ class TestPDO extends \PDO
  * @group     pdo
  * @requires  extension pdo
  */
-class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
+class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

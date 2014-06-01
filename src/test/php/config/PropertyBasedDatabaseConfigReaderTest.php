@@ -16,7 +16,7 @@ use stubbles\lang;
  * @group  db
  * @group  config
  */
-class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestCase
+class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

@@ -15,7 +15,7 @@ use stubbles\db\config\DatabaseConfiguration;
  * @group  db
  * @group  ioc
  */
-class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
+class ConnectionProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

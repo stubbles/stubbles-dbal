@@ -15,7 +15,7 @@ namespace stubbles\db\pdo;
  * @group     pdo
  * @requires  extension pdo
  */
-class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
+class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

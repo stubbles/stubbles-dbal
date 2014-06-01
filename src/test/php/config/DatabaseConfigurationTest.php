@@ -14,7 +14,7 @@ namespace stubbles\db\config;
  * @group  db
  * @group  config
  */
-class DatabaseConfigurationTestCase extends \PHPUnit_Framework_TestCase
+class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

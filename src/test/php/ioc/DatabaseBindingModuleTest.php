@@ -15,7 +15,7 @@ use stubbles\ioc\Binder;
  * @group  db
  * @group  ioc
  */
-class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
+class DatabaseBindingModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test

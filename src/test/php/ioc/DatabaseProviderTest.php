@@ -14,7 +14,7 @@ namespace stubbles\db\ioc;
  * @group  db
  * @group  ioc
  */
-class DatabaseProviderTestCase extends \PHPUnit_Framework_TestCase
+class DatabaseProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test
