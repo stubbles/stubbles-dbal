@@ -5,12 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\ioc;
+namespace stubbles\db\ioc;
 use stubbles\ioc\Binder;
 /**
- * Test for net\stubbles\db\ioc\DatabaseBindingModule.
+ * Test for stubbles\db\ioc\DatabaseBindingModule.
  *
  * @group  db
  * @group  ioc
@@ -45,9 +45,9 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->databaseBindingModule->configure($this->binder);
         $this->binder->bindConstant('stubbles.config.path')->to(__DIR__);
-        $this->assertInstanceOf('net\stubbles\db\config\PropertyBasedDatabaseConfigReader',
+        $this->assertInstanceOf('stubbles\db\config\PropertyBasedDatabaseConfigReader',
                                 $this->binder->getInjector()
-                                             ->getInstance('net\stubbles\db\config\DatabaseConfigReader')
+                                             ->getInstance('stubbles\db\config\DatabaseConfigReader')
         );
     }
 
@@ -56,12 +56,12 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
      */
     public function configReaderBindingCanBeChanged()
     {
-        $mockClass = get_class($this->getMock('net\stubbles\db\config\DatabaseConfigReader'));
+        $mockClass = get_class($this->getMock('stubbles\db\config\DatabaseConfigReader'));
         $this->databaseBindingModule->setConfigReaderClass($mockClass)
                                     ->configure($this->binder);
         $this->assertInstanceOf($mockClass,
                                 $this->binder->getInjector()
-                                             ->getInstance('net\stubbles\db\config\DatabaseConfigReader')
+                                             ->getInstance('stubbles\db\config\DatabaseConfigReader')
         );
     }
 

@@ -5,14 +5,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db;
+namespace stubbles\db;
 /**
  * Convenience access to database data to prevent fiddling with query results.
  *
  * @since  2.1.0
- * @ProvidedBy(net\stubbles\db\ioc\DatabaseProvider.class)
+ * @ProvidedBy(stubbles\db\ioc\DatabaseProvider.class)
  */
 class Database
 {

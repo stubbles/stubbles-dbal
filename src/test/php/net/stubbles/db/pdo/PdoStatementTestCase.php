@@ -5,11 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\pdo;
+namespace stubbles\db\pdo;
 /**
- * Test for net\stubbles\db\pdo\PdoStatement.
+ * Test for stubbles\db\pdo\PdoStatement.
  *
  * @group     db
  * @group     pdo
@@ -55,7 +55,7 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingBindParamThrowsDatabaseException()
     {
@@ -81,7 +81,7 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingBindValueThrowsDatabaseException()
     {
@@ -101,12 +101,12 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
                                ->with($this->equalTo([]))
                                ->will($this->returnValue(true));
         $result = $this->pdoStatement->execute([]);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $result);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $result);
     }
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function wrongExecuteThrowsDatabaseException()
     {
@@ -119,7 +119,7 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingExecuteThrowsDatabaseException()
     {
@@ -143,7 +143,7 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingCleanThrowsDatabaseException()
     {

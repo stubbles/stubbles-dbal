@@ -5,10 +5,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\ioc;
-use net\stubbles\db\Database;
+namespace stubbles\db\ioc;
+use stubbles\db\Database;
 use stubbles\ioc\InjectionProvider;
 /**
  * IoC provider for database instances.

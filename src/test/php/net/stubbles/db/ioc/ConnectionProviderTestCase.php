@@ -5,12 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\ioc;
-use net\stubbles\db\config\DatabaseConfiguration;
+namespace stubbles\db\ioc;
+use stubbles\db\config\DatabaseConfiguration;
 /**
- * Test for net\stubbles\db\ioc\ConnectionProvider.
+ * Test for stubbles\db\ioc\ConnectionProvider.
  *
  * @group  db
  * @group  ioc
@@ -34,7 +34,7 @@ class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->mockConfigReader   = $this->getMock('net\stubbles\db\config\DatabaseConfigReader');
+        $this->mockConfigReader   = $this->getMock('stubbles\db\config\DatabaseConfigReader');
         $this->connectionProvider = new ConnectionProvider($this->mockConfigReader);
     }
 
@@ -65,7 +65,7 @@ class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
                                ->method('readConfig')
                                ->with($this->equalTo('foo'))
                                ->will($this->returnValue(new DatabaseConfiguration('foo', 'dsn:bar')));
-        $this->assertInstanceOf('net\stubbles\db\DatabaseConnection',
+        $this->assertInstanceOf('stubbles\db\DatabaseConnection',
                                 $this->connectionProvider->get('foo')
         );
     }
@@ -83,7 +83,7 @@ class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
                                ->method('readConfig')
                                ->with($this->equalTo(DatabaseConfiguration::DEFAULT_ID))
                                ->will($this->returnValue(new DatabaseConfiguration(DatabaseConfiguration::DEFAULT_ID, 'dsn:bar')));
-        $this->assertInstanceOf('net\stubbles\db\DatabaseConnection',
+        $this->assertInstanceOf('stubbles\db\DatabaseConnection',
                                 $this->connectionProvider->get()
         );
     }

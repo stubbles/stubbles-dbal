@@ -5,10 +5,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\pdo;
-use net\stubbles\db\config\DatabaseConfiguration;
+namespace stubbles\db\pdo;
+use stubbles\db\config\DatabaseConfiguration;
 /**
  * Helper class for the test.
  */
@@ -17,7 +17,7 @@ class TestPDO extends \PDO
     public function __construct($dsn, $username, $passwd, $options) {}
 }
 /**
- * Test for net\stubbles\db\pdo\PdoDatabaseConnection.
+ * Test for stubbles\db\pdo\PdoDatabaseConnection.
  *
  * @group     db
  * @group     pdo
@@ -49,7 +49,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $mockPdo = $this->mockPdo = $this->getMock('net\stubbles\db\pdo\TestPDO', [], ['', '', '', []]);
+        $mockPdo = $this->mockPdo = $this->getMock('stubbles\db\pdo\TestPDO', [], ['', '', '', []]);
         $this->dbConfig      = DatabaseConfiguration::fromArray('foo', 'dsn:bar', ['baz' => 'bar']);
         $this->pdoConnection = new PdoDatabaseConnection($this->dbConfig,
                                                          function() use ($mockPdo)
@@ -104,7 +104,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
      *
      * @test
      * @expectedException  stubbles\lang\exception\MethodInvocationException
-     * @expectedExceptionMessage  Call to undefined method net\stubbles\db\pdo\PdoDatabaseConnection::foo()
+     * @expectedExceptionMessage  Call to undefined method stubbles\db\pdo\PdoDatabaseConnection::foo()
      */
     public function undefinedMethod()
     {
@@ -148,7 +148,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function connectThrowsDatabaseExceptionWhenPdoFails()
@@ -222,7 +222,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function delegatedMethodCallWrapsPdoExceptionToDatabaseException()
@@ -242,14 +242,14 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->method('prepare')
                       ->with($this->equalTo('foo'), $this->equalTo([]))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoStatement',
+        $this->assertInstanceOf('stubbles\db\pdo\PdoStatement',
                                 $this->pdoConnection->prepare('foo')
         );
     }
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function prepareThrowsDatabaseExceptionWhenStatementCreationFails()
@@ -271,7 +271,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo');
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
@@ -284,7 +284,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'), $this->equalTo(\PDO::FETCH_ASSOC))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_ASSOC]);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
@@ -297,7 +297,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'), $this->equalTo(\PDO::FETCH_COLUMN), $this->equalTo(5))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
@@ -320,7 +320,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'), $this->equalTo(\PDO::FETCH_INTO), $this->equalTo($class))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
@@ -342,7 +342,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'), $this->equalTo(\PDO::FETCH_CLASS), $this->equalTo('MyClass'), $this->equalTo([]))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
@@ -364,12 +364,12 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo('foo'), $this->equalTo(\PDO::FETCH_CLASS), $this->equalTo('MyClass'), $this->equalTo(['foo']))
                       ->will($this->returnValue($this->getMock('\PDOStatement')));
         $statement = $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass', 'ctorargs' => ['foo']]);
-        $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
     }
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function queryThrowsDatabaseExceptionOnFailure()
@@ -382,7 +382,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function execThrowsDatabaseExceptionOnFailure()
@@ -395,7 +395,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  Not connected: can not retrieve last insert id
      */
     public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected()
@@ -405,7 +405,7 @@ class PdoDatabaseConnectionTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      * @expectedExceptionMessage  error
      */
     public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails()

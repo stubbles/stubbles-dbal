@@ -5,9 +5,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\ioc;
+namespace stubbles\db\ioc;
 use stubbles\ioc\Binder;
 use stubbles\ioc\module\BindingModule;
 /**
@@ -32,7 +32,7 @@ class DatabaseBindingModule implements BindingModule
      *
      * @type  string
      */
-    private $configReaderClass = 'net\stubbles\db\config\PropertyBasedDatabaseConfigReader';
+    private $configReaderClass = 'stubbles\db\config\PropertyBasedDatabaseConfigReader';
 
     /**
      * constructor
@@ -77,7 +77,7 @@ class DatabaseBindingModule implements BindingModule
      */
     public function configure(Binder $binder)
     {
-        $binder->bind('net\stubbles\db\config\DatabaseConfigReader')
+        $binder->bind('stubbles\db\config\DatabaseConfigReader')
                ->to($this->configReaderClass);
         $binder->bindConstant('stubbles.db.fallback')
                ->to($this->fallback);

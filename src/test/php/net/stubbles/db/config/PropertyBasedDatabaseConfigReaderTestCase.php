@@ -5,13 +5,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\config;
+namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
 use stubbles\lang;
 /**
- * Test for net\stubbles\db\config\PropertyBasedDatabaseConfigReader.
+ * Test for stubbles\db\config\PropertyBasedDatabaseConfigReader.
  *
  * @group  db
  * @group  config
@@ -97,7 +97,7 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        $refClass = lang\reflect('net\stubbles\db\config\DatabaseConfigReader');
+        $refClass = lang\reflect('stubbles\db\config\DatabaseConfigReader');
         $this->assertEquals(get_class($this->propertyBasedConfigReader),
                             $refClass->getAnnotation('ImplementedBy')
                                      ->getDefaultImplementation()

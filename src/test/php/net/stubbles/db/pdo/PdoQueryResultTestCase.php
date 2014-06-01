@@ -5,11 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\pdo;
+namespace stubbles\db\pdo;
 /**
- * Test for net\stubbles\db\pdo\PdoQueryResult.
+ * Test for stubbles\db\pdo\PdoQueryResult.
  *
  * @group     db
  * @group     pdo
@@ -55,7 +55,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingBindColumnThrowsDatabaseException()
     {
@@ -99,7 +99,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingFetchThrowsDatabaseException()
     {
@@ -128,7 +128,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingFetchOneThrowsDatabaseException()
     {
@@ -279,7 +279,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingFetchAllThrowsDatabaseException()
     {
@@ -302,7 +302,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingNextThrowsDatabaseException()
     {
@@ -325,7 +325,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingRowCountThrowsDatabaseException()
     {
@@ -348,7 +348,7 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\db\DatabaseException
+     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingFreeThrowsDatabaseException()
     {

@@ -5,11 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db;
+namespace stubbles\db;
 /**
- * Test for net\stubbles\db\Database.
+ * Test for stubbles\db\Database.
  *
  * @group  db
  */
@@ -33,7 +33,7 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->mockDbConnection = $this->getMock('net\stubbles\db\DatabaseConnection');
+        $this->mockDbConnection = $this->getMock('stubbles\db\DatabaseConnection');
         $this->database         = new Database($this->mockDbConnection);
     }
 
@@ -45,8 +45,8 @@ class DatabaseTestCase extends \PHPUnit_Framework_TestCase
      */
     private function createQueryResult($sql, array $values)
     {
-        $mockStatement = $this->getMock('net\stubbles\db\Statement');
-        $mockQueryResult = $this->getMock('net\stubbles\db\QueryResult');
+        $mockStatement = $this->getMock('stubbles\db\Statement');
+        $mockQueryResult = $this->getMock('stubbles\db\QueryResult');
         $this->mockDbConnection->expects($this->once())
                                ->method('prepare')
                                ->with($sql)

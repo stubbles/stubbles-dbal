@@ -5,12 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\ioc;
-use net\stubbles\db\config\DatabaseConfiguration;
-use net\stubbles\db\config\DatabaseConfigReader;
-use net\stubbles\db\pdo\PdoDatabaseConnection;
+namespace stubbles\db\ioc;
+use stubbles\db\config\DatabaseConfiguration;
+use stubbles\db\config\DatabaseConfigReader;
+use stubbles\db\pdo\PdoDatabaseConnection;
 use stubbles\ioc\InjectionProvider;
 use stubbles\lang\exception\ConfigurationException;
 /**

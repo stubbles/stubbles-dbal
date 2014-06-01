@@ -5,11 +5,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\pdo;
-use net\stubbles\db\DatabaseException;
-use net\stubbles\db\Statement;
+namespace stubbles\db\pdo;
+use stubbles\db\DatabaseException;
+use stubbles\db\Statement;
 use PDOException;
 /**
  * Wrapper around the PDOStatement object.

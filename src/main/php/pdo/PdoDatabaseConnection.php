@@ -5,12 +5,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @package  net\stubbles\db
+ * @package  stubbles\db
  */
-namespace net\stubbles\db\pdo;
-use net\stubbles\db\DatabaseConnection;
-use net\stubbles\db\DatabaseException;
-use net\stubbles\db\config\DatabaseConfiguration;
+namespace stubbles\db\pdo;
+use stubbles\db\DatabaseConnection;
+use stubbles\db\DatabaseException;
+use stubbles\db\config\DatabaseConfiguration;
 use stubbles\lang\exception\IllegalArgumentException;
 use stubbles\lang\exception\MethodInvocationException;
 use stubbles\lang\exception\RuntimeException;
