@@ -14,8 +14,8 @@
         "mikey179/vfsStream": "~1.2"
     },
     "autoload": {
-        "psr-0": {
-            "net\\stubbles\\db": "src/main/php"
+        "psr-4": {
+            "net\\stubbles\\db\\": "src/main/php"
         }
     },
     "extra": {
