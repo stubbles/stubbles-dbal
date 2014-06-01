@@ -46,7 +46,7 @@ class DatabaseConfiguration
      *
      * @type  array
      */
-    private $driverOptions   = array();
+    private $driverOptions   = [];
     /**
      * initial query to be executed after commit
      *
@@ -64,7 +64,7 @@ class DatabaseConfiguration
      *
      * @type  array
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * create connection data instance from an array

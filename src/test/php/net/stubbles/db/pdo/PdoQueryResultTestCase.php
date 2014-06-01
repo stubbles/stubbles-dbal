@@ -81,18 +81,18 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
         $this->mockPdoStatement->expects($this->at(2))
                                ->method('fetch')
                                ->with($this->equalTo(\PDO::FETCH_OBJ), $this->equalTo(null), $this->equalTo(50))
-                               ->will($this->returnValue(array()));
+                               ->will($this->returnValue([]));
         $this->mockPdoStatement->expects($this->at(3))
                                ->method('fetch')
                                ->with($this->equalTo(\PDO::FETCH_BOTH), $this->equalTo('foo'), $this->equalTo(50))
                                ->will($this->returnValue(50));
         $this->assertTrue($this->pdoQueryResult->fetch());
-        $this->assertFalse($this->pdoQueryResult->fetch(\PDO::FETCH_ASSOC, array('cursorOrientation' => 'foo')));
-        $this->assertEquals(array(), $this->pdoQueryResult->fetch(\PDO::FETCH_OBJ, array('cursorOffset' => 50)));
-        $this->assertEquals(50, $this->pdoQueryResult->fetch(\PDO::FETCH_BOTH, array('cursorOrientation' => 'foo',
-                                                                                  'cursorOffset'      => 50,
-                                                                                 'foo'               => 'bar'
-                                                                            )
+        $this->assertFalse($this->pdoQueryResult->fetch(\PDO::FETCH_ASSOC, ['cursorOrientation' => 'foo']));
+        $this->assertEquals([], $this->pdoQueryResult->fetch(\PDO::FETCH_OBJ, ['cursorOffset' => 50]));
+        $this->assertEquals(50, $this->pdoQueryResult->fetch(\PDO::FETCH_BOTH, ['cursorOrientation' => 'foo',
+                                                                                'cursorOffset'      => 50,
+                                                                                'foo'               => 'bar'
+                                                                               ]
                                 )
         );
     }
@@ -145,8 +145,8 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->mockPdoStatement->expects($this->once())
                                ->method('fetchAll')
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(), $this->pdoQueryResult->fetchAll());
+                               ->will($this->returnValue([]));
+        $this->assertEquals([], $this->pdoQueryResult->fetchAll());
     }
 
     /**
@@ -158,8 +158,8 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
         $this->mockPdoStatement->expects($this->once())
                                ->method('fetchAll')
                                ->with($this->equalTo(\PDO::FETCH_COLUMN), $this->equalTo(0))
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(), $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN));
+                               ->will($this->returnValue([]));
+        $this->assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN));
     }
 
     /**
@@ -171,8 +171,8 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
         $this->mockPdoStatement->expects($this->once())
                                ->method('fetchAll')
                                ->with($this->equalTo(\PDO::FETCH_COLUMN), $this->equalTo(2))
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(), $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN, array('columnIndex' => 2)));
+                               ->will($this->returnValue([]));
+        $this->assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN, ['columnIndex' => 2]));
     }
 
     /**
@@ -183,13 +183,13 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
         $this->mockPdoStatement->expects($this->once())
                                ->method('fetchAll')
                                ->with($this->equalTo(\PDO::FETCH_OBJ))
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(), $this->pdoQueryResult->fetchAll(\PDO::FETCH_OBJ));
+                               ->will($this->returnValue([]));
+        $this->assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_OBJ));
     }
 
     /**
      * @test
-     * @expectedException  net\stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  stubbles\lang\exception\IllegalArgumentException
      * @since  1.3.2
      * @group  bug248
      */
@@ -213,10 +213,10 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
                                       $this->equalTo('ExampleClass'),
                                       $this->equalTo(null)
                                  )
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(),
+                               ->will($this->returnValue([]));
+        $this->assertEquals([],
                             $this->pdoQueryResult->fetchAll(\PDO::FETCH_CLASS,
-                                                          array('classname' => 'ExampleClass')
+                                                            ['classname' => 'ExampleClass']
                             )
         );
     }
@@ -234,12 +234,12 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
                                       $this->equalTo('ExampleClass'),
                                       $this->equalTo('foo')
                                  )
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(),
+                               ->will($this->returnValue([]));
+        $this->assertEquals([],
                             $this->pdoQueryResult->fetchAll(\PDO::FETCH_CLASS,
-                                                          array('classname' => 'ExampleClass',
-                                                                'arguments' => 'foo'
-                                                          )
+                                                            ['classname' => 'ExampleClass',
+                                                             'arguments' => 'foo'
+                                                            ]
                             )
         );
     }
@@ -256,17 +256,17 @@ class PdoQueryResultTestCase extends \PHPUnit_Framework_TestCase
                                ->with($this->equalTo(\PDO::FETCH_FUNC),
                                       $this->equalTo('exampleFunc')
                                  )
-                               ->will($this->returnValue(array()));
-        $this->assertEquals(array(),
+                               ->will($this->returnValue([]));
+        $this->assertEquals([],
                             $this->pdoQueryResult->fetchAll(\PDO::FETCH_FUNC,
-                                                          array('function' => 'exampleFunc')
+                                                            ['function' => 'exampleFunc']
                             )
         );
     }
 
     /**
      * @test
-     * @expectedException  net\stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  stubbles\lang\exception\IllegalArgumentException
      * @since  1.3.2
      * @group  bug248
      */

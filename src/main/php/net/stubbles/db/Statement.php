@@ -53,7 +53,7 @@ interface Statement
      * @return  QueryResult
      * @throws  DatabaseException
      */
-    public function execute(array $values = array());
+    public function execute(array $values = []);
 
     /**
      * releases resources allocated for the specified prepared query

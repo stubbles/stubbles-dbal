@@ -98,9 +98,9 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->mockPdoStatement->expects($this->once())
                                ->method('execute')
-                               ->with($this->equalTo(array()))
+                               ->with($this->equalTo([]))
                                ->will($this->returnValue(true));
-        $result = $this->pdoStatement->execute(array());
+        $result = $this->pdoStatement->execute([]);
         $this->assertInstanceOf('net\stubbles\db\pdo\PdoQueryResult', $result);
     }
 
@@ -112,9 +112,9 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->mockPdoStatement->expects($this->once())
                                ->method('execute')
-                               ->with($this->equalTo(array()))
+                               ->with($this->equalTo([]))
                                ->will($this->returnValue(false));
-        $this->pdoStatement->execute(array());
+        $this->pdoStatement->execute([]);
     }
 
     /**
@@ -125,7 +125,7 @@ class PdoStatementTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->mockPdoStatement->expects($this->once())
                                ->method('execute')
-                               ->with($this->equalTo(array()))
+                               ->with($this->equalTo([]))
                                ->will($this->throwException(new \PDOException('error')));
         $this->pdoStatement->execute();
     }

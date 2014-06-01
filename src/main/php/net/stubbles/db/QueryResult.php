@@ -32,7 +32,7 @@ interface QueryResult
      * @return  mixed
      * @throws  DatabaseException
      */
-    public function fetch($fetchMode = null, array $driverOptions = array());
+    public function fetch($fetchMode = null, array $driverOptions = []);
 
     /**
      * fetch single column from the next row from a result set
@@ -51,7 +51,7 @@ interface QueryResult
      * @return  array
      * @throws  DatabaseException
      */
-    public function fetchAll($fetchMode = null, array $driverOptions = array());
+    public function fetchAll($fetchMode = null, array $driverOptions = []);
 
     /**
      * moves the internal result pointer to the next result row

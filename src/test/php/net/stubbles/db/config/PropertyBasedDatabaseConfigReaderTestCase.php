@@ -9,6 +9,7 @@
  */
 namespace net\stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
+use stubbles\lang;
 /**
  * Test for net\stubbles\db\config\PropertyBasedDatabaseConfigReader.
  *
@@ -44,8 +45,8 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function annotationsPresentOnClass()
     {
-        $this->assertTrue(\net\stubbles\lang\reflect($this->propertyBasedConfigReader)
-                                                          ->hasAnnotation('Singleton')
+        $this->assertTrue(
+                lang\reflect($this->propertyBasedConfigReader)->hasAnnotation('Singleton')
         );
     }
 
@@ -54,11 +55,11 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function annotationsPresentOnConstructor()
     {
-        $class       = \net\stubbles\lang\reflect($this->propertyBasedConfigReader);
+        $class       = lang\reflect($this->propertyBasedConfigReader);
         $constructor = $class->getConstructor();
         $this->assertTrue($constructor->hasAnnotation('Inject'));
         $this->assertTrue($constructor->hasAnnotation('Named'));
-        $this->assertEquals('net.stubbles.config.path',
+        $this->assertEquals('stubbles.config.path',
                             $constructor->getAnnotation('Named')->getName()
         );
     }
@@ -68,12 +69,11 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function annotationsPresentOnSetDescriptorMethod()
     {
-        $setDescriptorMethod = \net\stubbles\lang\reflect($this->propertyBasedConfigReader)
-                                                               ->getMethod('setDescriptor');
+        $setDescriptorMethod = lang\reflect($this->propertyBasedConfigReader)->getMethod('setDescriptor');
         $this->assertTrue($setDescriptorMethod->hasAnnotation('Inject'));
         $this->assertTrue($setDescriptorMethod->getAnnotation('Inject')->isOptional());
         $this->assertTrue($setDescriptorMethod->hasAnnotation('Named'));
-        $this->assertEquals('net.stubbles.db.descriptor',
+        $this->assertEquals('stubbles.db.descriptor',
                             $setDescriptorMethod->getAnnotation('Named')->getName()
         );
     }
@@ -83,12 +83,11 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function annotationsPresentOnSetFallbackMethod()
     {
-        $setFallbackMethod = \net\stubbles\lang\reflect($this->propertyBasedConfigReader)
-                                                             ->getMethod('setFallback');
+        $setFallbackMethod = lang\reflect($this->propertyBasedConfigReader)->getMethod('setFallback');
         $this->assertTrue($setFallbackMethod->hasAnnotation('Inject'));
         $this->assertTrue($setFallbackMethod->getAnnotation('Inject')->isOptional());
         $this->assertTrue($setFallbackMethod->hasAnnotation('Named'));
-        $this->assertEquals('net.stubbles.db.fallback',
+        $this->assertEquals('stubbles.db.fallback',
                             $setFallbackMethod->getAnnotation('Named')->getName()
         );
     }
@@ -98,7 +97,7 @@ class PropertyBasedDatabaseConfigReaderTestCase extends \PHPUnit_Framework_TestC
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        $refClass = \net\stubbles\lang\reflect('net\stubbles\db\config\DatabaseConfigReader');
+        $refClass = lang\reflect('net\stubbles\db\config\DatabaseConfigReader');
         $this->assertEquals(get_class($this->propertyBasedConfigReader),
                             $refClass->getAnnotation('ImplementedBy')
                                      ->getDefaultImplementation()
@@ -150,7 +149,7 @@ dsn="mysql:host=localhost;dbname=example"');
 
     /**
      * @test
-     * @expectedException  net\stubbles\lang\exception\ConfigurationException
+     * @expectedException  stubbles\lang\exception\ConfigurationException
      * @expectedExceptionMessage  Missing dsn property in database configuration with id foo
      */
     public function readConfigThrowsConfigurationExceptionWhenDsnPropertyMissing()

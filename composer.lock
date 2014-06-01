@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e486ba54d48013f290e1614e41175e49",
+    "hash": "d27d90d28368ec1da4c7cb789e028123",
     "packages": [
         {
             "name": "stubbles/core",
-            "version": "v3.5.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stubbles/stubbles-core.git",
-                "reference": "36be594df574e2d0a8bed657f93c527b7c90f358"
+                "reference": "a43b8b387b2971c154123f45699d3f12dbf80257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stubbles/stubbles-core/zipball/36be594df574e2d0a8bed657f93c527b7c90f358",
-                "reference": "36be594df574e2d0a8bed657f93c527b7c90f358",
+                "url": "https://api.github.com/repos/stubbles/stubbles-core/zipball/a43b8b387b2971c154123f45699d3f12dbf80257",
+                "reference": "a43b8b387b2971c154123f45699d3f12dbf80257",
                 "shasum": ""
             },
             "require": {
@@ -24,22 +24,22 @@
             },
             "require-dev": {
                 "mikey179/vfsstream": "~1.2",
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~4.1",
+                "stubbles/core-dev": "4.0.*@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.5.x-dev"
+                    "dev-master": "4.0.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "net\\stubbles": "src/main/php",
-                    "org\\stubbles": "src/main/php"
+                "psr-4": {
+                    "stubbles\\": "src/main/php"
                 },
                 "files": [
-                    "src/main/php/net/stubbles/lang/functions.php",
-                    "src/main/php/net/stubbles/peer/functions.php"
+                    "src/main/php/lang/functions.php",
+                    "src/main/php/peer/functions.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -48,7 +48,7 @@
             ],
             "description": "Provides base classes for Stubbles packages.",
             "homepage": "http://stubbles.net/",
-            "time": "2014-05-07 14:10:43"
+            "time": "2014-06-01 13:46:49"
         }
     ],
     "packages-dev": [
@@ -84,16 +84,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.6",
+            "version": "2.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "bccecf50645068b44f49a84009e2a0499a500b99"
+                "reference": "58401826c8cfc8fd689b60026e91c337df374bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/bccecf50645068b44f49a84009e2a0499a500b99",
-                "reference": "bccecf50645068b44f49a84009e2a0499a500b99",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/58401826c8cfc8fd689b60026e91c337df374bca",
+                "reference": "58401826c8cfc8fd689b60026e91c337df374bca",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +145,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-04-30 09:01:21"
+            "time": "2014-05-26 14:55:24"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -332,16 +332,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "efb1b1334605594417a3bd466477772d06d460a8"
+                "reference": "1d6b554732382879045e11c56decd4be76130720"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/efb1b1334605594417a3bd466477772d06d460a8",
-                "reference": "efb1b1334605594417a3bd466477772d06d460a8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1d6b554732382879045e11c56decd4be76130720",
+                "reference": "1d6b554732382879045e11c56decd4be76130720",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +402,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-05-02 07:13:40"
+            "time": "2014-05-24 10:48:51"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -730,17 +730,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.4",
+            "version": "v2.5.0",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
+                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
                 "shasum": ""
             },
             "require": {
@@ -749,7 +749,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -775,21 +775,15 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-05-16 14:25:18"
         }
     ],
-    "aliases": [
-
-    ],
-    "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
     "platform": {
         "php": ">=5.4.0",
         "ext-pdo": "*"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }

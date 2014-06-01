@@ -8,7 +8,7 @@
  * @package  net\stubbles\db
  */
 namespace net\stubbles\db\ioc;
-use net\stubbles\ioc\Binder;
+use stubbles\ioc\Binder;
 /**
  * Test for net\stubbles\db\ioc\DatabaseBindingModule.
  *
@@ -44,7 +44,7 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
     public function usesProperyBasedConfigReaderByDefault()
     {
         $this->databaseBindingModule->configure($this->binder);
-        $this->binder->bindConstant('net.stubbles.config.path')->to(__DIR__);
+        $this->binder->bindConstant('stubbles.config.path')->to(__DIR__);
         $this->assertInstanceOf('net\stubbles\db\config\PropertyBasedDatabaseConfigReader',
                                 $this->binder->getInjector()
                                              ->getInstance('net\stubbles\db\config\DatabaseConfigReader')
@@ -72,7 +72,7 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->databaseBindingModule->configure($this->binder);
         $this->assertTrue($this->binder->getInjector()
-                                       ->getConstant('net.stubbles.db.fallback')
+                                       ->getConstant('stubbles.db.fallback')
         );
     }
 
@@ -83,7 +83,7 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
     {
         DatabaseBindingModule::create(false)->configure($this->binder);
         $this->assertFalse($this->binder->getInjector()
-                                        ->getConstant('net.stubbles.db.fallback')
+                                        ->getConstant('stubbles.db.fallback')
         );
     }
 
@@ -93,7 +93,7 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
     public function descriptorNotBoundByDefault()
     {
         $this->databaseBindingModule->configure($this->binder);
-        $this->assertFalse($this->binder->hasConstant('net.stubbles.db.descriptor'));
+        $this->assertFalse($this->binder->hasConstant('stubbles.db.descriptor'));
     }
 
     /**
@@ -104,7 +104,7 @@ class DatabaseBindingModuleTestCase extends \PHPUnit_Framework_TestCase
         DatabaseBindingModule::create(true, 'rdbms-test')->configure($this->binder);
         $this->assertEquals('rdbms-test',
                             $this->binder->getInjector()
-                                        ->getConstant('net.stubbles.db.descriptor')
+                                        ->getConstant('stubbles.db.descriptor')
         );
     }
 

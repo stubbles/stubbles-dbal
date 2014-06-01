@@ -11,9 +11,9 @@ namespace net\stubbles\db\pdo;
 use net\stubbles\db\DatabaseConnection;
 use net\stubbles\db\DatabaseException;
 use net\stubbles\db\config\DatabaseConfiguration;
-use net\stubbles\lang\exception\IllegalArgumentException;
-use net\stubbles\lang\exception\MethodInvocationException;
-use net\stubbles\lang\exception\RuntimeException;
+use stubbles\lang\exception\IllegalArgumentException;
+use stubbles\lang\exception\MethodInvocationException;
+use stubbles\lang\exception\RuntimeException;
 use PDO;
 use PDOException;
 /**
@@ -182,7 +182,7 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         try {
-            return call_user_func_array(array($this->pdo, $method), $arguments);
+            return call_user_func_array([$this->pdo, $method], $arguments);
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
@@ -195,7 +195,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      */
     public function beginTransaction()
     {
-        return $this->__call('beginTransaction', array());
+        return $this->__call('beginTransaction', []);
     }
 
     /**
@@ -205,7 +205,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      */
     public function commit()
     {
-        return $this->__call('commit', array());
+        return $this->__call('commit', []);
     }
 
     /**
@@ -215,7 +215,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      */
     public function rollback()
     {
-        return $this->__call('rollBack', array());
+        return $this->__call('rollBack', []);
     }
 
     /**
@@ -227,7 +227,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @throws  DatabaseException
      * @see     http://php.net/pdo-prepare
      */
-    public function prepare($statement, array $driverOptions = array())
+    public function prepare($statement, array $driverOptions = [])
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -261,7 +261,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @see     http://php.net/pdo-query
      * @see     http://php.net/pdostatement-setfetchmode for the details on the fetch mode options
      */
-    public function query($sql, array $driverOptions = array())
+    public function query($sql, array $driverOptions = [])
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -292,7 +292,7 @@ class PdoDatabaseConnection implements DatabaseConnection
                         }
 
                         if (!isset($driverOptions['ctorargs'])) {
-                            $driverOptions['ctorargs'] = array();
+                            $driverOptions['ctorargs'] = [];
                         }
 
                         $pdoStatement = $this->pdo->query($sql, $driverOptions['fetchMode'], $driverOptions['classname'], $driverOptions['ctorargs']);

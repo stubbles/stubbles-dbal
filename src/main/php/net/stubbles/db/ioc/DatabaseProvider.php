@@ -9,7 +9,7 @@
  */
 namespace net\stubbles\db\ioc;
 use net\stubbles\db\Database;
-use net\stubbles\ioc\InjectionProvider;
+use stubbles\ioc\InjectionProvider;
 /**
  * IoC provider for database instances.
  *

@@ -8,8 +8,8 @@
  * @package  net\stubbles\db
  */
 namespace net\stubbles\db\config;
-use net\stubbles\lang\Properties;
-use net\stubbles\lang\exception\ConfigurationException;
+use stubbles\lang\Properties;
+use stubbles\lang\exception\ConfigurationException;
 /**
  * Creates database configuration instances based on property files.
  *
@@ -47,7 +47,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      *
      * @param  string  $configPath
      * @Inject
-     * @Named('net.stubbles.config.path')
+     * @Named('stubbles.config.path')
      */
     public function  __construct($configPath)
     {
@@ -60,7 +60,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * @param   string  $descriptor
      * @return  PropertyBasedDatabaseConfigReader
      * @Inject(optional=true)
-     * @Named('net.stubbles.db.descriptor')
+     * @Named('stubbles.db.descriptor')
      */
     public function setDescriptor($descriptor)
     {
@@ -74,7 +74,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * @param   bool  $fallback
      * @return  PropertyBasedDatabaseConfigReader
      * @Inject(optional=true)
-     * @Named('net.stubbles.db.fallback')
+     * @Named('stubbles.db.fallback')
      */
     public function setFallback($fallback)
     {

@@ -8,7 +8,7 @@
  * @package  net\stubbles\db
  */
 namespace net\stubbles\db;
-use net\stubbles\lang\exception\Exception;
+use stubbles\lang\exception\Exception;
 /**
  * Interface for database connections.
  */

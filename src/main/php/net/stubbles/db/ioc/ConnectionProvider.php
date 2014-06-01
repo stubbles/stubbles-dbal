@@ -11,8 +11,8 @@ namespace net\stubbles\db\ioc;
 use net\stubbles\db\config\DatabaseConfiguration;
 use net\stubbles\db\config\DatabaseConfigReader;
 use net\stubbles\db\pdo\PdoDatabaseConnection;
-use net\stubbles\ioc\InjectionProvider;
-use net\stubbles\lang\exception\ConfigurationException;
+use stubbles\ioc\InjectionProvider;
+use stubbles\lang\exception\ConfigurationException;
 /**
  * IoC provider for database connections.
  */
@@ -29,7 +29,7 @@ class ConnectionProvider implements InjectionProvider
      *
      * @type  array
      */
-    private $connections  = array();
+    private $connections  = [];
 
     /**
      * constructor

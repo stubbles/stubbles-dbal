@@ -8,8 +8,8 @@
  * @package  net\stubbles\db
  */
 namespace net\stubbles\db\ioc;
-use net\stubbles\ioc\Binder;
-use net\stubbles\ioc\module\BindingModule;
+use stubbles\ioc\Binder;
+use stubbles\ioc\module\BindingModule;
 /**
  * Binding module for the database package.
  */
@@ -79,10 +79,10 @@ class DatabaseBindingModule implements BindingModule
     {
         $binder->bind('net\stubbles\db\config\DatabaseConfigReader')
                ->to($this->configReaderClass);
-        $binder->bindConstant('net.stubbles.db.fallback')
+        $binder->bindConstant('stubbles.db.fallback')
                ->to($this->fallback);
         if (null !== $this->descriptor) {
-            $binder->bindConstant('net.stubbles.db.descriptor')
+            $binder->bindConstant('stubbles.db.descriptor')
                    ->to($this->descriptor);
         }
     }

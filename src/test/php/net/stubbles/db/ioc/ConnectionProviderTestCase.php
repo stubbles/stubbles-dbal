@@ -40,7 +40,7 @@ class ConnectionProviderTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  net\stubbles\lang\exception\ConfigurationException
+     * @expectedException  stubbles\lang\exception\ConfigurationException
      * @expectedExceptionMessage  No database configuration known for database requested with id foo
      */
     public function throwsConfigurationExceptionWhenNoConfigForRequestedDatabaseAvailable()

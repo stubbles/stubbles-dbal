@@ -10,7 +10,7 @@
 namespace net\stubbles\db\pdo;
 use net\stubbles\db\DatabaseException;
 use net\stubbles\db\QueryResult;
-use net\stubbles\lang\exception\IllegalArgumentException;
+use stubbles\lang\exception\IllegalArgumentException;
 use PDO;
 use PDOException;
 /**
@@ -65,7 +65,7 @@ class PdoQueryResult implements QueryResult
      * @throws  DatabaseException
      * @see     http://php.net/pdostatement-fetch
      */
-    public function fetch($fetchMode = null, array $driverOptions = array())
+    public function fetch($fetchMode = null, array $driverOptions = [])
     {
         if (null === $fetchMode) {
             $fetchMode = PDO::FETCH_BOTH;
@@ -73,8 +73,8 @@ class PdoQueryResult implements QueryResult
 
         try {
             return $this->pdoStatement->fetch($fetchMode,
-                                              ((isset($driverOptions['cursorOrientation']) == false) ? (null) : ($driverOptions['cursorOrientation'])),
-                                              ((isset($driverOptions['cursorOffset']) == false) ? (null) : ($driverOptions['cursorOffset']))
+                                              ((!isset($driverOptions['cursorOrientation'])) ? (null) : ($driverOptions['cursorOrientation'])),
+                                              ((!isset($driverOptions['cursorOffset'])) ? (null) : ($driverOptions['cursorOffset']))
                    );
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
@@ -108,7 +108,7 @@ class PdoQueryResult implements QueryResult
      * @throws  IllegalArgumentException
      * @see     http://php.net/pdostatement-fetchAll
      */
-    public function fetchAll($fetchMode = null, array $driverOptions = array())
+    public function fetchAll($fetchMode = null, array $driverOptions = [])
     {
         try {
             if (null === $fetchMode) {

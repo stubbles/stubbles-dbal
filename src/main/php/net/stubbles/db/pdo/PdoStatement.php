@@ -92,7 +92,7 @@ class PdoStatement implements Statement
      * @throws  DatabaseException
      * @see     http://php.net/pdostatement-execute
      */
-    public function execute(array $values = array())
+    public function execute(array $values = [])
     {
         try {
             if ($this->pdoStatement->execute($values)) {

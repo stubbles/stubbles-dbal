@@ -86,7 +86,7 @@ interface DatabaseConnection
      * @return  Statement
      * @throws  DatabaseException
      */
-    public function prepare($statement, array $driverOptions = array());
+    public function prepare($statement, array $driverOptions = []);
 
     /**
      * executes a SQL statement
@@ -96,7 +96,7 @@ interface DatabaseConnection
      * @return  QueryResult
      * @throws  DatabaseException
      */
-    public function query($sql, array $driverOptions = array());
+    public function query($sql, array $driverOptions = []);
 
     /**
      * execute an SQL statement and return the number of affected rows
