@@ -8,6 +8,7 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\config;
+use stubbles\lang\SecureString;
 /**
  * Configuration for a database connection.
  */
@@ -38,7 +39,7 @@ class DatabaseConfiguration
     /**
      * password
      *
-     * @type  string
+     * @type  \stubbles\lang\SecureString
      */
     private $password;
     /**
@@ -86,7 +87,7 @@ class DatabaseConfiguration
         }
 
         if (isset($properties['password'])) {
-            $self->password = $properties['password'];
+            $self->setPassword($properties['password']);
             unset($properties['password']);
         }
 
@@ -165,23 +166,27 @@ class DatabaseConfiguration
     /**
      * sets user password for database login
      *
-     * @param   string  $password
+     * @param   string|\stubbles\lang\SecureString  $password
      * @return  DatabaseConfiguration
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = SecureString::create($password);
         return $this;
     }
 
     /**
      * returns the user password
      *
-     * @return  string
+     * @return  \stubbles\lang\SecureString
      */
     public function getPassword()
     {
-        return $this->password;
+        if (null !== $this->password) {
+            return $this->password->unveil();
+        }
+
+        return null;
     }
 
     /**

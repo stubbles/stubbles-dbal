@@ -26,7 +26,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * database configuration required to establish the connection
      *
-     * @type  DatabaseConfiguration
+     * @type  \stubbles\db\config\DatabaseConfiguration
      */
     private $configuration;
     /**
@@ -45,8 +45,8 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * constructor
      *
-     * @param   DatabaseConfiguration  $configuration  database configuration required to establish the connection
-     * @throws  RuntimeException  in case pdo extension not available
+     * @param   \stubbles\db\config\DatabaseConfiguration  $configuration  database configuration required to establish the connection
+     * @throws  \stubbles\lang\exception\RuntimeException  in case pdo extension not available
      */
     public function __construct(DatabaseConfiguration $configuration, \Closure $pdoCreator = null)
     {
