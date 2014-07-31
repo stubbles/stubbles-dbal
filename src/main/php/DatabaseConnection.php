@@ -44,8 +44,8 @@ interface DatabaseConnection
     /**
      * establishes the connection
      *
-     * @return  DatabaseConnection
-     * @throws  DatabaseException
+     * @return  \stubbles\db\DatabaseConnection
+     * @throws  \stubbles\db\DatabaseException
      */
     public function connect();
 
@@ -58,7 +58,7 @@ interface DatabaseConnection
      * start a transaction
      *
      * @return  bool
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function beginTransaction();
 
@@ -66,7 +66,7 @@ interface DatabaseConnection
      * commit a transaction
      *
      * @return  bool
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function commit();
 
@@ -74,7 +74,7 @@ interface DatabaseConnection
      * rollback a transaction
      *
      * @return  bool
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function rollback();
 
@@ -83,8 +83,8 @@ interface DatabaseConnection
      *
      * @param   string  $statement      sql statement
      * @param   array   $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
-     * @return  Statement
-     * @throws  DatabaseException
+     * @return  \stubbles\db\Statement
+     * @throws  \stubbles\db\DatabaseException
      */
     public function prepare($statement, array $driverOptions = []);
 
@@ -93,8 +93,8 @@ interface DatabaseConnection
      *
      * @param   string  $sql            sql query to use
      * @param   array   $driverOptions  optional  one or more driver specific options for the call to query()
-     * @return  QueryResult
-     * @throws  DatabaseException
+     * @return  \stubbles\db\QueryResult
+     * @throws  \stubbles\db\DatabaseException
      */
     public function query($sql, array $driverOptions = []);
 
@@ -103,7 +103,7 @@ interface DatabaseConnection
      *
      * @param   string  $statement      the sql statement to execute
      * @return  int     number of effected rows
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function exec($statement);
 
@@ -112,7 +112,7 @@ interface DatabaseConnection
      *
      * @param   string  $name  optional  identifier to where to retrieve the last insert id from
      * @return  int
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function getLastInsertId($name = null);
 }

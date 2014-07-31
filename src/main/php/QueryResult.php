@@ -20,7 +20,7 @@ interface QueryResult
      * @param   mixed       &$variable  the variable to bind to the column
      * @param   int|string  $type       optional  type of the variable to bind
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function bindColumn($column, &$variable, $type = null);
 
@@ -30,7 +30,7 @@ interface QueryResult
      * @param   int    $fetchMode      optional  the mode to use for fetching the data
      * @param   array  $driverOptions  optional  driver specific arguments
      * @return  mixed
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function fetch($fetchMode = null, array $driverOptions = []);
 
@@ -39,7 +39,7 @@ interface QueryResult
      *
      * @param   int     $columnNumber  optional  the column number to fetch, default is first column
      * @return  string
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function fetchOne($columnNumber = 0);
 
@@ -49,7 +49,7 @@ interface QueryResult
      * @param   int    $fetchMode      optional  the mode to use for fetching the data
      * @param   array  $driverOptions  optional  driver specific arguments
      * @return  array
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function fetchAll($fetchMode = null, array $driverOptions = []);
 
@@ -57,7 +57,7 @@ interface QueryResult
      * moves the internal result pointer to the next result row
      *
      * @return  bool  true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function next();
 
@@ -65,7 +65,7 @@ interface QueryResult
      * returns the number of rows affected by the last SQL statement
      *
      * @return  int
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function count();
 
@@ -73,7 +73,7 @@ interface QueryResult
      * releases resources allocated of the result set
      *
      * @return  bool  true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function free();
 }

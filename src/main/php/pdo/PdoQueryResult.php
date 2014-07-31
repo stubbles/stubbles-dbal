@@ -44,7 +44,7 @@ class PdoQueryResult implements QueryResult
      * @param   mixed       &$variable  the variable to bind to the column
      * @param   int|string  $type       optional  type of the binded variable
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindColumn
      */
     public function bindColumn($column, &$variable, $type = null)
@@ -62,7 +62,7 @@ class PdoQueryResult implements QueryResult
      * @param   int    $fetchMode      optional  the mode to use for fetching the data
      * @param   array  $driverOptions  optional  driver specific arguments
      * @return  mixed
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-fetch
      */
     public function fetch($fetchMode = null, array $driverOptions = [])
@@ -86,7 +86,7 @@ class PdoQueryResult implements QueryResult
      *
      * @param   int     $columnNumber  optional  the column number to fetch, default is first column
      * @return  string
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-fetchColumn
      */
     public function fetchOne($columnNumber = 0)
@@ -104,8 +104,8 @@ class PdoQueryResult implements QueryResult
      * @param   int    $fetchMode      optional  the mode to use for fetching the data
      * @param   array  $driverOptions  optional  driver specific arguments
      * @return  array
-     * @throws  DatabaseException
-     * @throws  IllegalArgumentException
+     * @throws  \stubbles\db\DatabaseException
+     * @throws  \stubbles\lang\exception\IllegalArgumentException
      * @see     http://php.net/pdostatement-fetchAll
      */
     public function fetchAll($fetchMode = null, array $driverOptions = [])
@@ -152,7 +152,7 @@ class PdoQueryResult implements QueryResult
      * moves the internal result pointer to the next result row
      *
      * @return  bool  true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-nextRowset
      */
     public function next()
@@ -168,7 +168,7 @@ class PdoQueryResult implements QueryResult
      * returns the number of rows affected by the last SQL statement
      *
      * @return  int
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-rowCount
      */
     public function count()
@@ -184,7 +184,7 @@ class PdoQueryResult implements QueryResult
      * releases resources allocated of the result set
      *
      * @return  bool  true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-closeCursor
      */
     public function free()

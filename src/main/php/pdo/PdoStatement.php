@@ -48,7 +48,7 @@ class PdoStatement implements Statement
      * @param   int|string  $type       optional  type of the parameter
      * @param   int         $length     optional  length of the data type
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindParam
      */
     public function bindParam($param, &$variable, $type = null, $length = null)
@@ -70,7 +70,7 @@ class PdoStatement implements Statement
      * @param   mixed       $value  the value to bind
      * @param   int|string  $type   optional  type of the parameter
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindValue
      */
     public function bindValue($param, $value, $type = null)
@@ -88,8 +88,8 @@ class PdoStatement implements Statement
      * @param   array  $values  optional  specifies all necessary information for bindParam()
      *                                    the array elements must use keys corresponding to the
      *                                    number of the position or name of the parameter
-     * @return  stubDatabaseResult
-     * @throws  DatabaseException
+     * @return  \stubbles\db\pdo\PdoQueryResult
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-execute
      */
     public function execute(array $values = [])

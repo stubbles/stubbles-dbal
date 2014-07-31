@@ -76,7 +76,7 @@ class DatabaseConfiguration
      * @param   string  $id
      * @param   string  $dsn
      * @param   array   $properties
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public static function fromArray($id, $dsn, array $properties)
     {
@@ -145,7 +145,7 @@ class DatabaseConfiguration
      * sets user name for database login
      *
      * @param   string  $userName
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setUserName($userName)
     {
@@ -167,7 +167,7 @@ class DatabaseConfiguration
      * sets user password for database login
      *
      * @param   string|\stubbles\lang\SecureString  $password
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setPassword($password)
     {
@@ -193,7 +193,7 @@ class DatabaseConfiguration
      * sets driver-specific connection options for database
      *
      * @param   array  $driverOptions
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setDriverOptions(array $driverOptions)
     {
@@ -225,7 +225,7 @@ class DatabaseConfiguration
      * sets initial query to be send after establishing the connection
      *
      * @param   string  $initialQuery
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setInitialQuery($initialQuery)
     {
@@ -257,7 +257,7 @@ class DatabaseConfiguration
      * sets details about the database
      *
      * @param   string  $details
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      * @since   2.1.0
      */
     public function setDetails($details)

@@ -26,7 +26,7 @@ interface Statement
      * @param   int|string  $type       optional  type of the parameter
      * @param   int         $length     optional  length of the data type
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function bindParam($param, &$variable, $type = null, $length = null);
 
@@ -40,7 +40,7 @@ interface Statement
      * @param   mixed       $value  the value to bind
      * @param   int|string  $type   optional  type of the parameter
      * @return  bool        true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function bindValue($param, $value, $type = null);
 
@@ -50,8 +50,8 @@ interface Statement
      * @param   array  $values  optional  specifies all necessary information for bindParam()
      *                                    the array elements must use keys corresponding to the
      *                                    number of the position or name of the parameter
-     * @return  QueryResult
-     * @throws  DatabaseException
+     * @return  \stubbles\db\QueryResult
+     * @throws  \stubbles\db\DatabaseException
      */
     public function execute(array $values = []);
 
@@ -63,7 +63,7 @@ interface Statement
      * executed again.
      *
      * @return  bool  true on success, false on failure
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function clean();
 }

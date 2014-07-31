@@ -19,7 +19,7 @@ interface DatabaseConfigReader
      * sets the descriptor to be used
      *
      * @param   string  $descriptor
-     * @return  DatabaseConfigReader
+     * @return  \stubbles\db\config\DatabaseConfigReader
      */
     public function setDescriptor($descriptor);
 
@@ -27,7 +27,7 @@ interface DatabaseConfigReader
      * whether to fallback to default database if requested database id does not exist
      *
      * @param   bool  $fallback
-     * @return  DatabaseConfigReader
+     * @return  \stubbles\db\config\DatabaseConfigReader
      */
     public function setFallback($fallback);
 
@@ -51,7 +51,7 @@ interface DatabaseConfigReader
      * returns database configuration with given id
      *
      * @param   string                      $id
-     * @return  DatabaseConfiguration
+     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function readConfig($id);
 }

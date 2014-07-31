@@ -21,7 +21,7 @@ class ConnectionProvider implements InjectionProvider
     /**
      * database configuration reader
      *
-     * @type  DatabaseConfigReader
+     * @type  \stubbles\db\config\DatabaseConfigReader
      */
     private $configReader;
     /**
@@ -34,7 +34,7 @@ class ConnectionProvider implements InjectionProvider
     /**
      * constructor
      *
-     * @param  DatabaseConfigReader  $configReader
+     * @param  \stubbles\db\config\DatabaseConfigReader  $configReader
      * @Inject
      */
     public function __construct(DatabaseConfigReader $configReader)
@@ -63,7 +63,7 @@ class ConnectionProvider implements InjectionProvider
      * If no name is provided the default connection will be returned.
      *
      * @param   string  $name
-     * @return  DatabaseConnection
+     * @return  \stubbles\db\DatabaseConnection
      */
     public function get($name = null)
     {
@@ -83,8 +83,8 @@ class ConnectionProvider implements InjectionProvider
      * retrieves connection data
      *
      * @param   string  $name
-     * @return  ConnectionConfiguration
-     * @throws  ConfigurationException
+     * @return  \stubbles\db\config\ConnectionConfiguration
+     * @throws  \stubbles\lang\exception\ConfigurationException
      */
     private function readConfig($name)
     {

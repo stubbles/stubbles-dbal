@@ -51,7 +51,7 @@ class DatabaseBindingModule implements BindingModule
      *
      * @param   bool    $fallback    whether to allow fallback to default connection if named connection does not exist
      * @param   string  $descriptor  descriptor for database initializer
-     * @return  DatabaseBindingModule
+     * @return  \stubbles\db\ioc\DatabaseBindingModule
      */
     public static function create($fallback = true, $descriptor = null)
     {
@@ -62,7 +62,7 @@ class DatabaseBindingModule implements BindingModule
      * sets name of database initializer class to bind
      *
      * @param   string  $configReaderClass
-     * @return  DatabaseBindingModule
+     * @return  \stubbles\db\ioc\DatabaseBindingModule
      */
     public function setConfigReaderClass($configReaderClass)
     {
@@ -73,7 +73,7 @@ class DatabaseBindingModule implements BindingModule
     /**
      * configure the binder
      *
-     * @param  Binder  $binder
+     * @param  \stubbles\ioc\Binder  $binder
      */
     public function configure(Binder $binder)
     {

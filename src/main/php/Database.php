@@ -19,14 +19,14 @@ class Database
     /**
      * actual connection to be used
      *
-     * @type  DatabaseConnection
+     * @type  \stubbles\db\DatabaseConnection
      */
     private $dbConnection;
 
     /**
      * constructor
      *
-     * @param  DatabaseConnection  $dbConnection
+     * @param  \stubbles\db\DatabaseConnection  $dbConnection
      */
     public function __construct(DatabaseConnection $dbConnection)
     {

@@ -38,7 +38,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
     /**
      * properties for database connections
      *
-     * @type  Properties
+     * @type  \stubbles\lang\Properties
      */
     private $dbProperties;
 
@@ -58,7 +58,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * sets the descriptor to be used
      *
      * @param   string  $descriptor
-     * @return  PropertyBasedDatabaseConfigReader
+     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigReader
      * @Inject(optional=true)
      * @Named('stubbles.db.descriptor')
      */
@@ -72,7 +72,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * whether to fallback to default database if requested database id does not exist
      *
      * @param   bool  $fallback
-     * @return  PropertyBasedDatabaseConfigReader
+     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigReader
      * @Inject(optional=true)
      * @Named('stubbles.db.fallback')
      */
@@ -112,8 +112,8 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * returns database configuration with given id
      *
      * @param   string  $id
-     * @return  DatabaseConfiguration
-     * @throws  ConfigurationException
+     * @return  \stubbles\db\config\DatabaseConfiguration
+     * @throws  \stubbles\lang\exception\ConfigurationException
      */
     public function readConfig($id)
     {
@@ -146,7 +146,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
     /**
      * initializing method
      *
-     * @return  Properties
+     * @return  \stubbles\lang\Properties
      */
     protected function readProperties()
     {

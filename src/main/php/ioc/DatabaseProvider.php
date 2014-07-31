@@ -20,14 +20,14 @@ class DatabaseProvider implements InjectionProvider
     /**
      * actual connection provider
      *
-     * @type  ConnectionProvider
+     * @type  \stubbles\db\ioc\ConnectionProvider
      */
     private $connectionProvider;
 
     /**
      * constructor
      *
-     * @param  ConnectionProvider  $connectionProvider
+     * @param  \stubbles\db\ioc\ConnectionProvider  $connectionProvider
      * @Inject
      */
     public function __construct(ConnectionProvider $connectionProvider)
@@ -46,7 +46,7 @@ class DatabaseProvider implements InjectionProvider
      * If no name is provided the default connection will be used.
      *
      * @param   string  $name
-     * @return  Database
+     * @return  \stubbles\db\Database
      */
     public function get($name = null)
     {

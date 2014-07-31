@@ -104,8 +104,8 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * establishes the connection
      *
-     * @return  PdoDatabaseConnection
-     * @throws  DatabaseException
+     * @return  \stubbles\db\pdo\PdoDatabaseConnection
+     * @throws  \stubbles\db\DatabaseException
      */
     public function connect()
     {
@@ -168,8 +168,8 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @param   string  $method     name of the method to call
      * @param   array   $arguments  list of arguments for the method call
      * @return  mixed
-     * @throws  DatabaseException
-     * @throws  MethodInvocationException
+     * @throws  \stubbles\db\DatabaseException
+     * @throws  \stubbles\lang\exception\MethodInvocationException
      */
     public function __call($method, $arguments)
     {
@@ -223,8 +223,8 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @param   string  $statement      SQL statement
      * @param   array   $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
-     * @return  PdoStatement
-     * @throws  DatabaseException
+     * @return  \stubbles\db\pdo\PdoStatement
+     * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdo-prepare
      */
     public function prepare($statement, array $driverOptions = [])
@@ -255,9 +255,9 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @param   string  $sql            the sql query to use
      * @param   array   $driverOptions  optional  how to fetch the data
-     * @return  PdoQueryResult
-     * @throws  IllegalArgumentException
-     * @throws  DatabaseException
+     * @return  \stubbles\db\pdo\PdoQueryResult
+     * @throws  \stubbles\db\DatabaseException
+     * @throws  \stubbles\lang\exception\IllegalArgumentException
      * @see     http://php.net/pdo-query
      * @see     http://php.net/pdostatement-setfetchmode for the details on the fetch mode options
      */
@@ -316,7 +316,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @param   string  $statement      the sql statement to execute d
      * @return  int     number of effected rows
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function exec($statement)
     {
@@ -336,7 +336,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @param   string  $name  name of the sequence object from which the ID should be returned.
      * @return  int
-     * @throws  DatabaseException
+     * @throws  \stubbles\db\DatabaseException
      */
     public function getLastInsertId($name = null)
     {
