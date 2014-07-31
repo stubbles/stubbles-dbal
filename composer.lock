@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7e417ba5148134e6bf7ce4c9ad86bc2c",
+    "hash": "7628343627ccbefd19f755b12c684a91",
     "packages": [
         {
             "name": "stubbles/core",
-            "version": "dev-master",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stubbles/stubbles-core.git",
-                "reference": "ae0e3e1b70cf6b09f73391d71d80e8ed447148be"
+                "reference": "6e84ef039726b6eccc9536586f76e71948e20682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stubbles/stubbles-core/zipball/ae0e3e1b70cf6b09f73391d71d80e8ed447148be",
-                "reference": "ae0e3e1b70cf6b09f73391d71d80e8ed447148be",
+                "url": "https://api.github.com/repos/stubbles/stubbles-core/zipball/6e84ef039726b6eccc9536586f76e71948e20682",
+                "reference": "6e84ef039726b6eccc9536586f76e71948e20682",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +49,7 @@
             ],
             "description": "Provides base classes for Stubbles packages.",
             "homepage": "http://stubbles.net/",
-            "time": "2014-07-30 16:14:27"
+            "time": "2014-07-31 11:22:40"
         }
     ],
     "packages-dev": [
@@ -251,12 +251,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "1.0.5"
+                "reference": "19689d4354b295ee3d8c54b4f42c3efb69cbc17c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/1.0.5",
-                "reference": "1.0.5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/19689d4354b295ee3d8c54b4f42c3efb69cbc17c",
+                "reference": "19689d4354b295ee3d8c54b4f42c3efb69cbc17c",
                 "shasum": ""
             },
             "require": {
@@ -687,7 +687,8 @@
                 },
                 {
                     "name": "Adam Harvey",
-                    "email": "aharvey@php.net"
+                    "email": "aharvey@php.net",
+                    "role": "Lead"
                 },
                 {
                     "name": "Bernhard Schussek",
