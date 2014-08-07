@@ -12,6 +12,7 @@ namespace stubbles\db;
  * Test for stubbles\db\Database.
  *
  * @group  db
+ * @since  2.1.0
  */
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,6 +57,39 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                       ->with($this->equalTo($values))
                       ->will($this->returnValue($mockQueryResult));
         return $mockQueryResult;
+    }
+
+    /**
+     * @test
+     * @since   3.1.0
+     */
+    public function queryExecutesQueryAndReturnsAmountOfAffectedRecords()
+    {
+        $mockQueryResult = $this->createQueryResult('INSERT INTO baz VALUES (:col)', [':col' => 'yes']);
+        $mockQueryResult->expects($this->once())
+                        ->method('count')
+                        ->will($this->returnValue(1));
+        $this->assertEquals(
+                1,
+                $this->database->query('INSERT INTO baz VALUES (:col)', [':col' => 'yes'])
+        );
+    }
+
+    /**
+     * @test
+     * @since   3.1.0
+     */
+    public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn()
+    {
+        $mockQueryResult = $this->createQueryResult('SELECT foo FROM baz WHERE col = :col', [':col' => 'yes']);
+        $mockQueryResult->expects($this->once())
+                        ->method('fetchOne')
+                        ->with($this->equalTo(0))
+                        ->will($this->returnValue('bar'));
+        $this->assertEquals(
+                'bar',
+                $this->database->fetchOne('SELECT foo FROM baz WHERE col = :col', [':col' => 'yes'])
+        );
     }
 
     /**

@@ -34,6 +34,38 @@ class Database
     }
 
     /**
+     * sends a query to the database and returns amount of affected records
+     *
+     * @param   string  $sql
+     * @param   array   $values
+     * @return  int
+     * @since   3.1.0
+     */
+    public function query($sql, array $values = [])
+    {
+        return $this->dbConnection->prepare($sql)
+                                  ->execute($values)
+                                  ->count();
+    }
+
+    /**
+     * fetch single value from a result set
+     *
+     * @param   string  $sql            sql query to fetch data with
+     * @param   array   $values         map of values in case $sql contains a prepared statement
+     * @param   int     $columnNumber  optional  the column number to fetch, default is first column
+     * @return  string
+     * @throws  \stubbles\db\DatabaseException
+     * @since   3.1.0
+     */
+    public function fetchOne($sql, array $values = [], $columnNumber = 0)
+    {
+        return $this->dbConnection->prepare($sql)
+                                  ->execute($values)
+                                  ->fetchOne($columnNumber);
+    }
+
+    /**
      * return all result rows for given sql query
      *
      * Allows to fetch all results for a query at once.

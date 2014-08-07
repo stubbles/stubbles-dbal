@@ -1,3 +1,10 @@
+3.1.0 (2014-08-07)
+------------------
+
+  * added `stubbles\db\Database::query()`
+  * added `stubbles\db\Database::fetchOne()`
+
+
 3.0.0 (2014-07-31)
 ------------------
 
