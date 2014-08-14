@@ -101,7 +101,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      */
     public function hasConfig($id)
     {
-        if ($this->readProperties()->hasSection($id)) {
+        if ($this->readProperties()->containSection($id)) {
             return true;
         }
 
@@ -117,7 +117,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      */
     public function readConfig($id)
     {
-        if (!$this->readProperties()->hasSection($id)) {
+        if (!$this->readProperties()->containSection($id)) {
             if (!$this->hasFallback()) {
                 return null;
             }
@@ -125,7 +125,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
             $id = DatabaseConfiguration::DEFAULT_ID;
         }
 
-        $properties = $this->readProperties()->getSection($id);
+        $properties = $this->readProperties()->section($id);
         if (!isset($properties['dsn'])) {
             throw new ConfigurationException('Missing dsn property in database configuration with id ' . $id);
         }
@@ -140,7 +140,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      */
     private function hasFallback()
     {
-        return ($this->fallback && $this->readProperties()->hasSection(DatabaseConfiguration::DEFAULT_ID));
+        return ($this->fallback && $this->readProperties()->containSection(DatabaseConfiguration::DEFAULT_ID));
     }
 
     /**
