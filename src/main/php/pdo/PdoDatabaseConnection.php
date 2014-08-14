@@ -13,7 +13,6 @@ use stubbles\db\DatabaseException;
 use stubbles\db\config\DatabaseConfiguration;
 use stubbles\lang\exception\IllegalArgumentException;
 use stubbles\lang\exception\MethodInvocationException;
-use stubbles\lang\exception\RuntimeException;
 use PDO;
 use PDOException;
 /**
@@ -46,14 +45,9 @@ class PdoDatabaseConnection implements DatabaseConnection
      * constructor
      *
      * @param   \stubbles\db\config\DatabaseConfiguration  $configuration  database configuration required to establish the connection
-     * @throws  \stubbles\lang\exception\RuntimeException  in case pdo extension not available
      */
     public function __construct(DatabaseConfiguration $configuration, \Closure $pdoCreator = null)
     {
-        if (!extension_loaded('pdo')) {
-            throw new RuntimeException('Can not create ' . __CLASS__ . ', requires PHP extension "pdo"');
-        }
-
         $this->configuration = $configuration;
         $this->pdoCreator    = $pdoCreator;
     }
