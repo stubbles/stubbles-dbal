@@ -11,19 +11,19 @@ namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
 use stubbles\lang;
 /**
- * Test for stubbles\db\config\PropertyBasedDatabaseConfigReader.
+ * Test for stubbles\db\config\PropertyBasedDatabaseConfigurations.
  *
  * @group  db
  * @group  config
  */
-class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
+class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test
      *
-     * @type  PropertyBasedDatabaseConfigReader
+     * @type  \stubbles\db\config\PropertyBasedDatabaseConfigurations
      */
-    private $propertyBasedConfigReader;
+    private $propertyBasedConfigurations;
     /**
      *
      * @type  \org\bovigo\vfs\vfsStreamFile
@@ -37,7 +37,7 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
     {
         $root = vfsStream::setup();
         $this->configFile = vfsStream::newFile('rdbms.ini')->at($root);
-        $this->propertyBasedConfigReader = new PropertyBasedDatabaseConfigReader($root->url());
+        $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($root->url());
     }
 
     /**
@@ -46,7 +46,7 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
     public function annotationsPresentOnClass()
     {
         $this->assertTrue(
-                lang\reflect($this->propertyBasedConfigReader)->hasAnnotation('Singleton')
+                lang\reflect($this->propertyBasedConfigurations)->hasAnnotation('Singleton')
         );
     }
 
@@ -55,12 +55,13 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function annotationsPresentOnConstructor()
     {
-        $class       = lang\reflect($this->propertyBasedConfigReader);
+        $class       = lang\reflect($this->propertyBasedConfigurations);
         $constructor = $class->getConstructor();
         $this->assertTrue($constructor->hasAnnotation('Inject'));
         $this->assertTrue($constructor->hasAnnotation('Named'));
-        $this->assertEquals('stubbles.config.path',
-                            $constructor->getAnnotation('Named')->getName()
+        $this->assertEquals(
+                'stubbles.config.path',
+                $constructor->annotation('Named')->getName()
         );
     }
 
@@ -69,12 +70,13 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function annotationsPresentOnSetDescriptorMethod()
     {
-        $setDescriptorMethod = lang\reflect($this->propertyBasedConfigReader)->getMethod('setDescriptor');
+        $setDescriptorMethod = lang\reflect($this->propertyBasedConfigurations)->getMethod('setDescriptor');
         $this->assertTrue($setDescriptorMethod->hasAnnotation('Inject'));
-        $this->assertTrue($setDescriptorMethod->getAnnotation('Inject')->isOptional());
+        $this->assertTrue($setDescriptorMethod->annotation('Inject')->isOptional());
         $this->assertTrue($setDescriptorMethod->hasAnnotation('Named'));
-        $this->assertEquals('stubbles.db.descriptor',
-                            $setDescriptorMethod->getAnnotation('Named')->getName()
+        $this->assertEquals(
+                'stubbles.db.descriptor',
+                $setDescriptorMethod->annotation('Named')->getName()
         );
     }
 
@@ -83,12 +85,13 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function annotationsPresentOnSetFallbackMethod()
     {
-        $setFallbackMethod = lang\reflect($this->propertyBasedConfigReader)->getMethod('setFallback');
+        $setFallbackMethod = lang\reflect($this->propertyBasedConfigurations)->getMethod('setFallback');
         $this->assertTrue($setFallbackMethod->hasAnnotation('Inject'));
-        $this->assertTrue($setFallbackMethod->getAnnotation('Inject')->isOptional());
+        $this->assertTrue($setFallbackMethod->annotation('Inject')->isOptional());
         $this->assertTrue($setFallbackMethod->hasAnnotation('Named'));
-        $this->assertEquals('stubbles.db.fallback',
-                            $setFallbackMethod->getAnnotation('Named')->getName()
+        $this->assertEquals(
+                'stubbles.db.fallback',
+                $setFallbackMethod->annotation('Named')->getName()
         );
     }
 
@@ -97,53 +100,52 @@ class PropertyBasedDatabaseConfigReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        $refClass = lang\reflect('stubbles\db\config\DatabaseConfigReader');
-        $this->assertEquals(get_class($this->propertyBasedConfigReader),
-                            $refClass->getAnnotation('ImplementedBy')
-                                     ->getDefaultImplementation()
-                                     ->getName()
+        $refClass = lang\reflect('stubbles\db\config\DatabaseConfigurations');
+        $this->assertEquals(
+                get_class($this->propertyBasedConfigurations),
+                $refClass->annotation('ImplementedBy')->__value()->getName()
         );
     }
 
     /**
      * @test
      */
-    public function hasConfigWhenPresentInFile()
+    public function containsConfigWhenPresentInFile()
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertTrue($this->propertyBasedConfigReader->hasConfig('foo'));
+        $this->assertTrue($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
      * @test
      */
-    public function hasConfigWhenNotPresentInFileButDefaultAndFallbackEnabled()
+    public function containsConfigWhenNotPresentInFileButDefaultAndFallbackEnabled()
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertTrue($this->propertyBasedConfigReader->hasConfig('foo'));
+        $this->assertTrue($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
      * @test
      */
-    public function doesNothaveConfigWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
+    public function doesNotContainConfigWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertFalse($this->propertyBasedConfigReader->hasConfig('foo'));
+        $this->assertFalse($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
      * @test
      */
-    public function doesNothaveConfigWhenNotPresentInFileAndFallbackDisabled()
+    public function doesNotContainConfigWhenNotPresentInFileAndFallbackDisabled()
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertFalse($this->propertyBasedConfigReader->setFallback(false)
-                                                           ->hasConfig('foo')
+        $this->assertFalse(
+                $this->propertyBasedConfigurations->setFallback(false)->contain('foo')
         );
     }
 
@@ -152,11 +154,11 @@ dsn="mysql:host=localhost;dbname=example"');
      * @expectedException  stubbles\lang\exception\ConfigurationException
      * @expectedExceptionMessage  Missing dsn property in database configuration with id foo
      */
-    public function readConfigThrowsConfigurationExceptionWhenDsnPropertyMissing()
+    public function throwsConfigurationExceptionWhenDsnPropertyMissing()
     {
         $this->configFile->setContent('[foo]
 username="root"');
-        $this->propertyBasedConfigReader->readConfig('foo');
+        $this->propertyBasedConfigurations->get('foo');
     }
 
     /**
@@ -166,9 +168,9 @@ username="root"');
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertEquals('foo',
-                            $this->propertyBasedConfigReader->readConfig('foo')
-                                                            ->getId()
+        $this->assertEquals(
+                'foo',
+                $this->propertyBasedConfigurations->get('foo')->getId()
         );
     }
 
@@ -179,32 +181,34 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertEquals('default',
-                            $this->propertyBasedConfigReader->readConfig('foo')
-                                                            ->getId()
+        $this->assertEquals(
+                'default',
+                $this->propertyBasedConfigurations->get('foo')->getId()
         );
     }
 
     /**
      * @test
+     * @expectedException  stubbles\lang\exception\ConfigurationException
+     * @expectedExceptionMessage  No database configuration known for database requested with id foo
      */
-    public function returnsNullWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
+    public function throwsConfigurationExceptionWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertNull($this->propertyBasedConfigReader->readConfig('foo'));
+        $this->propertyBasedConfigurations->get('foo');
     }
 
     /**
      * @test
+     * @expectedException  stubbles\lang\exception\ConfigurationException
+     * @expectedExceptionMessage  No database configuration known for database requested with id foo
      */
-    public function returnsNullWhenNotPresentInFileAndFallbackDisabled()
+    public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled()
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertNull($this->propertyBasedConfigReader->setFallback(false)
-                                                           ->readConfig('foo')
-        );
+        $this->propertyBasedConfigurations->setFallback(false)->get('foo');
     }
 
     /**
@@ -221,25 +225,28 @@ dsn="mysql:host=localhost;dbname=example"')
 dsn="mysql:host=prod.example.com;dbname=example"')
                          ->at($root);
         $this->assertEquals('mysql:host=localhost;dbname=example',
-                            $this->propertyBasedConfigReader->setDescriptor('rdbms-test')
-                                                            ->readConfig('foo')
+                            $this->propertyBasedConfigurations->setDescriptor('rdbms-test')
+                                                            ->get('foo')
                                                             ->getDsn()
         );
     }
 
     /**
      * @test
-     * @since  2.1.0
+     * @since  4.0.0
      */
-    public function returnsListOfConfigIds()
+    public function canIterateOverConfigurations()
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"
 
 [other]
 dsn="mysql:host=example.com;dbname=other"');
-        $this->assertEquals(['default', 'other'],
-                            $this->propertyBasedConfigReader->configIds()
-        );
+        $result = [];
+        foreach ($this->propertyBasedConfigurations as $configuration) {
+            $result[] = $configuration->getId();
+        }
+
+        $this->assertEquals(['default', 'other'], $result);
     }
 }

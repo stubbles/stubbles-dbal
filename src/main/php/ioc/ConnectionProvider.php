@@ -9,10 +9,9 @@
  */
 namespace stubbles\db\ioc;
 use stubbles\db\config\DatabaseConfiguration;
-use stubbles\db\config\DatabaseConfigReader;
+use stubbles\db\config\DatabaseConfigurations;
 use stubbles\db\pdo\PdoDatabaseConnection;
 use stubbles\ioc\InjectionProvider;
-use stubbles\lang\exception\ConfigurationException;
 /**
  * IoC provider for database connections.
  */
@@ -21,9 +20,9 @@ class ConnectionProvider implements InjectionProvider
     /**
      * database configuration reader
      *
-     * @type  \stubbles\db\config\DatabaseConfigReader
+     * @type  \stubbles\db\config\DatabaseConfigurations
      */
-    private $configReader;
+    private $configurations;
     /**
      * map of database connections
      *
@@ -34,12 +33,12 @@ class ConnectionProvider implements InjectionProvider
     /**
      * constructor
      *
-     * @param  \stubbles\db\config\DatabaseConfigReader  $configReader
+     * @param  \stubbles\db\config\DatabaseConfigurations  $configReader
      * @Inject
      */
-    public function __construct(DatabaseConfigReader $configReader)
+    public function __construct(DatabaseConfigurations $configReader)
     {
-        $this->configReader = $configReader;
+        $this->configurations = $configReader;
     }
 
     /**
@@ -49,7 +48,7 @@ class ConnectionProvider implements InjectionProvider
      */
     public function availableConnections()
     {
-        return $this->configReader->configIds();
+        return $this->configurations->configIds();
     }
 
     /**
@@ -75,23 +74,7 @@ class ConnectionProvider implements InjectionProvider
             return $this->connections[$name];
         }
 
-        $this->connections[$name] = new PdoDatabaseConnection($this->readConfig($name));
+        $this->connections[$name] = new PdoDatabaseConnection($this->configurations->get($name));
         return $this->connections[$name];
-    }
-
-    /**
-     * retrieves connection data
-     *
-     * @param   string  $name
-     * @return  \stubbles\db\config\ConnectionConfiguration
-     * @throws  \stubbles\lang\exception\ConfigurationException
-     */
-    private function readConfig($name)
-    {
-        if ($this->configReader->hasConfig($name)) {
-            return $this->configReader->readConfig($name);
-        }
-
-        throw new ConfigurationException('No database configuration known for database requested with id ' . $name);
     }
 }

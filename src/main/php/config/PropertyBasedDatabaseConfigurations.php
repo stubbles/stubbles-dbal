@@ -10,13 +10,16 @@
 namespace stubbles\db\config;
 use stubbles\lang\Properties;
 use stubbles\lang\exception\ConfigurationException;
+use stubbles\lang\iterator\PropertyBasedIterator;
 /**
- * Creates database configuration instances based on property files.
+ * Represents a list of available database configurations, configured in a property file.
  *
  * @Singleton
  */
-class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
+class PropertyBasedDatabaseConfigurations implements \Iterator, DatabaseConfigurations
 {
+    use PropertyBasedIterator;
+
     /**
      * path to config files
      *
@@ -58,7 +61,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * sets the descriptor to be used
      *
      * @param   string  $descriptor
-     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigReader
+     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigurations
      * @Inject(optional=true)
      * @Named('stubbles.db.descriptor')
      */
@@ -72,7 +75,7 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * whether to fallback to default database if requested database id does not exist
      *
      * @param   bool  $fallback
-     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigReader
+     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigurations
      * @Inject(optional=true)
      * @Named('stubbles.db.fallback')
      */
@@ -83,14 +86,13 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
     }
 
     /**
-     * returns list of available config ids
+     * checks whether fallback is enabled and exists
      *
-     * @return  string[]
-     * @since   2.1.0
+     * @return bool
      */
-    public function configIds()
+    private function hasFallback()
     {
-        return $this->readProperties()->getSections();
+        return ($this->fallback && $this->properties()->containSection(DatabaseConfiguration::DEFAULT_ID));
     }
 
     /**
@@ -99,9 +101,9 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * @param   string  $id
      * @return  bool
      */
-    public function hasConfig($id)
+    public function contain($id)
     {
-        if ($this->readProperties()->containSection($id)) {
+        if ($this->properties()->containSection($id)) {
             return true;
         }
 
@@ -115,45 +117,48 @@ class PropertyBasedDatabaseConfigReader implements DatabaseConfigReader
      * @return  \stubbles\db\config\DatabaseConfiguration
      * @throws  \stubbles\lang\exception\ConfigurationException
      */
-    public function readConfig($id)
+    public function get($id)
     {
-        if (!$this->readProperties()->containSection($id)) {
+        if (!$this->properties()->containSection($id)) {
             if (!$this->hasFallback()) {
-                return null;
+                throw new ConfigurationException('No database configuration known for database requested with id ' . $id);
             }
 
             $id = DatabaseConfiguration::DEFAULT_ID;
         }
 
-        $properties = $this->readProperties()->section($id);
-        if (!isset($properties['dsn'])) {
+        if (!$this->properties()->containValue($id, 'dsn')) {
             throw new ConfigurationException('Missing dsn property in database configuration with id ' . $id);
         }
 
-        return DatabaseConfiguration::fromArray($id, $properties['dsn'], $properties);
+        return DatabaseConfiguration::fromArray(
+                $id,
+                $this->properties()->value($id, 'dsn'),
+                $this->properties()->section($id)
+        );
     }
 
     /**
-     * checks whether fallback is enabled and exists
-     *
-     * @return bool
-     */
-    private function hasFallback()
-    {
-        return ($this->fallback && $this->readProperties()->containSection(DatabaseConfiguration::DEFAULT_ID));
-    }
-
-    /**
-     * initializing method
+     * reads properties if not done yet
      *
      * @return  \stubbles\lang\Properties
      */
-    protected function readProperties()
+    protected function properties()
     {
         if (null === $this->dbProperties) {
             $this->dbProperties = Properties::fromFile($this->configPath . '/' . $this->descriptor . '.ini');
         }
 
         return $this->dbProperties;
+    }
+
+    /**
+     * returns current entry in iteration
+     *
+     * @return  \stubbles\db\config\DatabaseConfiguration
+     */
+    public function current()
+    {
+        return $this->get($this->properties()->key());
     }
 }

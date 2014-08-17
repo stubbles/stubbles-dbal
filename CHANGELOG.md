@@ -1,6 +1,12 @@
 4.0.0 (2014-08-07)
 ------------------
 
+### BC breaks
+
+  * replaced `stubbles\db\config\DatabaseConfigReader` with `stubbles\db\config\DatabaseConfigurations`
+
+### Other changes
+
   * upgraded stubbles/core to 5.0.0
 
 
