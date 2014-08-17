@@ -11,8 +11,6 @@ namespace stubbles\db\pdo;
 use stubbles\db\DatabaseConnection;
 use stubbles\db\DatabaseException;
 use stubbles\db\config\DatabaseConfiguration;
-use stubbles\lang\exception\IllegalArgumentException;
-use stubbles\lang\exception\MethodInvocationException;
 use PDO;
 use PDOException;
 /**
@@ -163,7 +161,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @param   array   $arguments  list of arguments for the method call
      * @return  mixed
      * @throws  \stubbles\db\DatabaseException
-     * @throws  \stubbles\lang\exception\MethodInvocationException
+     * @throws  \BadMethodCallException
      */
     public function __call($method, $arguments)
     {
@@ -172,7 +170,7 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         if (!method_exists($this->pdo, $method)) {
-            throw new MethodInvocationException('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
+            throw new \BadMethodCallException('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
         }
 
         try {
@@ -251,7 +249,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @param   array   $driverOptions  optional  how to fetch the data
      * @return  \stubbles\db\pdo\PdoQueryResult
      * @throws  \stubbles\db\DatabaseException
-     * @throws  \stubbles\lang\exception\IllegalArgumentException
+     * @throws  \InvalidArgumentException
      * @see     http://php.net/pdo-query
      * @see     http://php.net/pdostatement-setfetchmode for the details on the fetch mode options
      */
@@ -266,7 +264,7 @@ class PdoDatabaseConnection implements DatabaseConnection
                 switch ($driverOptions['fetchMode']) {
                     case PDO::FETCH_COLUMN:
                         if (!isset($driverOptions['colNo'])) {
-                            throw new IllegalArgumentException('Fetch mode COLUMN requires driver option colNo.');
+                            throw new \InvalidArgumentException('Fetch mode COLUMN requires driver option colNo.');
                         }
 
                         $pdoStatement = $this->pdo->query($sql, $driverOptions['fetchMode'], $driverOptions['colNo']);
@@ -274,7 +272,7 @@ class PdoDatabaseConnection implements DatabaseConnection
 
                     case PDO::FETCH_INTO:
                         if (!isset($driverOptions['object'])) {
-                            throw new IllegalArgumentException('Fetch mode INTO requires driver option object.');
+                            throw new \InvalidArgumentException('Fetch mode INTO requires driver option object.');
                         }
 
                         $pdoStatement = $this->pdo->query($sql, $driverOptions['fetchMode'], $driverOptions['object']);
@@ -282,7 +280,7 @@ class PdoDatabaseConnection implements DatabaseConnection
 
                     case PDO::FETCH_CLASS:
                         if (!isset($driverOptions['classname'])) {
-                            throw new IllegalArgumentException('Fetch mode CLASS requires driver option classname.');
+                            throw new \InvalidArgumentException('Fetch mode CLASS requires driver option classname.');
                         }
 
                         if (!isset($driverOptions['ctorargs'])) {

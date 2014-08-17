@@ -10,7 +10,6 @@
 namespace stubbles\db\pdo;
 use stubbles\db\DatabaseException;
 use stubbles\db\QueryResult;
-use stubbles\lang\exception\IllegalArgumentException;
 use PDO;
 use PDOException;
 /**
@@ -105,7 +104,7 @@ class PdoQueryResult implements QueryResult
      * @param   array  $driverOptions  optional  driver specific arguments
      * @return  array
      * @throws  \stubbles\db\DatabaseException
-     * @throws  \stubbles\lang\exception\IllegalArgumentException
+     * @throws  \InvalidArgumentException
      * @see     http://php.net/pdostatement-fetchAll
      */
     public function fetchAll($fetchMode = null, array $driverOptions = [])
@@ -123,7 +122,7 @@ class PdoQueryResult implements QueryResult
 
             if (PDO::FETCH_CLASS == $fetchMode) {
                 if (!isset($driverOptions['classname'])) {
-                    throw new IllegalArgumentException('Tried to use PDO::FETCH_CLASS but no classname given in driver options.');
+                    throw new \InvalidArgumentException('Tried to use PDO::FETCH_CLASS but no classname given in driver options.');
                 }
 
                 return $this->pdoStatement->fetchAll(PDO::FETCH_CLASS,
@@ -134,7 +133,7 @@ class PdoQueryResult implements QueryResult
 
             if (PDO::FETCH_FUNC == $fetchMode) {
                 if (!isset($driverOptions['function'])) {
-                    throw new IllegalArgumentException('Tried to use PDO::FETCH_FUNC but no function given in driver options.');
+                    throw new \InvalidArgumentException('Tried to use PDO::FETCH_FUNC but no function given in driver options.');
                 }
 
                 return $this->pdoStatement->fetchAll(PDO::FETCH_FUNC,

@@ -189,7 +189,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  InvalidArgumentException
      * @since  1.3.2
      * @group  bug248
      */
@@ -266,7 +266,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  InvalidArgumentException
      * @since  1.3.2
      * @group  bug248
      */

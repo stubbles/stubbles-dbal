@@ -103,7 +103,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      * assert that a call to an undefined pdo method throws a MethodInvocationException
      *
      * @test
-     * @expectedException  stubbles\lang\exception\MethodInvocationException
+     * @expectedException  BadMethodCallException
      * @expectedExceptionMessage  Call to undefined method stubbles\db\pdo\PdoDatabaseConnection::foo()
      */
     public function undefinedMethod()
@@ -302,7 +302,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeColumnButMissingOptionThrowsIllegalArgumentException()
     {
@@ -325,7 +325,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeIntoButMissingOptionThrowsIllegalArgumentException()
     {
@@ -347,7 +347,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\IllegalArgumentException
+     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeClassButMissingOptionThrowsIllegalArgumentException()
     {
