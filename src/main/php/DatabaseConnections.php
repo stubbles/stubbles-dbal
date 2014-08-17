@@ -7,15 +7,16 @@
  *
  * @package  stubbles\db
  */
-namespace stubbles\db\ioc;
+namespace stubbles\db;
 use stubbles\db\config\DatabaseConfiguration;
 use stubbles\db\config\DatabaseConfigurations;
 use stubbles\db\pdo\PdoDatabaseConnection;
 use stubbles\ioc\InjectionProvider;
+use stubbles\lang\iterator\MappingIterator;
 /**
- * IoC provider for database connections.
+ * List of available database connections.
  */
-class ConnectionProvider implements InjectionProvider
+class DatabaseConnections implements \IteratorAggregate, InjectionProvider
 {
     /**
      * database configuration reader
@@ -39,16 +40,6 @@ class ConnectionProvider implements InjectionProvider
     public function __construct(DatabaseConfigurations $configReader)
     {
         $this->configurations = $configReader;
-    }
-
-    /**
-     * returns list of available connection ids
-     *
-     * @return  string[]
-     */
-    public function availableConnections()
-    {
-        return $this->configurations->configIds();
     }
 
     /**
@@ -76,5 +67,21 @@ class ConnectionProvider implements InjectionProvider
 
         $this->connections[$name] = new PdoDatabaseConnection($this->configurations->get($name));
         return $this->connections[$name];
+    }
+
+    /**
+     * returns an external iterator
+     *
+     * @return  \Traversable
+     */
+    public function getIterator()
+    {
+        return new MappingIterator(
+                $this->configurations,
+                function($value, $key)
+                {
+                    return $this->get($key);
+                }
+        );
     }
 }

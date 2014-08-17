@@ -9,6 +9,7 @@
  */
 namespace stubbles\db\ioc;
 use stubbles\db\Database;
+use stubbles\db\DatabaseConnections;
 use stubbles\ioc\InjectionProvider;
 /**
  * IoC provider for database instances.
@@ -27,10 +28,10 @@ class DatabaseProvider implements InjectionProvider
     /**
      * constructor
      *
-     * @param  \stubbles\db\ioc\ConnectionProvider  $connectionProvider
+     * @param  \stubbles\db\ioc\DatabaseConnections  $connectionProvider
      * @Inject
      */
-    public function __construct(ConnectionProvider $connectionProvider)
+    public function __construct(DatabaseConnections $connectionProvider)
     {
         $this->connectionProvider = $connectionProvider;
     }

@@ -11,7 +11,7 @@ namespace stubbles\db;
 /**
  * Interface for database connections.
  *
- * @ProvidedBy(stubbles\db\ioc\ConnectionProvider.class)
+ * @ProvidedBy(stubbles\db\DatabaseConnections.class)
  */
 interface DatabaseConnection
 {

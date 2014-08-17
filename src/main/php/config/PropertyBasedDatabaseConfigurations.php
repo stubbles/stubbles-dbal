@@ -10,16 +10,14 @@
 namespace stubbles\db\config;
 use stubbles\lang\Properties;
 use stubbles\lang\exception\ConfigurationException;
-use stubbles\lang\iterator\PropertyBasedIterator;
+use stubbles\lang\iterator\MappingIterator;
 /**
  * Represents a list of available database configurations, configured in a property file.
  *
  * @Singleton
  */
-class PropertyBasedDatabaseConfigurations implements \Iterator, DatabaseConfigurations
+class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseConfigurations
 {
-    use PropertyBasedIterator;
-
     /**
      * path to config files
      *
@@ -153,12 +151,18 @@ class PropertyBasedDatabaseConfigurations implements \Iterator, DatabaseConfigur
     }
 
     /**
-     * returns current entry in iteration
+     * returns an external iterator
      *
-     * @return  \stubbles\db\config\DatabaseConfiguration
+     * @return  \Traversable
      */
-    public function current()
+    public function getIterator()
     {
-        return $this->get($this->properties()->key());
+        return new MappingIterator(
+                $this->properties(),
+                function($value, $key)
+                {
+                    return $this->get($key);
+                }
+        );
     }
 }

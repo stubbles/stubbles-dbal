@@ -4,6 +4,8 @@
 ### BC breaks
 
   * replaced `stubbles\db\config\DatabaseConfigReader` with `stubbles\db\config\DatabaseConfigurations`
+  * replaced `stubbles\db\ioc\ConnectionProvider` with `stubbles\db\\DatabaseConnections`
+  * removed `stubbles\db\ioc\DatabaseBindingModule`, did not provide any additional value
 
 ### Other changes
 
