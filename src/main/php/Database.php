@@ -12,7 +12,7 @@ namespace stubbles\db;
  * Convenience access to database data to prevent fiddling with query results.
  *
  * @since  2.1.0
- * @ProvidedBy(stubbles\db\ioc\DatabaseProvider.class)
+ * @ProvidedBy(stubbles\db\Databases.class)
  */
 class Database
 {
@@ -31,6 +31,17 @@ class Database
     public function __construct(DatabaseConnection $dbConnection)
     {
         $this->dbConnection = $dbConnection;
+    }
+
+    /**
+     * returns dsn of database connection
+     *
+     * @return  string
+     * @since   4.0.0
+     */
+    public function dsn()
+    {
+        return $this->dbConnection->dsn();
     }
 
     /**

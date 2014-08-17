@@ -7,37 +7,36 @@
  *
  * @package  stubbles\db
  */
-namespace stubbles\db\ioc;
-use stubbles\db\Database;
-use stubbles\db\DatabaseConnections;
+namespace stubbles\db;
 use stubbles\ioc\InjectionProvider;
+use stubbles\lang\iterator\MappingIterator;
 /**
  * IoC provider for database instances.
  *
  * @since  2.1.0
  */
-class DatabaseProvider implements InjectionProvider
+class Databases implements \IteratorAggregate, InjectionProvider
 {
     /**
      * actual connection provider
      *
-     * @type  \stubbles\db\ioc\ConnectionProvider
+     * @type  \stubbles\db\DatabaseConnections
      */
-    private $connectionProvider;
+    private $connections;
 
     /**
      * constructor
      *
-     * @param  \stubbles\db\ioc\DatabaseConnections  $connectionProvider
+     * @param  \stubbles\db\DatabaseConnections  $connectionProvider
      * @Inject
      */
-    public function __construct(DatabaseConnections $connectionProvider)
+    public function __construct(DatabaseConnections $connections)
     {
-        $this->connectionProvider = $connectionProvider;
+        $this->connections = $connections;
     }
 
     /**
-     * returns the database to be injected
+     * returns the database
      *
      * If a name is provided and a connection with this name exists this
      * connection will be used. If fallback is enabled and the named
@@ -51,6 +50,22 @@ class DatabaseProvider implements InjectionProvider
      */
     public function get($name = null)
     {
-        return new Database($this->connectionProvider->get($name));
+        return new Database($this->connections->get($name));
+    }
+
+    /**
+     * returns an external iterator
+     *
+     * @return  \Traversable
+     */
+    public function getIterator()
+    {
+        return new MappingIterator(
+                $this->connections,
+                function($value, $key)
+                {
+                    return $this->get($key);
+                }
+        );
     }
 }

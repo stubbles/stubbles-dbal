@@ -43,7 +43,7 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
     }
 
     /**
-     * returns the connection to be injected
+     * returns the connection
      *
      * If a name is provided and a connection with this name exists this
      * connection will be returned. If fallback is enabled and the named

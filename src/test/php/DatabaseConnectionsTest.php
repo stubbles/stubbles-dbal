@@ -15,7 +15,6 @@ use stubbles\lang;
  * Test for stubbles\db\DatabaseConnections.
  *
  * @group  db
- * @group  ioc
  */
 class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,23 +24,19 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      * @type  \stubbles\db\DatabaseConnections
      */
     private $databaseConnections;
-    /**
-     *
-     * @type  \stubbles\db\config\ArrayBasedDatabaseConfigurations
-     */
-    private $databaseConfigurations;
 
     /**
      * set up test environment
      */
     public function setUp()
     {
-        $this->databaseConfigurations = new ArrayBasedDatabaseConfigurations(
-                                            ['foo'                             => new DatabaseConfiguration('foo', 'dsn:bar'),
-                                             DatabaseConfiguration::DEFAULT_ID => new DatabaseConfiguration('default', 'dsn:baz')
-                                            ]
+        $this->databaseConnections = new DatabaseConnections(
+                new ArrayBasedDatabaseConfigurations(
+                        ['foo'                             => new DatabaseConfiguration('foo', 'dsn:bar'),
+                         DatabaseConfiguration::DEFAULT_ID => new DatabaseConfiguration('default', 'dsn:baz')
+                        ]
+                )
         );
-        $this->databaseConnections    = new DatabaseConnections($this->databaseConfigurations);
     }
 
     /**
