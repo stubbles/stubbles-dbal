@@ -35,9 +35,20 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function setUp()
     {
+        $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder());
+    }
+
+    /**
+     * creates config folder and returns its url
+     *
+     * @param   string  name of config file
+     * @return  string
+     */
+    private function createConfigFolder($filename = 'rdbms.ini')
+    {
         $root = vfsStream::setup();
-        $this->configFile = vfsStream::newFile('rdbms.ini')->at($root);
-        $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($root->url());
+        $this->configFile = vfsStream::newFile($filename)->at($root);
+        return $root->url();
     }
 
     /**
@@ -55,43 +66,24 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnConstructor()
     {
-        $class       = lang\reflect($this->propertyBasedConfigurations);
-        $constructor = $class->getConstructor();
+        $constructor = lang\reflectConstructor($this->propertyBasedConfigurations);
         $this->assertTrue($constructor->hasAnnotation('Inject'));
-        $this->assertTrue($constructor->hasAnnotation('Named'));
+
+        $parameters = $constructor->getParameters();
+        $this->assertTrue($parameters[0]->hasAnnotation('Named'));
         $this->assertEquals(
                 'stubbles.config.path',
-                $constructor->annotation('Named')->getName()
+                $parameters[0]->annotation('Named')->getName()
         );
-    }
-
-    /**
-     * @test
-     */
-    public function annotationsPresentOnSetDescriptorMethod()
-    {
-        $setDescriptorMethod = lang\reflect($this->propertyBasedConfigurations)->getMethod('setDescriptor');
-        $this->assertTrue($setDescriptorMethod->hasAnnotation('Inject'));
-        $this->assertTrue($setDescriptorMethod->annotation('Inject')->isOptional());
-        $this->assertTrue($setDescriptorMethod->hasAnnotation('Named'));
+        $this->assertTrue($parameters[1]->hasAnnotation('Named'));
         $this->assertEquals(
                 'stubbles.db.descriptor',
-                $setDescriptorMethod->annotation('Named')->getName()
+                $parameters[1]->annotation('Named')->getName()
         );
-    }
-
-    /**
-     * @test
-     */
-    public function annotationsPresentOnSetFallbackMethod()
-    {
-        $setFallbackMethod = lang\reflect($this->propertyBasedConfigurations)->getMethod('setFallback');
-        $this->assertTrue($setFallbackMethod->hasAnnotation('Inject'));
-        $this->assertTrue($setFallbackMethod->annotation('Inject')->isOptional());
-        $this->assertTrue($setFallbackMethod->hasAnnotation('Named'));
+        $this->assertTrue($parameters[2]->hasAnnotation('Named'));
         $this->assertEquals(
                 'stubbles.db.fallback',
-                $setFallbackMethod->annotation('Named')->getName()
+                $parameters[2]->annotation('Named')->getName()
         );
     }
 
@@ -142,10 +134,11 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function doesNotContainConfigWhenNotPresentInFileAndFallbackDisabled()
     {
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder() ,'rdbms', false);
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
         $this->assertFalse(
-                $this->propertyBasedConfigurations->setFallback(false)->contain('foo')
+                $propertyBasedConfigurations->contain('foo')
         );
     }
 
@@ -206,9 +199,10 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled()
     {
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder() ,'rdbms', false);
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->propertyBasedConfigurations->setFallback(false)->get('foo');
+        $propertyBasedConfigurations->get('foo');
     }
 
     /**
@@ -216,18 +210,12 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function usesDifferentFileWhenDescriptorChanged()
     {
-        $root = vfsStream::setup();
-        vfsStream::newFile('rdbms-test.ini')
-                 ->withContent('[foo]
-dsn="mysql:host=localhost;dbname=example"')
-                 ->at($root);
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder('rdbms-test.ini') , 'rdbms-test');
         $this->configFile->setContent('[foo]
-dsn="mysql:host=prod.example.com;dbname=example"')
-                         ->at($root);
+dsn="mysql:host=localhost;dbname=example"');
         $this->assertEquals('mysql:host=localhost;dbname=example',
-                            $this->propertyBasedConfigurations->setDescriptor('rdbms-test')
-                                                            ->get('foo')
-                                                            ->getDsn()
+                            $propertyBasedConfigurations->get('foo')
+                                                        ->getDsn()
         );
     }
 

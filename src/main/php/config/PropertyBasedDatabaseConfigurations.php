@@ -29,13 +29,13 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @type  string
      */
-    private $descriptor   = 'rdbms';
+    private $descriptor;
     /**
      * switch whether to fallback to default connection if no named connection exists
      *
      * @type  bool
      */
-    private $fallback     = true;
+    private $fallback;
     /**
      * properties for database connections
      *
@@ -48,39 +48,15 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @param  string  $configPath
      * @Inject
-     * @Named('stubbles.config.path')
+     * @Named{configPath}('stubbles.config.path')
+     * @Named{descriptor}('stubbles.db.descriptor')
+     * @Named{fallback}('stubbles.db.fallback')
      */
-    public function  __construct($configPath)
+    public function  __construct($configPath, $descriptor = 'rdbms', $fallback = true)
     {
         $this->configPath = $configPath;
-    }
-
-    /**
-     * sets the descriptor to be used
-     *
-     * @param   string  $descriptor
-     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigurations
-     * @Inject(optional=true)
-     * @Named('stubbles.db.descriptor')
-     */
-    public function setDescriptor($descriptor)
-    {
         $this->descriptor = $descriptor;
-        return $this;
-    }
-
-    /**
-     * whether to fallback to default database if requested database id does not exist
-     *
-     * @param   bool  $fallback
-     * @return  \stubbles\db\config\PropertyBasedDatabaseConfigurations
-     * @Inject(optional=true)
-     * @Named('stubbles.db.fallback')
-     */
-    public function setFallback($fallback)
-    {
-        $this->fallback = $fallback;
-        return $this;
+        $this->fallback   = $fallback;
     }
 
     /**
