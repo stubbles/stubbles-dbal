@@ -10,7 +10,7 @@
 namespace stubbles\db;
 use stubbles\db\config\ArrayBasedDatabaseConfigurations;
 use stubbles\db\config\DatabaseConfiguration;
-use stubbles\lang;
+use stubbles\lang\reflect;
 /**
  * Test for stubbles\db\Databases.
  *
@@ -44,12 +44,12 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function isProviderForDatabases()
+    public function isProviderForDatabase()
     {
         $this->assertEquals(
                 get_class($this->databases),
-                lang\reflect('stubbles\db\Database')
-                    ->annotation('ProvidedBy')
+                reflect\annotationsOf('stubbles\db\Database')
+                    ->firstNamed('ProvidedBy')
                     ->__value()
                     ->getName()
         );

@@ -9,7 +9,7 @@
  */
 namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
-use stubbles\lang;
+use stubbles\lang\reflect;
 /**
  * Test for stubbles\db\config\PropertyBasedDatabaseConfigurations.
  *
@@ -35,7 +35,9 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function setUp()
     {
-        $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder());
+        $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
+                $this->createConfigFolder()
+        );
     }
 
     /**
@@ -57,7 +59,8 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     public function annotationsPresentOnClass()
     {
         $this->assertTrue(
-                lang\reflect($this->propertyBasedConfigurations)->hasAnnotation('Singleton')
+                reflect\annotationsOf($this->propertyBasedConfigurations)
+                        ->contain('Singleton')
         );
     }
 
@@ -66,24 +69,39 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnConstructor()
     {
-        $constructor = lang\reflectConstructor($this->propertyBasedConfigurations);
-        $this->assertTrue($constructor->hasAnnotation('Inject'));
+        $this->assertTrue(
+                reflect\constructorAnnotationsOf($this->propertyBasedConfigurations)
+                        ->contain('Inject')
+        );
 
-        $parameters = $constructor->getParameters();
-        $this->assertTrue($parameters[0]->hasAnnotation('Named'));
+        $configPathParamAnnotations = reflect\annotationsOfConstructorParameter(
+                'configPath',
+                $this->propertyBasedConfigurations
+        );
+        $this->assertTrue($configPathParamAnnotations->contain('Named'));
         $this->assertEquals(
                 'stubbles.config.path',
-                $parameters[0]->annotation('Named')->getName()
+                $configPathParamAnnotations->firstNamed('Named')->getName()
         );
-        $this->assertTrue($parameters[1]->hasAnnotation('Named'));
+
+        $descriptorParamAnnotations = reflect\annotationsOfConstructorParameter(
+                'descriptor',
+                $this->propertyBasedConfigurations
+        );
+        $this->assertTrue($descriptorParamAnnotations->contain('Named'));
         $this->assertEquals(
                 'stubbles.db.descriptor',
-                $parameters[1]->annotation('Named')->getName()
+                $descriptorParamAnnotations->firstNamed('Named')->getName()
         );
-        $this->assertTrue($parameters[2]->hasAnnotation('Named'));
+
+        $fallbackParamAnnotations = reflect\annotationsOfConstructorParameter(
+                'fallback',
+                $this->propertyBasedConfigurations
+        );
+        $this->assertTrue($fallbackParamAnnotations->contain('Named'));
         $this->assertEquals(
                 'stubbles.db.fallback',
-                $parameters[2]->annotation('Named')->getName()
+                $fallbackParamAnnotations->firstNamed('Named')->getName()
         );
     }
 
@@ -92,10 +110,10 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        $refClass = lang\reflect('stubbles\db\config\DatabaseConfigurations');
         $this->assertEquals(
                 get_class($this->propertyBasedConfigurations),
-                $refClass->annotation('ImplementedBy')->__value()->getName()
+                reflect\annotationsOf('stubbles\db\config\DatabaseConfigurations')
+                        ->firstNamed('ImplementedBy')->__value()->getName()
         );
     }
 
