@@ -70,7 +70,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     public function annotationsPresentOnConstructor()
     {
         $this->assertTrue(
-                reflect\constructorAnnotationsOf($this->propertyBasedConfigurations)
+                reflect\annotationsOfConstructor($this->propertyBasedConfigurations)
                         ->contain('Inject')
         );
 
