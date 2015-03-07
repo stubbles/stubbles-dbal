@@ -1,3 +1,12 @@
+5.0.0 (2015-??-??)
+------------------
+
+### BC breaks
+
+  * deprecated `stubbles\db\Datebase::map()`, use `stubbles\db\Datebase::fetchAll()->map()->values()` instead, will be removed with 6.0.0
+  * `stubbles\db\Datebase::fetchAll()` and `stubbles\db\Datebase::fetchColumn()` now return an instance of `stubbles\lang\Sequence` instead of an array
+
+
 4.1.0 (2014-09-29)
 ------------------
 
