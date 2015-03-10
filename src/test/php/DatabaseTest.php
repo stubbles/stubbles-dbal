@@ -163,7 +163,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 [':col' => 'yes']
         );
         $mockQueryResult->expects($this->exactly(3))
-                        ->method('fetch')
+                        ->method('fetchOne')
                         ->will($this->onConsecutiveCalls('bar', 'baz', false));
         $this->assertEquals(
                 ['bar', 'baz'],

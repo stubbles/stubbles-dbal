@@ -87,11 +87,17 @@ class QueryResultIterator implements \Iterator
      */
     public function next()
     {
-        $this->current = $this->queryResult->fetch(
-                $this->fetchMode,
-                $this->driverOptions
-        );
         $this->key++;
+        if (\PDO::FETCH_COLUMN !== $this->fetchMode) {
+            $this->current = $this->queryResult->fetch(
+                    $this->fetchMode,
+                    $this->driverOptions
+            );
+        } else {
+            $this->current = $this->queryResult->fetchOne(
+                    $this->driverOptions['columnIndex']
+            );
+        }
     }
 
     /**
