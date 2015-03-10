@@ -72,7 +72,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->mockPdoStatement->expects($this->at(0))
                                ->method('fetch')
-                               ->with($this->equalTo(\PDO::FETCH_BOTH), $this->equalTo(null), $this->equalTo(null))
+                               ->with($this->equalTo(\PDO::FETCH_ASSOC), $this->equalTo(null), $this->equalTo(null))
                                ->will($this->returnValue(true));
         $this->mockPdoStatement->expects($this->at(1))
                                ->method('fetch')

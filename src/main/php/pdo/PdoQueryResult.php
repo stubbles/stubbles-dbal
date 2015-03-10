@@ -67,14 +67,15 @@ class PdoQueryResult implements QueryResult
     public function fetch($fetchMode = null, array $driverOptions = [])
     {
         if (null === $fetchMode) {
-            $fetchMode = PDO::FETCH_BOTH;
+            $fetchMode = PDO::FETCH_ASSOC;
         }
 
         try {
-            return $this->pdoStatement->fetch($fetchMode,
-                                              ((!isset($driverOptions['cursorOrientation'])) ? (null) : ($driverOptions['cursorOrientation'])),
-                                              ((!isset($driverOptions['cursorOffset'])) ? (null) : ($driverOptions['cursorOffset']))
-                   );
+            return $this->pdoStatement->fetch(
+                    $fetchMode,
+                    ((!isset($driverOptions['cursorOrientation'])) ? (null) : ($driverOptions['cursorOrientation'])),
+                    ((!isset($driverOptions['cursorOffset'])) ? (null) : ($driverOptions['cursorOffset']))
+            );
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
@@ -115,9 +116,10 @@ class PdoQueryResult implements QueryResult
             }
 
             if (PDO::FETCH_COLUMN == $fetchMode) {
-                return $this->pdoStatement->fetchAll(PDO::FETCH_COLUMN,
-                                                     (!(isset($driverOptions['columnIndex'])) ? (0) : ($driverOptions['columnIndex']))
-                       );
+                return $this->pdoStatement->fetchAll(
+                        PDO::FETCH_COLUMN,
+                        (!(isset($driverOptions['columnIndex'])) ? (0) : ($driverOptions['columnIndex']))
+                );
             }
 
             if (PDO::FETCH_CLASS == $fetchMode) {
@@ -125,10 +127,11 @@ class PdoQueryResult implements QueryResult
                     throw new \InvalidArgumentException('Tried to use PDO::FETCH_CLASS but no classname given in driver options.');
                 }
 
-                return $this->pdoStatement->fetchAll(PDO::FETCH_CLASS,
-                                                     $driverOptions['classname'],
-                                                     (!(isset($driverOptions['arguments'])) ? (null) : ($driverOptions['arguments']))
-                       );
+                return $this->pdoStatement->fetchAll(
+                        PDO::FETCH_CLASS,
+                        $driverOptions['classname'],
+                        (!(isset($driverOptions['arguments'])) ? (null) : ($driverOptions['arguments']))
+                );
             }
 
             if (PDO::FETCH_FUNC == $fetchMode) {
@@ -136,9 +139,10 @@ class PdoQueryResult implements QueryResult
                     throw new \InvalidArgumentException('Tried to use PDO::FETCH_FUNC but no function given in driver options.');
                 }
 
-                return $this->pdoStatement->fetchAll(PDO::FETCH_FUNC,
-                                                     $driverOptions['function']
-                       );
+                return $this->pdoStatement->fetchAll(
+                        PDO::FETCH_FUNC,
+                        $driverOptions['function']
+                );
             }
 
             return $this->pdoStatement->fetchAll($fetchMode);
