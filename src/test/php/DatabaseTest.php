@@ -48,14 +48,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $mockStatement = $this->getMock('stubbles\db\Statement');
         $mockQueryResult = $this->getMock('stubbles\db\QueryResult');
-        $this->mockDbConnection->expects($this->once())
-                               ->method('prepare')
-                               ->with($sql)
-                               ->will($this->returnValue($mockStatement));
-        $mockStatement->expects($this->once())
-                      ->method('execute')
-                      ->with($this->equalTo($values))
-                      ->will($this->returnValue($mockQueryResult));
+        $this->mockDbConnection->method('prepare')
+                ->with($sql)
+                ->will($this->returnValue($mockStatement));
+        $mockStatement->method('execute')
+                ->with($this->equalTo($values))
+                ->will($this->returnValue($mockQueryResult));
         return $mockQueryResult;
     }
 
@@ -69,10 +67,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'INSERT INTO baz VALUES (:col)',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->once())
-                        ->method('count')
-                        ->will($this->returnValue(1));
-        $this->assertEquals(
+        $mockQueryResult->method('count')->will(returnValue(1));
+        assertEquals(
                 1,
                 $this->database->query(
                         'INSERT INTO baz VALUES (:col)',
@@ -91,11 +87,10 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'SELECT foo FROM baz WHERE col = :col',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->once())
-                        ->method('fetchOne')
-                        ->with($this->equalTo(0))
-                        ->will($this->returnValue('bar'));
-        $this->assertEquals(
+        $mockQueryResult->method('fetchOne')
+                ->with(equalTo(0))
+                ->will(returnValue('bar'));
+        assertEquals(
                 'bar',
                 $this->database->fetchOne(
                         'SELECT foo FROM baz WHERE col = :col',
@@ -113,14 +108,13 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'SELECT foo, blubb FROM baz WHERE col = :col',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->exactly(3))
-                        ->method('fetch')
-                        ->will($this->onConsecutiveCalls(
-                                ['foo' => 'bar', 'blubb' => '303'],
-                                ['foo' => 'baz', 'blubb' => '909'],
-                                false
-                        ));
-        $this->assertEquals(
+        $mockQueryResult->method('fetch')
+                ->will(onConsecutiveCalls(
+                        ['foo' => 'bar', 'blubb' => '303'],
+                        ['foo' => 'baz', 'blubb' => '909'],
+                        false
+                ));
+        assertEquals(
                 [['foo' => 'bar', 'blubb' => '303'],
                  ['foo' => 'baz', 'blubb' => '909']
                 ],
@@ -141,10 +135,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'SELECT foo, blubb FROM baz WHERE col = :col',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->once())
-                        ->method('fetch')
-                        ->will($this->returnValue(['foo' => 'bar']));
-        $this->assertEquals(
+        $mockQueryResult->method('fetch')->will(returnValue(['foo' => 'bar']));
+        assertEquals(
                 ['foo' => 'bar'],
                 $this->database->fetchRow(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
@@ -162,10 +154,9 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'SELECT foo FROM baz WHERE col = :col',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->exactly(3))
-                        ->method('fetchOne')
-                        ->will($this->onConsecutiveCalls('bar', 'baz', false));
-        $this->assertEquals(
+        $mockQueryResult->method('fetchOne')
+                ->will(onConsecutiveCalls('bar', 'baz', false));
+        assertEquals(
                 ['bar', 'baz'],
                 $this->database->fetchColumn(
                         'SELECT foo FROM baz WHERE col = :col',
@@ -183,30 +174,29 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 'SELECT foo FROM baz WHERE col = :col',
                 [':col' => 'yes']
         );
-        $mockQueryResult->expects($this->exactly(3))
-                        ->method('fetch')
-                        ->will($this->onConsecutiveCalls(
-                                ['foo' => 'bar'],
-                                ['foo' => 'blubb'],
-                                false
-                        ));
+        $mockQueryResult->method('fetch')
+                ->will($this->onConsecutiveCalls(
+                        ['foo' => 'bar'],
+                        ['foo' => 'blubb'],
+                        false
+                ));
         $i = 0;
         $f = function($row) use (&$i)
         {
             $i++;
             if (1 === $i) {
-                $this->assertEquals(['foo' => 'bar'], $row);
+                assertEquals(['foo' => 'bar'], $row);
                 return 303;
             }
 
             if (2 === $i) {
-                $this->assertEquals(['foo' => 'blubb'], $row);
+                assertEquals(['foo' => 'blubb'], $row);
                 return 313;
             }
 
             $this->fail('Unexpected call for row ' . var_export($row));
         };
-        $this->assertEquals(
+        assertEquals(
                 [303, 313],
                 $this->database->map(
                         'SELECT foo FROM baz WHERE col = :col',

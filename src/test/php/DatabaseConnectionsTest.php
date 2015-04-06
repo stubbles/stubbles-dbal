@@ -44,7 +44,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function isProviderForDatabaseConnection()
     {
-        $this->assertEquals(
+        assertEquals(
                 get_class($this->databaseConnections),
                 reflect\annotationsOf('stubbles\db\DatabaseConnection')
                     ->firstNamed('ProvidedBy')
@@ -58,7 +58,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsConnectionForRequestedDatabase()
     {
-        $this->assertEquals('dsn:bar', $this->databaseConnections->get('foo')->dsn());
+        assertEquals('dsn:bar', $this->databaseConnections->get('foo')->dsn());
     }
 
     /**
@@ -66,7 +66,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function usesDefaultConnectionWhenNoNameGiven()
     {
-        $this->assertEquals('dsn:baz', $this->databaseConnections->get()->dsn());
+        assertEquals('dsn:baz', $this->databaseConnections->get()->dsn());
     }
 
     /**
@@ -74,7 +74,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsSameInstanceWhenSameNameIsRequestedTwice()
     {
-        $this->assertSame(
+        assertSame(
                 $this->databaseConnections->get('foo'),
                 $this->databaseConnections->get('foo')
         );
@@ -91,6 +91,6 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
             $result[] = $connection->dsn();
         }
 
-        $this->assertEquals(['dsn:bar', 'dsn:baz'], $result);
+        assertEquals(['dsn:bar', 'dsn:baz'], $result);
     }
 }

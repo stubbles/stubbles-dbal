@@ -45,10 +45,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function bindParamPassesValuesCorrectly()
     {
         $bar = 1;
-        $this->mockPdoStatement->expects($this->exactly(2))
-                               ->method('bindParam')
-                               ->with($this->equalTo('foo'), $this->equalTo($bar), $this->equalTo(\PDO::PARAM_INT))
-                               ->will($this->onConsecutiveCalls(true, false));
+        $this->mockPdoStatement->method('bindParam')
+                ->with(equalTo('foo'), equalTo($bar), equalTo(\PDO::PARAM_INT))
+                ->will(onConsecutiveCalls(true, false));
         $this->assertTrue($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
         $this->assertFalse($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
     }
@@ -60,9 +59,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function failingBindParamThrowsDatabaseException()
     {
         $bar = 1;
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('bindParam')
-                               ->will($this->throwException(new \PDOException('error')));
+        $this->mockPdoStatement->method('bindParam')
+                ->will(throwException(new \PDOException('error')));
         $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
     }
 
@@ -71,10 +69,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function bindValuePassesValuesCorrectly()
     {
-        $this->mockPdoStatement->expects($this->exactly(2))
-                               ->method('bindValue')
-                               ->with($this->equalTo('foo'), $this->equalTo(1), $this->equalTo(\PDO::PARAM_INT))
-                               ->will($this->onConsecutiveCalls(true, false));
+        $this->mockPdoStatement->method('bindValue')
+                ->with(equalTo('foo'), equalTo(1), equalTo(\PDO::PARAM_INT))
+                ->will(onConsecutiveCalls(true, false));
         $this->assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
         $this->assertFalse($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
     }
@@ -85,9 +82,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingBindValueThrowsDatabaseException()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('bindValue')
-                               ->will($this->throwException(new \PDOException('error')));
+        $this->mockPdoStatement->method('bindValue')
+                ->will(throwException(new \PDOException('error')));
         $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
     }
 
@@ -96,10 +92,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function executeReturnsPdoQueryResult()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('execute')
-                               ->with($this->equalTo([]))
-                               ->will($this->returnValue(true));
+        $this->mockPdoStatement->method('execute')
+                ->with(equalTo([]))
+                ->will(returnValue(true));
         $result = $this->pdoStatement->execute([]);
         $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $result);
     }
@@ -110,10 +105,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function wrongExecuteThrowsDatabaseException()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('execute')
-                               ->with($this->equalTo([]))
-                               ->will($this->returnValue(false));
+        $this->mockPdoStatement->method('execute')
+                ->with(equalTo([]))
+                ->will(returnValue(false));
         $this->pdoStatement->execute([]);
     }
 
@@ -123,10 +117,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingExecuteThrowsDatabaseException()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('execute')
-                               ->with($this->equalTo([]))
-                               ->will($this->throwException(new \PDOException('error')));
+        $this->mockPdoStatement->method('execute')
+                ->with(equalTo([]))
+                ->will(throwException(new \PDOException('error')));
         $this->pdoStatement->execute();
     }
 
@@ -135,9 +128,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function cleanClosesResultCursor()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('closeCursor')
-                               ->will($this->returnValue(true));
+        $this->mockPdoStatement->method('closeCursor')->will(returnValue(true));
         $this->assertTrue($this->pdoStatement->clean());
     }
 
@@ -147,9 +138,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingCleanThrowsDatabaseException()
     {
-        $this->mockPdoStatement->expects($this->once())
-                               ->method('closeCursor')
-                               ->will($this->throwException(new \PDOException('error')));
+        $this->mockPdoStatement->method('closeCursor')
+                ->will(throwException(new \PDOException('error')));
         $this->pdoStatement->clean();
     }
 }

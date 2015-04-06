@@ -58,7 +58,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnClass()
     {
-        $this->assertTrue(
+        assertTrue(
                 reflect\annotationsOf($this->propertyBasedConfigurations)
                         ->contain('Singleton')
         );
@@ -69,7 +69,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnConstructor()
     {
-        $this->assertTrue(
+        assertTrue(
                 reflect\annotationsOfConstructor($this->propertyBasedConfigurations)
                         ->contain('Inject')
         );
@@ -78,8 +78,8 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
                 'configPath',
                 $this->propertyBasedConfigurations
         );
-        $this->assertTrue($configPathParamAnnotations->contain('Named'));
-        $this->assertEquals(
+        assertTrue($configPathParamAnnotations->contain('Named'));
+        assertEquals(
                 'stubbles.config.path',
                 $configPathParamAnnotations->firstNamed('Named')->getName()
         );
@@ -88,8 +88,8 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
                 'descriptor',
                 $this->propertyBasedConfigurations
         );
-        $this->assertTrue($descriptorParamAnnotations->contain('Named'));
-        $this->assertEquals(
+        assertTrue($descriptorParamAnnotations->contain('Named'));
+        assertEquals(
                 'stubbles.db.descriptor',
                 $descriptorParamAnnotations->firstNamed('Named')->getName()
         );
@@ -98,8 +98,8 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
                 'fallback',
                 $this->propertyBasedConfigurations
         );
-        $this->assertTrue($fallbackParamAnnotations->contain('Named'));
-        $this->assertEquals(
+        assertTrue($fallbackParamAnnotations->contain('Named'));
+        assertEquals(
                 'stubbles.db.fallback',
                 $fallbackParamAnnotations->firstNamed('Named')->getName()
         );
@@ -110,7 +110,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        $this->assertEquals(
+        assertEquals(
                 get_class($this->propertyBasedConfigurations),
                 reflect\annotationsOf('stubbles\db\config\DatabaseConfigurations')
                         ->firstNamed('ImplementedBy')->__value()->getName()
@@ -124,7 +124,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertTrue($this->propertyBasedConfigurations->contain('foo'));
+        assertTrue($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
@@ -134,7 +134,7 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertTrue($this->propertyBasedConfigurations->contain('foo'));
+        assertTrue($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
@@ -144,7 +144,7 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertFalse($this->propertyBasedConfigurations->contain('foo'));
+        assertFalse($this->propertyBasedConfigurations->contain('foo'));
     }
 
     /**
@@ -152,10 +152,14 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function doesNotContainConfigWhenNotPresentInFileAndFallbackDisabled()
     {
-        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder() ,'rdbms', false);
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
+                $this->createConfigFolder() ,
+                'rdbms',
+                false
+        );
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertFalse(
+        assertFalse(
                 $propertyBasedConfigurations->contain('foo')
         );
     }
@@ -179,7 +183,7 @@ username="root"');
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertEquals(
+        assertEquals(
                 'foo',
                 $this->propertyBasedConfigurations->get('foo')->getId()
         );
@@ -192,7 +196,7 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertEquals(
+        assertEquals(
                 'default',
                 $this->propertyBasedConfigurations->get('foo')->getId()
         );
@@ -217,7 +221,11 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled()
     {
-        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder() ,'rdbms', false);
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
+                $this->createConfigFolder() ,
+                'rdbms',
+                false
+        );
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
         $propertyBasedConfigurations->get('foo');
@@ -228,10 +236,13 @@ dsn="mysql:host=localhost;dbname=example"');
      */
     public function usesDifferentFileWhenDescriptorChanged()
     {
-        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations($this->createConfigFolder('rdbms-test.ini') , 'rdbms-test');
+        $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
+                $this->createConfigFolder('rdbms-test.ini'),
+                'rdbms-test'
+        );
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->assertEquals('mysql:host=localhost;dbname=example',
+        assertEquals('mysql:host=localhost;dbname=example',
                             $propertyBasedConfigurations->get('foo')
                                                         ->getDsn()
         );
@@ -253,6 +264,6 @@ dsn="mysql:host=example.com;dbname=other"');
             $result[] = $configuration->getId();
         }
 
-        $this->assertEquals(['default', 'other'], $result);
+        assertEquals(['default', 'other'], $result);
     }
 }

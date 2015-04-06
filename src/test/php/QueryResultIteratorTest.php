@@ -35,14 +35,14 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $i = 0;
         foreach ($results as $result) {
-            $this->mockQueryResult->expects($this->at($i))
-                                  ->method('fetch')
-                                  ->will($this->returnValue($result));
+            $this->mockQueryResult->expects(at($i))
+                    ->method('fetch')
+                    ->will(returnValue($result));
             $i++;
         }
-        $this->mockQueryResult->expects($this->at($i))
-                              ->method('fetch')
-                              ->will($this->returnValue(false));
+        $this->mockQueryResult->expects(at($i))
+                ->method('fetch')
+                ->will(onConsecutiveCalls(false));
         $queryResultIterator = new QueryResultIterator(
                 $this->mockQueryResult,
                 \PDO::FETCH_ASSOC,
@@ -61,7 +61,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
             $rounds++;
         }
 
-        $this->assertEquals(0, $rounds);
+        assertEquals(0, $rounds);
     }
 
     /**
@@ -72,11 +72,11 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
         $results = [['foo'], ['bar']];
         $rounds = 0;
         foreach ($this->createIterator($results) as $key => $result) {
-            $this->assertEquals($results[$key], $result);
+            assertEquals($results[$key], $result);
             $rounds++;
         }
 
-        $this->assertEquals(2, $rounds);
+        assertEquals(2, $rounds);
     }
 
     /**

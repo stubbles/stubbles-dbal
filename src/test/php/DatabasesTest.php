@@ -46,7 +46,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function isProviderForDatabase()
     {
-        $this->assertEquals(
+        assertEquals(
                 get_class($this->databases),
                 reflect\annotationsOf('stubbles\db\Database')
                     ->firstNamed('ProvidedBy')
@@ -60,7 +60,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsRequestedDatabase()
     {
-        $this->assertEquals('dsn:bar', $this->databases->get('foo')->dsn());
+        assertEquals('dsn:bar', $this->databases->get('foo')->dsn());
     }
 
     /**
@@ -68,7 +68,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function usesDefaultWhenNoNameGiven()
     {
-        $this->assertEquals('dsn:baz', $this->databases->get()->dsn());
+        assertEquals('dsn:baz', $this->databases->get()->dsn());
     }
 
     /**
@@ -82,6 +82,6 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
             $result[] = $database->dsn();
         }
 
-        $this->assertEquals(['dsn:bar', 'dsn:baz'], $result);
+        assertEquals(['dsn:bar', 'dsn:baz'], $result);
     }
 }
