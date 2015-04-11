@@ -8,6 +8,8 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\pdo;
+use bovigo\callmap;
+use bovigo\callmap\NewInstance;
 /**
  * Test for stubbles\db\pdo\PdoStatement.
  *
@@ -28,15 +30,15 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      *
      * @type  \PHPUnit_Framework_MockObject_MockObject
      */
-    private $mockPdoStatement;
+    private $basePdoStatement;
 
     /**
      * set up test environment
      */
     public function setUp()
     {
-        $this->mockPdoStatement = $this->getMock('\PDOStatement');
-        $this->pdoStatement     = new PdoStatement($this->mockPdoStatement);
+        $this->basePdoStatement = NewInstance::of('\PDOStatement');
+        $this->pdoStatement     = new PdoStatement($this->basePdoStatement);
     }
 
     /**
@@ -45,11 +47,12 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function bindParamPassesValuesCorrectly()
     {
         $bar = 1;
-        $this->mockPdoStatement->method('bindParam')
-                ->with(equalTo('foo'), equalTo($bar), equalTo(\PDO::PARAM_INT))
-                ->will(onConsecutiveCalls(true, false));
-        $this->assertTrue($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
-        $this->assertFalse($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
+        $this->basePdoStatement->mapCalls(['bindParam' => true]);
+        assertTrue($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
+        assertEquals(
+                ['foo', $bar, \PDO::PARAM_INT, 2, null],
+                $this->basePdoStatement->argumentsReceivedFor('bindParam')
+        );
     }
 
     /**
@@ -59,8 +62,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function failingBindParamThrowsDatabaseException()
     {
         $bar = 1;
-        $this->mockPdoStatement->method('bindParam')
-                ->will(throwException(new \PDOException('error')));
+        $this->basePdoStatement->mapCalls(
+                ['bindParam' => callmap\throws(new \PDOException('error'))]
+        );
         $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
     }
 
@@ -69,11 +73,12 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function bindValuePassesValuesCorrectly()
     {
-        $this->mockPdoStatement->method('bindValue')
-                ->with(equalTo('foo'), equalTo(1), equalTo(\PDO::PARAM_INT))
-                ->will(onConsecutiveCalls(true, false));
-        $this->assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
-        $this->assertFalse($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
+        $this->basePdoStatement->mapCalls(['bindValue' => true]);
+        assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
+        assertEquals(
+                ['foo', 1, \PDO::PARAM_INT],
+                $this->basePdoStatement->argumentsReceivedFor('bindValue')
+        );
     }
 
     /**
@@ -82,8 +87,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingBindValueThrowsDatabaseException()
     {
-        $this->mockPdoStatement->method('bindValue')
-                ->will(throwException(new \PDOException('error')));
+        $this->basePdoStatement->mapCalls(
+                ['bindValue' => callmap\throws(new \PDOException('error'))]
+        );
         $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
     }
 
@@ -92,11 +98,22 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function executeReturnsPdoQueryResult()
     {
-        $this->mockPdoStatement->method('execute')
-                ->with(equalTo([]))
-                ->will(returnValue(true));
+        $this->basePdoStatement->mapCalls(['execute' => true]);
         $result = $this->pdoStatement->execute([]);
-        $this->assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $result);
+        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function executePassesArguments()
+    {
+        $this->basePdoStatement->mapCalls(['execute' => true]);
+        $this->pdoStatement->execute([':roland' => 303]);
+        assertEquals(
+                [[':roland' => 303]],
+                $this->basePdoStatement->argumentsReceivedFor('execute')
+        );
     }
 
     /**
@@ -105,9 +122,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function wrongExecuteThrowsDatabaseException()
     {
-        $this->mockPdoStatement->method('execute')
-                ->with(equalTo([]))
-                ->will(returnValue(false));
+        $this->basePdoStatement->mapCalls(['execute' => false]);
         $this->pdoStatement->execute([]);
     }
 
@@ -117,9 +132,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingExecuteThrowsDatabaseException()
     {
-        $this->mockPdoStatement->method('execute')
-                ->with(equalTo([]))
-                ->will(throwException(new \PDOException('error')));
+        $this->basePdoStatement->mapCalls(
+                ['execute' => callmap\throws(new \PDOException('error'))]
+        );
         $this->pdoStatement->execute();
     }
 
@@ -128,8 +143,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function cleanClosesResultCursor()
     {
-        $this->mockPdoStatement->method('closeCursor')->will(returnValue(true));
-        $this->assertTrue($this->pdoStatement->clean());
+        $this->basePdoStatement->mapCalls(['closeCursor' => true]);
+        assertTrue($this->pdoStatement->clean());
     }
 
     /**
@@ -138,8 +153,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
      */
     public function failingCleanThrowsDatabaseException()
     {
-        $this->mockPdoStatement->method('closeCursor')
-                ->will(throwException(new \PDOException('error')));
+        $this->basePdoStatement->mapCalls(
+                ['closeCursor' => callmap\throws(new \PDOException('error'))]
+        );
         $this->pdoStatement->clean();
     }
 }

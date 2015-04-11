@@ -8,6 +8,8 @@
  * @package  stubbles\db
  */
 namespace stubbles\db;
+use bovigo\callmap\InvocationResults;
+use bovigo\callmap\NewInstance;
 /**
  * Test for stubbles\db\QueryResultIterator.
  *
@@ -21,30 +23,27 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
      *
      * @type  \PHPUnit_Framework_MockObject_MockObject
      */
-    private $mockQueryResult;
+    private $queryResult;
 
     /**
      * set up test environment
      */
     public function setUp()
     {
-        $this->mockQueryResult     = $this->getMock('stubbles\db\QueryResult');
+        $this->queryResult = NewInstance::of('stubbles\db\QueryResult');
     }
 
     private function createIterator(array $results)
     {
-        $i = 0;
-        foreach ($results as $result) {
-            $this->mockQueryResult->expects(at($i))
-                    ->method('fetch')
-                    ->will(returnValue($result));
-            $i++;
-        }
-        $this->mockQueryResult->expects(at($i))
-                ->method('fetch')
-                ->will(onConsecutiveCalls(false));
+        $results[] = false;
+        $this->queryResult->mapCalls(
+                // FIXME replace by callmap\onConsecutiveCalls(...$results)
+                // as soon as PHP 5.6 is the minimum version, as
+                // InvocationResults doesn't belong to the public API
+                ['fetch' => new InvocationResults($results)]
+        );
         $queryResultIterator = new QueryResultIterator(
-                $this->mockQueryResult,
+                $this->queryResult,
                 \PDO::FETCH_ASSOC,
                 []
         );

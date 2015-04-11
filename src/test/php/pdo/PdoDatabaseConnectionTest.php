@@ -8,33 +8,29 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\pdo;
+use bovigo\callmap;
+use bovigo\callmap\NewInstance;
 use stubbles\db\config\DatabaseConfiguration;
-/**
- * Helper class for the test.
- */
-class TestPDO extends \PDO
-{
-    public function __construct($dsn, $username, $passwd, $options) {}
-}
 /**
  * Test for stubbles\db\pdo\PdoDatabaseConnection.
  *
  * @group     db
  * @group     pdo
  * @requires  extension pdo
+ * @requires  extension pdo_sqlite
  */
 class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * instance to test
      *
-     * @type  PdoDatabaseConnection
+     * @type  \stubbles\db\pdo\PdoDatabaseConnection
      */
     private $pdoConnection;
     /**
      * configuration instance
      *
-     * @type  DatabaseConfiguration
+     * @type  \stubbles\db\config\DatabaseConfiguration
      */
     private $dbConfig;
     /**
@@ -42,14 +38,14 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      *
      * @type  \PHPUnit_Framework_MockObject_MockObject
      */
-    private $mockPdo;
+    private $pdo;
 
     /**
      * set up test environment
      */
     public function setUp()
     {
-        $this->mockPdo = $this->getMock('stubbles\db\pdo\TestPDO', [], ['', '', '', []]);
+        $this->pdo      = NewInstance::of('\PDO', ['sqlite::memory:']);
         $this->dbConfig = DatabaseConfiguration::fromArray(
                 'foo',
                 'dsn:bar',
@@ -59,7 +55,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 $this->dbConfig,
                 function()
                 {
-                    return $this->mockPdo;
+                    return $this->pdo;
                 }
         );
     }
@@ -69,7 +65,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
-        $this->pdoConnection->disconnect();
+        $this->pdo = null;
     }
 
     /**
@@ -120,8 +116,8 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function connectWithoutInitialQuery()
     {
-        $this->mockPdo->expects(never())->method('query');
         $this->pdoConnection->connect();
+        assertEquals(0, $this->pdo->callsReceivedFor('query'));
     }
 
     /**
@@ -130,10 +126,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function connectExecutesInitialQuery()
     {
         $this->dbConfig->setInitialQuery('set names utf8');
-        $this->mockPdo->expects(once())
-                ->method('query')
-                ->with(equalTo('set names utf8'));
+        $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
+        assertEquals(
+                ['set names utf8'],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -142,11 +140,10 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function connectExecutesInitialQueryOnlyOnce()
     {
         $this->dbConfig->setInitialQuery('set names utf8');
-        $this->mockPdo->expects(once())
-                ->method('query')
-                ->with(equalTo('set names utf8'));
+        $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
         $this->pdoConnection->connect();
+        assertEquals(1, $this->pdo->callsReceivedFor('query'));
     }
 
     /**
@@ -218,8 +215,19 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function delegatesMethodCallsToPdoInstance($method, $returnValue, \Closure $assertion)
     {
-        $this->mockPdo->method($method)->will(returnValue($returnValue));
+        $this->pdo->mapCalls([$method => $returnValue]);
         $assertion($this->pdoConnection);
+
+    }
+
+    /**
+     * @param  string  $method
+     */
+    private function callThrowsException($method)
+    {
+        $this->pdo->mapCalls(
+                [$method => callmap\throws(new \PDOException('error'))]
+        );
     }
 
     /**
@@ -229,8 +237,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function delegatedMethodCallWrapsPdoExceptionToDatabaseException()
     {
-        $this->mockPdo->method('commit')
-                ->will(throwException(new \PDOException('error')));
+        $this->callThrowsException('commit');
         $this->pdoConnection->commit();
     }
 
@@ -239,13 +246,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function prepareDelegatesToPdoInstanceAndReturnsPdoStatement()
     {
-        $this->mockPdo->method('prepare')
-                ->with(equalTo('foo'), equalTo([]))
-                ->will(returnValue($this->getMock('\PDOStatement')));
+        $this->pdo->mapCalls(['prepare' => NewInstance::of('\PdoStatement')]);
         assertInstanceOf(
                 'stubbles\db\pdo\PdoStatement',
                 $this->pdoConnection->prepare('foo')
         );
+        assertEquals(['foo', []], $this->pdo->argumentsReceivedFor('prepare'));
     }
 
     /**
@@ -255,9 +261,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function prepareThrowsDatabaseExceptionWhenStatementCreationFails()
     {
-        $this->mockPdo->method('prepare')
-                ->with(equalTo('foo'), equalTo([]))
-                ->will(throwException(new \PDOException('error')));
+        $this->callThrowsException('prepare');
         $this->pdoConnection->prepare('foo');
     }
 
@@ -266,11 +270,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithOutFetchMode()
     {
-        $this->mockPdo->method('query')
-                ->with(equalTo('foo'))
-                ->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query('foo');
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query('foo')
+        );
+        assertEquals(['foo'], $this->pdo->argumentsReceivedFor('query'));
     }
 
     /**
@@ -278,14 +283,18 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithNoSpecialFetchMode()
     {
-        $this->mockPdo->method('query')
-                ->with(equalTo('foo'), equalTo(\PDO::FETCH_ASSOC))
-                ->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query(
-                'foo',
-                ['fetchMode' => \PDO::FETCH_ASSOC]
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query(
+                        'foo',
+                        ['fetchMode' => \PDO::FETCH_ASSOC]
+                )
         );
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        assertEquals(
+                ['foo', \PDO::FETCH_ASSOC],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -293,14 +302,18 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithFetchModeColumn()
     {
-        $this->mockPdo->method('query')
-                ->with(equalTo('foo'), equalTo(\PDO::FETCH_COLUMN), equalTo(5))
-                ->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query(
-                'foo',
-                ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query(
+                        'foo',
+                        ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
+                )
         );
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        assertEquals(
+                ['foo', \PDO::FETCH_COLUMN, 5],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -317,15 +330,19 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithFetchModeInto()
     {
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         $class = new \stdClass();
-        $this->mockPdo->method('query')
-                ->with(equalTo('foo'), equalTo(\PDO::FETCH_INTO), equalTo($class))
-                ->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query(
-                'foo',
-                ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query(
+                        'foo',
+                        ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
+                )
         );
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        assertEquals(
+                ['foo', \PDO::FETCH_INTO, $class],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -342,18 +359,18 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithFetchModeClass()
     {
-        $this->mockPdo->method('query')
-                ->with(
-                        equalTo('foo'),
-                        equalTo(\PDO::FETCH_CLASS),
-                        equalTo('MyClass'),
-                        equalTo([])
-                )->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query(
-                'foo',
-                ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query(
+                        'foo',
+                        ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
+                )
         );
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        assertEquals(
+                ['foo', \PDO::FETCH_CLASS, 'MyClass', []],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -370,21 +387,21 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryWithFetchModeClassWithCtorArgs()
     {
-        $this->mockPdo->method('query')
-                ->with(
-                        equalTo('foo'),
-                        equalTo(\PDO::FETCH_CLASS),
-                        equalTo('MyClass'),
-                        equalTo(['foo'])
-                )->will(returnValue($this->getMock('\PDOStatement')));
-        $statement = $this->pdoConnection->query(
-                'foo',
-                ['fetchMode' => \PDO::FETCH_CLASS,
-                 'classname' => 'MyClass',
-                 'ctorargs' => ['foo']
-                ]
+        $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
+        assertInstanceOf(
+                'stubbles\db\pdo\PdoQueryResult',
+                $this->pdoConnection->query(
+                        'foo',
+                        ['fetchMode' => \PDO::FETCH_CLASS,
+                         'classname' => 'MyClass',
+                         'ctorargs' => ['foo']
+                        ]
+                )
         );
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $statement);
+        assertEquals(
+                ['foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']],
+                $this->pdo->argumentsReceivedFor('query')
+        );
     }
 
     /**
@@ -394,8 +411,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function queryThrowsDatabaseExceptionOnFailure()
     {
-        $this->mockPdo->method('query')
-                ->will(throwException(new \PDOException('error')));
+        $this->callThrowsException('query');
         $this->pdoConnection->query('foo');
     }
 
@@ -406,8 +422,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function execThrowsDatabaseExceptionOnFailure()
     {
-        $this->mockPdo->method('exec')
-                ->will(throwException(new \PDOException('error')));
+        $this->callThrowsException('exec');
         $this->pdoConnection->exec('foo');
     }
 
@@ -428,8 +443,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails()
     {
-        $this->mockPdo->method('lastInsertId')
-                ->will(throwException(new \PDOException('error')));
+        $this->callThrowsException('lastInsertId');
         $this->pdoConnection->connect()->getLastInsertId();
     }
 }
