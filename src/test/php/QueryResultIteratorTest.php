@@ -21,7 +21,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     /**
      * mocked result to iterate over
      *
-     * @type  \PHPUnit_Framework_MockObject_MockObject
+     * @type  \bovigo\callmap\Proxy
      */
     private $queryResult;
 

@@ -27,7 +27,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     /**
      * mocked database connection
      *
-     * @type  \PHPUnit_Framework_MockObject_MockObject
+     * @type  \bovigo\callmap\Proxy
      */
     private $dbConnection;
 
@@ -43,7 +43,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     /**
      * creates a mocked query result
      *
-     * @return  \PHPUnit_Framework_MockObject_MockObject
+     * @return  \bovigo\callmap\Proxy
      */
     private function createQueryResult()
     {

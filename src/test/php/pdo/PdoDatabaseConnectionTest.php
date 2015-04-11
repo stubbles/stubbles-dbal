@@ -36,7 +36,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     /**
      * mock for pdo
      *
-     * @type  \PHPUnit_Framework_MockObject_MockObject
+     * @type  \bovigo\callmap\Proxy
      */
     private $pdo;
 
