@@ -117,7 +117,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function connectWithoutInitialQuery()
     {
         $this->pdoConnection->connect();
-        assertEquals(0, $this->pdo->callsReceivedFor('query'));
+        callmap\verify($this->pdo, 'query')->wasNeverCalled();
     }
 
     /**
@@ -128,10 +128,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         $this->dbConfig->setInitialQuery('set names utf8');
         $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
-        assertEquals(
-                ['set names utf8'],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')->received('set names utf8');
     }
 
     /**
@@ -143,7 +140,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
         $this->pdoConnection->connect();
-        assertEquals(1, $this->pdo->callsReceivedFor('query'));
+        callmap\verify($this->pdo, 'query')->wasCalledOnce();
     }
 
     /**
@@ -251,7 +248,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 'stubbles\db\pdo\PdoStatement',
                 $this->pdoConnection->prepare('foo')
         );
-        assertEquals(['foo', []], $this->pdo->argumentsReceivedFor('prepare'));
+        callmap\verify($this->pdo, 'prepare')->received('foo', []);
     }
 
     /**
@@ -275,7 +272,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 'stubbles\db\pdo\PdoQueryResult',
                 $this->pdoConnection->query('foo')
         );
-        assertEquals(['foo'], $this->pdo->argumentsReceivedFor('query'));
+        callmap\verify($this->pdo, 'query')->received('foo');
     }
 
     /**
@@ -291,10 +288,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_ASSOC]
                 )
         );
-        assertEquals(
-                ['foo', \PDO::FETCH_ASSOC],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')->received('foo', \PDO::FETCH_ASSOC);
     }
 
     /**
@@ -310,10 +304,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
                 )
         );
-        assertEquals(
-                ['foo', \PDO::FETCH_COLUMN, 5],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')->received('foo', \PDO::FETCH_COLUMN, 5);
     }
 
     /**
@@ -339,10 +330,8 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
                 )
         );
-        assertEquals(
-                ['foo', \PDO::FETCH_INTO, $class],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')
+                ->received('foo', \PDO::FETCH_INTO, $class);
     }
 
     /**
@@ -367,10 +356,8 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
                 )
         );
-        assertEquals(
-                ['foo', \PDO::FETCH_CLASS, 'MyClass', []],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')
+                ->received('foo', \PDO::FETCH_CLASS, 'MyClass', []);
     }
 
     /**
@@ -398,10 +385,8 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ]
                 )
         );
-        assertEquals(
-                ['foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']],
-                $this->pdo->argumentsReceivedFor('query')
-        );
+        callmap\verify($this->pdo, 'query')
+                ->received('foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']);
     }
 
     /**

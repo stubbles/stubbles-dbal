@@ -49,10 +49,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
         $bar = 1;
         $this->basePdoStatement->mapCalls(['bindParam' => true]);
         assertTrue($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
-        assertEquals(
-                ['foo', $bar, \PDO::PARAM_INT, 2, null],
-                $this->basePdoStatement->argumentsReceivedFor('bindParam')
-        );
+        callmap\verify($this->basePdoStatement, 'bindParam')
+                ->received('foo', $bar, \PDO::PARAM_INT, 2, null);
     }
 
     /**
@@ -75,10 +73,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['bindValue' => true]);
         assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
-        assertEquals(
-                ['foo', 1, \PDO::PARAM_INT],
-                $this->basePdoStatement->argumentsReceivedFor('bindValue')
-        );
+        callmap\verify($this->basePdoStatement, 'bindValue')
+                ->received('foo', 1, \PDO::PARAM_INT);
     }
 
     /**
@@ -110,10 +106,8 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['execute' => true]);
         $this->pdoStatement->execute([':roland' => 303]);
-        assertEquals(
-                [[':roland' => 303]],
-                $this->basePdoStatement->argumentsReceivedFor('execute')
-        );
+        callmap\verify($this->basePdoStatement, 'execute')
+                ->received([':roland' => 303]);
     }
 
     /**

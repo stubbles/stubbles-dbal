@@ -49,10 +49,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
         $bar = 1;
         $this->basePdoStatement->mapCalls(['bindColumn' => true]);
         assertTrue($this->pdoQueryResult->bindColumn('foo', $bar, \PDO::PARAM_INT));
-        assertEquals(
-                ['foo', $bar, \PDO::PARAM_INT, null, null],
-                $this->basePdoStatement->argumentsReceivedFor('bindColumn')
-        );
+        callmap\verify($this->basePdoStatement, 'bindColumn')
+                ->received('foo', $bar, \PDO::PARAM_INT, null, null);
     }
 
     /**
@@ -75,10 +73,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetch' => true]);
         assertTrue($this->pdoQueryResult->fetch());
-        assertEquals(
-                [\PDO::FETCH_ASSOC, null, null],
-                $this->basePdoStatement->argumentsReceivedFor('fetch')
-        );
+        callmap\verify($this->basePdoStatement, 'fetch')
+                ->received(\PDO::FETCH_ASSOC, null, null);
     }
 
     /**
@@ -93,10 +89,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['cursorOrientation' => 'foo']
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_ASSOC, 'foo', null],
-                $this->basePdoStatement->argumentsReceivedFor('fetch')
-        );
+        callmap\verify($this->basePdoStatement, 'fetch')
+                ->received(\PDO::FETCH_ASSOC, 'foo', null);
     }
 
     /**
@@ -109,10 +103,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                 [],
                 $this->pdoQueryResult->fetch(\PDO::FETCH_OBJ, ['cursorOffset' => 50])
         );
-        assertEquals(
-                [\PDO::FETCH_OBJ, null, 50],
-                $this->basePdoStatement->argumentsReceivedFor('fetch')
-        );
+        callmap\verify($this->basePdoStatement, 'fetch')
+                ->received(\PDO::FETCH_OBJ, null, 50);
     }
 
     /**
@@ -131,10 +123,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ]
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_BOTH, 'foo', 50],
-                $this->basePdoStatement->argumentsReceivedFor('fetch')
-        );
+        callmap\verify($this->basePdoStatement, 'fetch')
+                ->received(\PDO::FETCH_BOTH, 'foo', 50);
     }
 
     /**
@@ -157,10 +147,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
         $this->basePdoStatement->mapCalls(['fetchColumn' => true]);
         assertTrue($this->pdoQueryResult->fetchOne());
         assertTrue($this->pdoQueryResult->fetchOne(5));
-        assertEquals(
-                [5],
-                $this->basePdoStatement->argumentsReceivedFor('fetchColumn', 2)
-        );
+        callmap\verify($this->basePdoStatement, 'fetchColumn')
+                ->receivedOn(2, 5);
     }
 
     /**
@@ -192,10 +180,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetchAll' => []]);
         assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN));
-        assertEquals(
-                [\PDO::FETCH_COLUMN, 0],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_COLUMN, 0);
     }
 
     /**
@@ -212,10 +198,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['columnIndex' => 2]
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_COLUMN, 2],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_COLUMN, 2);
     }
 
     /**
@@ -225,10 +209,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetchAll' => []]);
         assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_OBJ));
-        assertEquals(
-                [\PDO::FETCH_OBJ],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_OBJ);
     }
 
     /**
@@ -257,10 +239,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['classname' => 'ExampleClass']
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_CLASS, 'ExampleClass', null],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_CLASS, 'ExampleClass', null);
     }
 
     /**
@@ -278,10 +258,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['classname' => 'ExampleClass', 'arguments' => 'foo']
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_CLASS, 'ExampleClass', 'foo'],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_CLASS, 'ExampleClass', 'foo');
     }
 
     /**
@@ -299,10 +277,8 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['function' => 'exampleFunc']
                 )
         );
-        assertEquals(
-                [\PDO::FETCH_FUNC, 'exampleFunc'],
-                $this->basePdoStatement->argumentsReceivedFor('fetchAll')
-        );
+        callmap\verify($this->basePdoStatement, 'fetchAll')
+                ->received(\PDO::FETCH_FUNC, 'exampleFunc');
     }
 
     /**
