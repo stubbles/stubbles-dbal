@@ -1,3 +1,9 @@
+5.0.1 (2015-05-04)
+------------------
+
+  * fixed warning when iterating over result set: use default column index when none specified
+
+
 5.0.0 (2015-04-01)
 ------------------
 
