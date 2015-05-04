@@ -33,21 +33,54 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
         $this->queryResult = NewInstance::of('stubbles\db\QueryResult');
     }
 
-    private function createIterator(array $results)
+    /**
+     * create an instance for the test
+     *
+     * @param   mixed[]  $results
+     * @return  \stubbles\db\QueryResultIterator
+     */
+    private function createIterator(
+            array $results,
+            $fetchMode = \PDO::FETCH_ASSOC,
+            array $driverOptions = [])
     {
         $results[] = false;
         $this->queryResult->mapCalls(
                 // FIXME replace by callmap\onConsecutiveCalls(...$results)
                 // as soon as PHP 5.6 is the minimum version, as
                 // InvocationResults doesn't belong to the public API
-                ['fetch' => new InvocationResults($results)]
+                ['fetch'    => new InvocationResults($results),
+                 'fetchOne' => new InvocationResults(['baz', false])
+                ]
         );
         $queryResultIterator = new QueryResultIterator(
                 $this->queryResult,
-                \PDO::FETCH_ASSOC,
-                []
+                $fetchMode,
+                $driverOptions
         );
         return $queryResultIterator;
+    }
+
+    /**
+     * @test
+     */
+    public function fetchColumnWithGivenColumn()
+    {
+        $results = [['foo', 'bar']];
+        foreach ($this->createIterator($results, \PDO::FETCH_COLUMN, ['columnIndex' => 1]) as $result) {
+            assertEquals('baz', $result);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function fetchColumnWithoutGivenColumn()
+    {
+        $results = [['foo', 'bar']];
+        foreach ($this->createIterator($results, \PDO::FETCH_COLUMN) as $result) {
+            assertEquals('baz', $result);
+        }
     }
 
     /**
