@@ -65,43 +65,31 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @test
+     * @return  array
      */
-    public function annotationsPresentOnConstructor()
+    public function annotatedParameters()
     {
-        assertTrue(
-                reflect\annotationsOfConstructor($this->propertyBasedConfigurations)
-                        ->contain('Inject')
-        );
+        return [
+            ['configPath', 'stubbles.config.path'],
+            ['descriptor', 'stubbles.db.descriptor'],
+            ['fallback', 'stubbles.db.fallback'],
+        ];
+    }
 
-        $configPathParamAnnotations = reflect\annotationsOfConstructorParameter(
-                'configPath',
+    /**
+     * @test
+     * @dataProvider  annotatedParameters
+     */
+    public function annotationsPresentOnConstructor($parameterName, $expectedName)
+    {
+        $annotations = reflect\annotationsOfConstructorParameter(
+                $parameterName,
                 $this->propertyBasedConfigurations
         );
-        assertTrue($configPathParamAnnotations->contain('Named'));
+        assertTrue($annotations->contain('Named'));
         assertEquals(
-                'stubbles.config.path',
-                $configPathParamAnnotations->firstNamed('Named')->getName()
-        );
-
-        $descriptorParamAnnotations = reflect\annotationsOfConstructorParameter(
-                'descriptor',
-                $this->propertyBasedConfigurations
-        );
-        assertTrue($descriptorParamAnnotations->contain('Named'));
-        assertEquals(
-                'stubbles.db.descriptor',
-                $descriptorParamAnnotations->firstNamed('Named')->getName()
-        );
-
-        $fallbackParamAnnotations = reflect\annotationsOfConstructorParameter(
-                'fallback',
-                $this->propertyBasedConfigurations
-        );
-        assertTrue($fallbackParamAnnotations->contain('Named'));
-        assertEquals(
-                'stubbles.db.fallback',
-                $fallbackParamAnnotations->firstNamed('Named')->getName()
+                $expectedName,
+                $annotations->firstNamed('Named')->getName()
         );
     }
 

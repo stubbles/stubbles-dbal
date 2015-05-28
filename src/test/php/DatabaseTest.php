@@ -141,41 +141,4 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 )->data()
         );
     }
-
-    /**
-     * @test
-     */
-    public function mapExecutesQueryAndAppliesFunctionToEachResultRow()
-    {
-        $queryResult = $this->createQueryResult();
-        $queryResult->mapCalls(['fetch' => callmap\onConsecutiveCalls(
-                        ['foo' => 'bar'],
-                        ['foo' => 'blubb'],
-                        false
-        )]);
-        $i = 0;
-        $f = function($row) use (&$i)
-        {
-            $i++;
-            if (1 === $i) {
-                assertEquals(['foo' => 'bar'], $row);
-                return 303;
-            }
-
-            if (2 === $i) {
-                assertEquals(['foo' => 'blubb'], $row);
-                return 313;
-            }
-
-            $this->fail('Unexpected call for row ' . var_export($row));
-        };
-        assertEquals(
-                [303, 313],
-                $this->database->map(
-                        'SELECT foo FROM baz WHERE col = :col',
-                        $f,
-                        [':col' => 'yes']
-                )
-        );
-    }
 }

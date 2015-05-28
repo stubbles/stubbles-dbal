@@ -47,7 +47,6 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      * constructor
      *
      * @param  string  $configPath
-     * @Inject
      * @Named{configPath}('stubbles.config.path')
      * @Named{descriptor}('stubbles.db.descriptor')
      * @Named{fallback}('stubbles.db.fallback')

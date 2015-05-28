@@ -138,35 +138,4 @@ class Database
     {
         return $this->fetchAll($sql, $values, \PDO::FETCH_COLUMN, ['columnIndex' => $columnIndex]);
     }
-
-    /**
-     * map all result rows using given function
-     *
-     * Allows to apply a mapping to each row of the query result:
-     * <code>
-     * $users = $database->map('SELECT * FROM users WHERE status = "blocked"',
-     *                         function($userRow)
-     *                         {
-     *                             return User::fromArray($userRow);
-     *                         }
-     *          );
-     * </code>
-     * In this case the value of $users would be a list of User instances
-     * instead of just the single record rows from the database.
-     *
-     * @param  string    $sql       sql query to map results of
-     * @param  \Closure  $function  function to apply to each result row
-     * @param  array     $values    map of values in case $sql contains a prepared statement
-     * @deprecated  use fetchAll()->map()->values() instead, will be removed with 6.0.0
-     */
-    public function map($sql, \Closure $function, array $values = [])
-    {
-        $result      = [];
-        $queryResult = $this->dbConnection->prepare($sql)->execute($values);
-        while ($row = $queryResult->fetch()) {
-            $result[] = $function($row);
-        }
-
-        return $result;
-    }
 }

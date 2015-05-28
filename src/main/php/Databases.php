@@ -28,7 +28,6 @@ class Databases implements \IteratorAggregate, InjectionProvider
      * constructor
      *
      * @param  \stubbles\db\DatabaseConnections  $connections
-     * @Inject
      */
     public function __construct(DatabaseConnections $connections)
     {

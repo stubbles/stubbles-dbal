@@ -35,7 +35,6 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
      * constructor
      *
      * @param  \stubbles\db\config\DatabaseConfigurations  $configReader
-     * @Inject
      */
     public function __construct(DatabaseConfigurations $configReader)
     {

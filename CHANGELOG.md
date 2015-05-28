@@ -1,3 +1,15 @@
+6.0.0 (2015-??-??)
+------------------
+
+### BC breaks
+
+  * removed `stubbles\db\Datebase::map()`, use `stubbles\db\Datebase::fetchAll()->map()->values()` instead, was deprecated since 5.0.0
+
+### Other changes
+
+  * upgraded stubbles/core to 6.0.0
+
+
 5.0.1 (2015-05-04)
 ------------------
 
