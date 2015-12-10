@@ -5,14 +5,14 @@
     "license": "BSD-3-Clause",
     "description": "Database abstraction layer.",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "ext-pdo": "*",
-        "stubbles/core": "~6.0"
+        "stubbles/core": "~7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.6",
-        "mikey179/vfsStream": "~1.5",
-        "bovigo/callmap": "~1.0"
+        "phpunit/phpunit": "~4.8",
+        "mikey179/vfsStream": "~1.6",
+        "bovigo/callmap": "~1.1"
     },
     "autoload": {
         "psr-4": {
@@ -26,7 +26,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0.x-dev"
+            "dev-master": "7.0.x-dev"
         }
     },
     "minimum-stability": "dev",
