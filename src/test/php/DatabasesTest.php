@@ -48,7 +48,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
     {
         assertEquals(
                 get_class($this->databases),
-                reflect\annotationsOf('stubbles\db\Database')
+                reflect\annotationsOf(Database::class)
                     ->firstNamed('ProvidedBy')
                     ->__value()
                     ->getName()

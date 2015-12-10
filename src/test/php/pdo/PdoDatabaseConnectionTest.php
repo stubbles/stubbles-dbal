@@ -245,7 +245,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['prepare' => NewInstance::of('\PdoStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoStatement',
+                PdoStatement::class,
                 $this->pdoConnection->prepare('foo')
         );
         callmap\verify($this->pdo, 'prepare')->received('foo', []);
@@ -269,7 +269,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query('foo')
         );
         callmap\verify($this->pdo, 'query')->received('foo');
@@ -282,7 +282,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_ASSOC]
@@ -298,7 +298,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
@@ -324,7 +324,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         $class = new \stdClass();
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
@@ -350,7 +350,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
@@ -376,7 +376,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         assertInstanceOf(
-                'stubbles\db\pdo\PdoQueryResult',
+                PdoQueryResult::class,
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_CLASS,

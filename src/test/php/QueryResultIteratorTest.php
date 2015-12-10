@@ -30,7 +30,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->queryResult = NewInstance::of('stubbles\db\QueryResult');
+        $this->queryResult = NewInstance::of(QueryResult::class);
     }
 
     /**

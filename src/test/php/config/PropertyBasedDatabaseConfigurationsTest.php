@@ -100,7 +100,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     {
         assertEquals(
                 get_class($this->propertyBasedConfigurations),
-                reflect\annotationsOf('stubbles\db\config\DatabaseConfigurations')
+                reflect\annotationsOf(DatabaseConfigurations::class)
                         ->firstNamed('ImplementedBy')->__value()->getName()
         );
     }

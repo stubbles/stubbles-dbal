@@ -46,7 +46,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
     {
         assertEquals(
                 get_class($this->databaseConnections),
-                reflect\annotationsOf('stubbles\db\DatabaseConnection')
+                reflect\annotationsOf(DatabaseConnection::class)
                     ->firstNamed('ProvidedBy')
                     ->__value()
                     ->getName()

@@ -96,7 +96,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['execute' => true]);
         $result = $this->pdoStatement->execute([]);
-        assertInstanceOf('stubbles\db\pdo\PdoQueryResult', $result);
+        assertInstanceOf(PdoQueryResult::class, $result);
     }
 
     /**

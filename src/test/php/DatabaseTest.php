@@ -36,7 +36,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->dbConnection = NewInstance::of('stubbles\db\DatabaseConnection');
+        $this->dbConnection = NewInstance::of(DatabaseConnection::class);
         $this->database     = new Database($this->dbConnection);
     }
 
@@ -47,8 +47,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     private function createQueryResult()
     {
-        $statement   = NewInstance::of('stubbles\db\Statement');
-        $queryResult = NewInstance::of('stubbles\db\QueryResult');
+        $statement   = NewInstance::of(Statement::class);
+        $queryResult = NewInstance::of(QueryResult::class);
         $this->dbConnection->mapCalls(['prepare' => $statement]);
         $statement->mapCalls(['execute' => $queryResult]);
         return $queryResult;
