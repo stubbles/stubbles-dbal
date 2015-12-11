@@ -8,6 +8,7 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\config;
+use stubbles\lang\Secret;
 /**
  * Test for stubbles\db\config\DatabaseConfiguration.
  *
@@ -76,7 +77,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function passwordCanBeSet()
     {
-        assertEquals('secret', $this->dbConfig->setPassword('secret')->getPassword());
+        assertEquals('secret', $this->dbConfig->setPassword(Secret::create('secret'))->getPassword());
     }
 
     /**
