@@ -8,8 +8,10 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\pdo;
-use bovigo\callmap;
 use bovigo\callmap\NewInstance;
+
+use function bovigo\callmap\throws;
+use function bovigo\callmap\verify;
 /**
  * Test for stubbles\db\pdo\PdoQueryResult.
  *
@@ -49,7 +51,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
         $bar = 1;
         $this->basePdoStatement->mapCalls(['bindColumn' => true]);
         assertTrue($this->pdoQueryResult->bindColumn('foo', $bar, \PDO::PARAM_INT));
-        callmap\verify($this->basePdoStatement, 'bindColumn')
+        verify($this->basePdoStatement, 'bindColumn')
                 ->received('foo', $bar, \PDO::PARAM_INT, null, null);
     }
 
@@ -61,7 +63,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $bar = 1;
         $this->basePdoStatement->mapCalls(
-                ['bindColumn' => callmap\throws(new \PDOException('error'))]
+                ['bindColumn' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->bindColumn('foo', $bar, \PDO::PARAM_INT);
     }
@@ -73,7 +75,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetch' => true]);
         assertTrue($this->pdoQueryResult->fetch());
-        callmap\verify($this->basePdoStatement, 'fetch')
+        verify($this->basePdoStatement, 'fetch')
                 ->received(\PDO::FETCH_ASSOC, null, null);
     }
 
@@ -89,7 +91,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['cursorOrientation' => 'foo']
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetch')
+        verify($this->basePdoStatement, 'fetch')
                 ->received(\PDO::FETCH_ASSOC, 'foo', null);
     }
 
@@ -103,7 +105,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                 [],
                 $this->pdoQueryResult->fetch(\PDO::FETCH_OBJ, ['cursorOffset' => 50])
         );
-        callmap\verify($this->basePdoStatement, 'fetch')
+        verify($this->basePdoStatement, 'fetch')
                 ->received(\PDO::FETCH_OBJ, null, 50);
     }
 
@@ -123,7 +125,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ]
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetch')
+        verify($this->basePdoStatement, 'fetch')
                 ->received(\PDO::FETCH_BOTH, 'foo', 50);
     }
 
@@ -134,7 +136,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingFetchThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['fetch' => callmap\throws(new \PDOException('error'))]
+                ['fetch' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->fetch();
     }
@@ -147,7 +149,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
         $this->basePdoStatement->mapCalls(['fetchColumn' => true]);
         assertTrue($this->pdoQueryResult->fetchOne());
         assertTrue($this->pdoQueryResult->fetchOne(5));
-        callmap\verify($this->basePdoStatement, 'fetchColumn')
+        verify($this->basePdoStatement, 'fetchColumn')
                 ->receivedOn(2, 5);
     }
 
@@ -158,7 +160,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingFetchOneThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['fetchColumn' => callmap\throws(new \PDOException('error'))]
+                ['fetchColumn' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->fetchOne();
     }
@@ -180,7 +182,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetchAll' => []]);
         assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN));
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_COLUMN, 0);
     }
 
@@ -198,7 +200,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['columnIndex' => 2]
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_COLUMN, 2);
     }
 
@@ -209,7 +211,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['fetchAll' => []]);
         assertEquals([], $this->pdoQueryResult->fetchAll(\PDO::FETCH_OBJ));
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_OBJ);
     }
 
@@ -239,7 +241,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['classname' => 'ExampleClass']
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_CLASS, 'ExampleClass', null);
     }
 
@@ -258,7 +260,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['classname' => 'ExampleClass', 'arguments' => 'foo']
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_CLASS, 'ExampleClass', 'foo');
     }
 
@@ -277,7 +279,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
                         ['function' => 'exampleFunc']
                 )
         );
-        callmap\verify($this->basePdoStatement, 'fetchAll')
+        verify($this->basePdoStatement, 'fetchAll')
                 ->received(\PDO::FETCH_FUNC, 'exampleFunc');
     }
 
@@ -299,7 +301,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingFetchAllThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['fetchAll' => callmap\throws(new \PDOException('error'))]
+                ['fetchAll' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->fetchAll();
     }
@@ -320,7 +322,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingNextThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['nextRowset' => callmap\throws(new \PDOException('error'))]
+                ['nextRowset' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->next();
     }
@@ -341,7 +343,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingRowCountThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['rowCount' => callmap\throws(new \PDOException('error'))]
+                ['rowCount' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->count();
     }
@@ -362,7 +364,7 @@ class PdoQueryResultTest extends \PHPUnit_Framework_TestCase
     public function failingFreeThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['closeCursor' => callmap\throws(new \PDOException('error'))]
+                ['closeCursor' => throws(new \PDOException('error'))]
         );
         $this->pdoQueryResult->free();
     }

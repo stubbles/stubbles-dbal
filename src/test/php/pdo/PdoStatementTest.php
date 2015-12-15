@@ -8,8 +8,10 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\pdo;
-use bovigo\callmap;
 use bovigo\callmap\NewInstance;
+
+use function bovigo\callmap\throws;
+use function bovigo\callmap\verify;
 /**
  * Test for stubbles\db\pdo\PdoStatement.
  *
@@ -49,7 +51,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
         $bar = 1;
         $this->basePdoStatement->mapCalls(['bindParam' => true]);
         assertTrue($this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2));
-        callmap\verify($this->basePdoStatement, 'bindParam')
+        verify($this->basePdoStatement, 'bindParam')
                 ->received('foo', $bar, \PDO::PARAM_INT, 2, null);
     }
 
@@ -61,7 +63,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $bar = 1;
         $this->basePdoStatement->mapCalls(
-                ['bindParam' => callmap\throws(new \PDOException('error'))]
+                ['bindParam' => throws(new \PDOException('error'))]
         );
         $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
     }
@@ -73,7 +75,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['bindValue' => true]);
         assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
-        callmap\verify($this->basePdoStatement, 'bindValue')
+        verify($this->basePdoStatement, 'bindValue')
                 ->received('foo', 1, \PDO::PARAM_INT);
     }
 
@@ -84,7 +86,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function failingBindValueThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['bindValue' => callmap\throws(new \PDOException('error'))]
+                ['bindValue' => throws(new \PDOException('error'))]
         );
         $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
     }
@@ -106,7 +108,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['execute' => true]);
         $this->pdoStatement->execute([':roland' => 303]);
-        callmap\verify($this->basePdoStatement, 'execute')
+        verify($this->basePdoStatement, 'execute')
                 ->received([':roland' => 303]);
     }
 
@@ -127,7 +129,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function failingExecuteThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['execute' => callmap\throws(new \PDOException('error'))]
+                ['execute' => throws(new \PDOException('error'))]
         );
         $this->pdoStatement->execute();
     }
@@ -148,7 +150,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     public function failingCleanThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
-                ['closeCursor' => callmap\throws(new \PDOException('error'))]
+                ['closeCursor' => throws(new \PDOException('error'))]
         );
         $this->pdoStatement->clean();
     }

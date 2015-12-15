@@ -8,9 +8,11 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\pdo;
-use bovigo\callmap;
 use bovigo\callmap\NewInstance;
 use stubbles\db\config\DatabaseConfiguration;
+
+use function bovigo\callmap\throws;
+use function bovigo\callmap\verify;
 /**
  * Test for stubbles\db\pdo\PdoDatabaseConnection.
  *
@@ -117,7 +119,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function connectWithoutInitialQuery()
     {
         $this->pdoConnection->connect();
-        callmap\verify($this->pdo, 'query')->wasNeverCalled();
+        verify($this->pdo, 'query')->wasNeverCalled();
     }
 
     /**
@@ -128,7 +130,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         $this->dbConfig->setInitialQuery('set names utf8');
         $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
-        callmap\verify($this->pdo, 'query')->received('set names utf8');
+        verify($this->pdo, 'query')->received('set names utf8');
     }
 
     /**
@@ -140,7 +142,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         $this->pdo->mapCalls(['query' => true]);
         $this->pdoConnection->connect();
         $this->pdoConnection->connect();
-        callmap\verify($this->pdo, 'query')->wasCalledOnce();
+        verify($this->pdo, 'query')->wasCalledOnce();
     }
 
     /**
@@ -223,7 +225,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     private function callThrowsException($method)
     {
         $this->pdo->mapCalls(
-                [$method => callmap\throws(new \PDOException('error'))]
+                [$method => throws(new \PDOException('error'))]
         );
     }
 
@@ -248,7 +250,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 PdoStatement::class,
                 $this->pdoConnection->prepare('foo')
         );
-        callmap\verify($this->pdo, 'prepare')->received('foo', []);
+        verify($this->pdo, 'prepare')->received('foo', []);
     }
 
     /**
@@ -272,7 +274,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 PdoQueryResult::class,
                 $this->pdoConnection->query('foo')
         );
-        callmap\verify($this->pdo, 'query')->received('foo');
+        verify($this->pdo, 'query')->received('foo');
     }
 
     /**
@@ -288,7 +290,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_ASSOC]
                 )
         );
-        callmap\verify($this->pdo, 'query')->received('foo', \PDO::FETCH_ASSOC);
+        verify($this->pdo, 'query')->received('foo', \PDO::FETCH_ASSOC);
     }
 
     /**
@@ -304,7 +306,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
                 )
         );
-        callmap\verify($this->pdo, 'query')->received('foo', \PDO::FETCH_COLUMN, 5);
+        verify($this->pdo, 'query')->received('foo', \PDO::FETCH_COLUMN, 5);
     }
 
     /**
@@ -330,7 +332,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
                 )
         );
-        callmap\verify($this->pdo, 'query')
+        verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_INTO, $class);
     }
 
@@ -356,7 +358,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
                 )
         );
-        callmap\verify($this->pdo, 'query')
+        verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_CLASS, 'MyClass', []);
     }
 
@@ -385,7 +387,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                         ]
                 )
         );
-        callmap\verify($this->pdo, 'query')
+        verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']);
     }
 

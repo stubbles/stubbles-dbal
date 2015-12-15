@@ -8,8 +8,9 @@
  * @package  stubbles\db
  */
 namespace stubbles\db;
-use bovigo\callmap;
 use bovigo\callmap\NewInstance;
+
+use function bovigo\callmap\onConsecutiveCalls;
 /**
  * Test for stubbles\db\Database.
  *
@@ -92,7 +93,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function fetchAllExecutesQueryAndFetchesCompleteResult()
     {
         $this->createQueryResult()->mapCalls(
-                ['fetch' => callmap\onConsecutiveCalls(
+                ['fetch' => onConsecutiveCalls(
                         ['foo' => 'bar', 'blubb' => '303'],
                         ['foo' => 'baz', 'blubb' => '909'],
                         false
@@ -131,7 +132,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
     {
         $this->createQueryResult()->mapCalls(
-                ['fetchOne' => callmap\onConsecutiveCalls('bar', 'baz', false)]
+                ['fetchOne' => onConsecutiveCalls('bar', 'baz', false)]
         );
         assertEquals(
                 ['bar', 'baz'],

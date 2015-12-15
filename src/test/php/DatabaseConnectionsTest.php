@@ -10,7 +10,8 @@
 namespace stubbles\db;
 use stubbles\db\config\ArrayBasedDatabaseConfigurations;
 use stubbles\db\config\DatabaseConfiguration;
-use stubbles\lang\reflect;
+
+use function stubbles\lang\reflect\annotationsOf;
 /**
  * Test for stubbles\db\DatabaseConnections.
  *
@@ -46,7 +47,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
     {
         assertEquals(
                 get_class($this->databaseConnections),
-                reflect\annotationsOf(DatabaseConnection::class)
+                annotationsOf(DatabaseConnection::class)
                     ->firstNamed('ProvidedBy')
                     ->__value()
                     ->getName()

@@ -9,7 +9,9 @@
  */
 namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
-use stubbles\lang\reflect;
+
+use function stubbles\lang\reflect\annotationsOf;
+use function stubbles\lang\reflect\annotationsOfConstructorParameter;
 /**
  * Test for stubbles\db\config\PropertyBasedDatabaseConfigurations.
  *
@@ -59,7 +61,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     public function annotationsPresentOnClass()
     {
         assertTrue(
-                reflect\annotationsOf($this->propertyBasedConfigurations)
+                annotationsOf($this->propertyBasedConfigurations)
                         ->contain('Singleton')
         );
     }
@@ -82,7 +84,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnConstructor($parameterName, $expectedName)
     {
-        $annotations = reflect\annotationsOfConstructorParameter(
+        $annotations = annotationsOfConstructorParameter(
                 $parameterName,
                 $this->propertyBasedConfigurations
         );
@@ -100,7 +102,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
     {
         assertEquals(
                 get_class($this->propertyBasedConfigurations),
-                reflect\annotationsOf(DatabaseConfigurations::class)
+                annotationsOf(DatabaseConfigurations::class)
                         ->firstNamed('ImplementedBy')->__value()->getName()
         );
     }
