@@ -8,7 +8,6 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\config;
-use stubbles\lang\exception\ConfigurationException;
 /**
  * List of available database configurations, provided as array.
  *
@@ -49,7 +48,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
      *
      * @param   string  $id  id of configuration to return
      * @return  \stubbles\db\config\DatabaseConfiguration
-     * @throws  \stubbles\lang\exception\ConfigurationException  in case no config for given id exists
+     * @throws  \OutOfBoundsException  in case no config for given id exists
      */
     public function get($id)
     {
@@ -57,7 +56,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
             return $this->configurations[$id];
         }
 
-        throw new ConfigurationException('No database configuration known for database requested with id ' . $id);
+        throw new \OutOfBoundsException('No database configuration known for database requested with id ' . $id);
     }
 
     /**

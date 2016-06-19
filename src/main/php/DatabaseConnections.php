@@ -12,7 +12,7 @@ use stubbles\db\config\DatabaseConfiguration;
 use stubbles\db\config\DatabaseConfigurations;
 use stubbles\db\pdo\PdoDatabaseConnection;
 use stubbles\ioc\InjectionProvider;
-use stubbles\lang\iterator\MappingIterator;
+use stubbles\sequence\iterator\MappingIterator;
 /**
  * List of available database connections.
  */

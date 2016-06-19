@@ -8,9 +8,8 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\config;
-use stubbles\lang\Properties;
-use stubbles\lang\exception\ConfigurationException;
-use stubbles\lang\iterator\MappingIterator;
+use stubbles\sequence\iterator\MappingIterator;
+use stubbles\values\Properties;
 /**
  * Represents a list of available database configurations, configured in a property file.
  *
@@ -88,20 +87,21 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @param   string  $id
      * @return  \stubbles\db\config\DatabaseConfiguration
-     * @throws  \stubbles\lang\exception\ConfigurationException
+     * @throws  \OutOfBoundsException  in case no configuration for given id is found and fallback is disabled
+     * @throws  \LogicException  in case the found configuration misses the dsn property
      */
     public function get($id)
     {
         if (!$this->properties()->containSection($id)) {
             if (!$this->hasFallback()) {
-                throw new ConfigurationException('No database configuration known for database requested with id ' . $id);
+                throw new \OutOfBoundsException('No database configuration known for database requested with id ' . $id);
             }
 
             $id = DatabaseConfiguration::DEFAULT_ID;
         }
 
         if (!$this->properties()->containValue($id, 'dsn')) {
-            throw new ConfigurationException('Missing dsn property in database configuration with id ' . $id);
+            throw new \LogicException('Missing dsn property in database configuration with id ' . $id);
         }
 
         return DatabaseConfiguration::fromArray(
@@ -114,7 +114,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
     /**
      * reads properties if not done yet
      *
-     * @return  \stubbles\lang\Properties
+     * @return  \stubbles\values\Properties
      */
     protected function properties()
     {

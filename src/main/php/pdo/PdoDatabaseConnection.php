@@ -133,16 +133,18 @@ class PdoDatabaseConnection implements DatabaseConnection
         return function(DatabaseConfiguration $configuration)
                {
                    if (!$configuration->hasDriverOptions()) {
-                       return new PDO($configuration->getDsn(),
-                                      $configuration->getUserName(),
-                                      $configuration->getPassword()
+                       return new PDO(
+                                $configuration->getDsn(),
+                                $configuration->getUserName(),
+                                $configuration->getPassword()
                        );
                    }
 
-                   return new PDO($configuration->getDsn(),
-                                  $configuration->getUserName(),
-                                  $configuration->getPassword(),
-                                  $configuration->getDriverOptions()
+                   return new PDO(
+                            $configuration->getDsn(),
+                            $configuration->getUserName(),
+                            $configuration->getPassword(),
+                            $configuration->getDriverOptions()
                    );
                };
     }

@@ -8,11 +8,19 @@
  * @package  stubbles\db
  */
 namespace stubbles\db;
-use stubbles\lang\exception\Exception;
 /**
- * Interface for database connections.
+ * Exceptions on calls to the database.
  */
-class DatabaseException extends Exception
+class DatabaseException extends \Exception
 {
-    // intentionally empty
+    /**
+     * constructor
+     *
+     * @param  string      $message   exception message
+     * @param  \Exception  $previous  exception that caused this exception
+     */
+    public function __construct($message, \Exception $previous = null)
+    {
+        parent::__construct($message, 0, $previous);
+    }
 }

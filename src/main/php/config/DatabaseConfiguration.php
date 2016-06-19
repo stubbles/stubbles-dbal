@@ -8,7 +8,7 @@
  * @package  stubbles\db
  */
 namespace stubbles\db\config;
-use stubbles\lang\Secret;
+use stubbles\values\Secret;
 /**
  * Configuration for a database connection.
  */
@@ -39,7 +39,7 @@ class DatabaseConfiguration
     /**
      * password
      *
-     * @type  \stubbles\lang\Secret
+     * @type  \stubbles\values\Secret
      */
     private $password;
     /**
@@ -166,7 +166,7 @@ class DatabaseConfiguration
     /**
      * sets user password for database login
      *
-     * @param   \stubbles\lang\Secret  $password
+     * @param   \stubbles\values\Secret  $password
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setPassword(Secret $password)
@@ -178,7 +178,7 @@ class DatabaseConfiguration
     /**
      * returns the user password
      *
-     * @return  \stubbles\lang\Secret
+     * @return  string
      */
     public function getPassword()
     {

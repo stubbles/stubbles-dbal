@@ -10,6 +10,10 @@
 namespace stubbles\db;
 use bovigo\callmap\InvocationResults;
 use bovigo\callmap\NewInstance;
+
+use function bovigo\assert\assert;
+use function bovigo\assert\expect;
+use function bovigo\assert\predicate\equals;
 /**
  * Test for stubbles\db\QueryResultIterator.
  *
@@ -68,7 +72,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN, ['columnIndex' => 1]) as $result) {
-            assertEquals('baz', $result);
+            assert($result, equals('baz'));
         }
     }
 
@@ -79,7 +83,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN) as $result) {
-            assertEquals('baz', $result);
+            assert($result, equals('baz'));
         }
     }
 
@@ -93,7 +97,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
             $rounds++;
         }
 
-        assertEquals(0, $rounds);
+        assert($rounds, equals(0));
     }
 
     /**
@@ -104,16 +108,15 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
         $results = [['foo'], ['bar']];
         $rounds = 0;
         foreach ($this->createIterator($results) as $key => $result) {
-            assertEquals($results[$key], $result);
+            assert($result, equals($results[$key]));
             $rounds++;
         }
 
-        assertEquals(2, $rounds);
+        assert($rounds, equals(2));
     }
 
     /**
      * @test
-     * @expectedException  BadMethodCallException
      */
     public function canNotIterateMoreThanOnce()
     {
@@ -122,8 +125,12 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
             // do nothing
         }
 
-        foreach ($iterator as $result) {
-            // do nothing
-        }
+        expect(function() use($iterator) {
+                foreach ($iterator as $result) {
+                    // do nothing
+                }
+        })
+                ->throws(\BadMethodCallException::class)
+                ->withMessage('Can not rewind database result set');
     }
 }

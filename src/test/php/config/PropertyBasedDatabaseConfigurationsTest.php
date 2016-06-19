@@ -10,8 +10,13 @@
 namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
 
-use function stubbles\lang\reflect\annotationsOf;
-use function stubbles\lang\reflect\annotationsOfConstructorParameter;
+use function bovigo\assert\assert;
+use function bovigo\assert\assertFalse;
+use function bovigo\assert\assertTrue;
+use function bovigo\assert\expect;
+use function bovigo\assert\predicate\equals;
+use function stubbles\reflect\annotationsOf;
+use function stubbles\reflect\annotationsOfConstructorParameter;
 /**
  * Test for stubbles\db\config\PropertyBasedDatabaseConfigurations.
  *
@@ -60,9 +65,8 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnClass()
     {
-        assertTrue(
-                annotationsOf($this->propertyBasedConfigurations)
-                        ->contain('Singleton')
+        assertTrue(annotationsOf($this->propertyBasedConfigurations)
+                ->contain('Singleton')
         );
     }
 
@@ -89,9 +93,9 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
                 $this->propertyBasedConfigurations
         );
         assertTrue($annotations->contain('Named'));
-        assertEquals(
-                $expectedName,
-                $annotations->firstNamed('Named')->getName()
+        assert(
+                $annotations->firstNamed('Named')->getName(),
+                equals($expectedName)
         );
     }
 
@@ -100,10 +104,10 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        assertEquals(
-                get_class($this->propertyBasedConfigurations),
+        assert(
                 annotationsOf(DatabaseConfigurations::class)
-                        ->firstNamed('ImplementedBy')->__value()->getName()
+                        ->firstNamed('ImplementedBy')->__value()->getName(),
+                equals(get_class($this->propertyBasedConfigurations))
         );
     }
 
@@ -149,21 +153,19 @@ dsn="mysql:host=localhost;dbname=example"');
         );
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        assertFalse(
-                $propertyBasedConfigurations->contain('foo')
-        );
+        assertFalse($propertyBasedConfigurations->contain('foo'));
     }
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\ConfigurationException
-     * @expectedExceptionMessage  Missing dsn property in database configuration with id foo
      */
     public function throwsConfigurationExceptionWhenDsnPropertyMissing()
     {
         $this->configFile->setContent('[foo]
 username="root"');
-        $this->propertyBasedConfigurations->get('foo');
+        expect(function() { $this->propertyBasedConfigurations->get('foo'); })
+                ->throws(\LogicException::class)
+                ->withMessage('Missing dsn property in database configuration with id foo');
     }
 
     /**
@@ -173,9 +175,9 @@ username="root"');
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        assertEquals(
-                'foo',
-                $this->propertyBasedConfigurations->get('foo')->getId()
+        assert(
+                $this->propertyBasedConfigurations->get('foo')->getId(),
+                equals('foo')
         );
     }
 
@@ -186,28 +188,26 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        assertEquals(
-                'default',
-                $this->propertyBasedConfigurations->get('foo')->getId()
+        assert(
+                $this->propertyBasedConfigurations->get('foo')->getId(),
+                equals('default')
         );
     }
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\ConfigurationException
-     * @expectedExceptionMessage  No database configuration known for database requested with id foo
      */
     public function throwsConfigurationExceptionWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
-        $this->propertyBasedConfigurations->get('foo');
+        expect(function() { $this->propertyBasedConfigurations->get('foo'); })
+                ->throws(\OutOfBoundsException::class)
+                ->withMessage('No database configuration known for database requested with id foo');
     }
 
     /**
      * @test
-     * @expectedException  stubbles\lang\exception\ConfigurationException
-     * @expectedExceptionMessage  No database configuration known for database requested with id foo
      */
     public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled()
     {
@@ -218,7 +218,11 @@ dsn="mysql:host=localhost;dbname=example"');
         );
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        $propertyBasedConfigurations->get('foo');
+        expect(function() use($propertyBasedConfigurations) {
+                $propertyBasedConfigurations->get('foo');
+        })
+                ->throws(\OutOfBoundsException::class)
+                ->withMessage('No database configuration known for database requested with id foo');
     }
 
     /**
@@ -232,9 +236,9 @@ dsn="mysql:host=localhost;dbname=example"');
         );
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        assertEquals('mysql:host=localhost;dbname=example',
-                            $propertyBasedConfigurations->get('foo')
-                                                        ->getDsn()
+        assert(
+                $propertyBasedConfigurations->get('foo')->getDsn(),
+                equals('mysql:host=localhost;dbname=example')
         );
     }
 
@@ -254,6 +258,6 @@ dsn="mysql:host=example.com;dbname=other"');
             $result[] = $configuration->getId();
         }
 
-        assertEquals(['default', 'other'], $result);
+        assert($result, equals(['default', 'other']));
     }
 }

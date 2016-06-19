@@ -11,7 +11,9 @@ namespace stubbles\db;
 use stubbles\db\config\ArrayBasedDatabaseConfigurations;
 use stubbles\db\config\DatabaseConfiguration;
 
-use function stubbles\lang\reflect\annotationsOf;
+use function bovigo\assert\assert;
+use function bovigo\assert\predicate\equals;
+use function stubbles\reflect\annotationsOf;
 /**
  * Test for stubbles\db\Databases.
  *
@@ -31,15 +33,12 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->databases = new Databases(
-                new DatabaseConnections(
-                        new ArrayBasedDatabaseConfigurations(
-                                ['foo'                             => new DatabaseConfiguration('foo', 'dsn:bar'),
-                                 DatabaseConfiguration::DEFAULT_ID => new DatabaseConfiguration('default', 'dsn:baz')
-                                ]
-                        )
-                )
-        );
+        $this->databases = new Databases(new DatabaseConnections(
+                new ArrayBasedDatabaseConfigurations([
+                        'foo'                             => new DatabaseConfiguration('foo', 'dsn:bar'),
+                        DatabaseConfiguration::DEFAULT_ID => new DatabaseConfiguration('default', 'dsn:baz')
+                ])
+        ));
     }
 
     /**
@@ -47,12 +46,12 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function isProviderForDatabase()
     {
-        assertEquals(
-                get_class($this->databases),
+        assert(
                 annotationsOf(Database::class)
                     ->firstNamed('ProvidedBy')
                     ->__value()
-                    ->getName()
+                    ->getName(),
+                equals(get_class($this->databases))
         );
     }
 
@@ -61,7 +60,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsRequestedDatabase()
     {
-        assertEquals('dsn:bar', $this->databases->get('foo')->dsn());
+        assert($this->databases->get('foo')->dsn(), equals('dsn:bar'));
     }
 
     /**
@@ -69,7 +68,7 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
      */
     public function usesDefaultWhenNoNameGiven()
     {
-        assertEquals('dsn:baz', $this->databases->get()->dsn());
+        assert($this->databases->get()->dsn(), equals('dsn:baz'));
     }
 
     /**
@@ -83,6 +82,6 @@ class DatabasesTest extends \PHPUnit_Framework_TestCase
             $result[] = $database->dsn();
         }
 
-        assertEquals(['dsn:bar', 'dsn:baz'], $result);
+        assert($result, equals(['dsn:bar', 'dsn:baz']));
     }
 }

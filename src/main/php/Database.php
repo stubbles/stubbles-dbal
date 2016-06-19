@@ -8,7 +8,7 @@
  * @package  stubbles\db
  */
 namespace stubbles\db;
-use stubbles\lang\Sequence;
+use stubbles\sequence\Sequence;
 /**
  * Convenience access to database data to prevent fiddling with query results.
  *
@@ -56,8 +56,8 @@ class Database
     public function query($sql, array $values = [])
     {
         return $this->dbConnection->prepare($sql)
-                                  ->execute($values)
-                                  ->count();
+                ->execute($values)
+                ->count();
     }
 
     /**
@@ -73,8 +73,8 @@ class Database
     public function fetchOne($sql, array $values = [], $columnNumber = 0)
     {
         return $this->dbConnection->prepare($sql)
-                                  ->execute($values)
-                                  ->fetchOne($columnNumber);
+                ->execute($values)
+                ->fetchOne($columnNumber);
     }
 
     /**
@@ -90,14 +90,13 @@ class Database
      * @param   array   $values         map of values in case $sql contains a prepared statement
      * @param   int     $fetchMode      optional  the mode to use for fetching the data
      * @param   array   $driverOptions  optional  driver specific arguments
-     * @return  \stubbles\lang\Sequence
+     * @return  \stubbles\sequence\Sequence
      */
     public function fetchAll($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
     {
         return Sequence::of(
                 new QueryResultIterator(
-                        $this->dbConnection->prepare($sql)
-                                           ->execute($values),
+                        $this->dbConnection->prepare($sql)->execute($values),
                         $fetchMode,
                         $driverOptions
                 )
@@ -117,8 +116,8 @@ class Database
     public function fetchRow($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
     {
         return $this->dbConnection->prepare($sql)
-                                  ->execute($values)
-                                  ->fetch($fetchMode, $driverOptions);
+                ->execute($values)
+                ->fetch($fetchMode, $driverOptions);
     }
 
     /**
@@ -132,10 +131,15 @@ class Database
      * @param   string  $sql          sql query to fetch data with
      * @param   array   $values       map of values in case $sql contains a prepared statement
      * @param   int     $columnIndex  number of column to fetch
-     * @return  \stubbles\lang\Sequence
+     * @return  \stubbles\sequence\Sequence
      */
     public function fetchColumn($sql, array $values = [], $columnIndex = 0)
     {
-        return $this->fetchAll($sql, $values, \PDO::FETCH_COLUMN, ['columnIndex' => $columnIndex]);
+        return $this->fetchAll(
+                $sql,
+                $values,
+                \PDO::FETCH_COLUMN,
+                ['columnIndex' => $columnIndex]
+        );
     }
 }

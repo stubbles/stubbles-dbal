@@ -9,8 +9,15 @@
  */
 namespace stubbles\db\pdo;
 use bovigo\callmap\NewInstance;
+use stubbles\db\DatabaseException;
 use stubbles\db\config\DatabaseConfiguration;
 
+use function bovigo\assert\assert;
+use function bovigo\assert\assertTrue;
+use function bovigo\assert\expect;
+use function bovigo\assert\predicate\contains;
+use function bovigo\assert\predicate\equals;
+use function bovigo\assert\predicate\isInstanceOf;
 use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
 /**
@@ -76,7 +83,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function dsnReturnsDsnFromConfiguration()
     {
-        assertEquals('dsn:bar', $this->pdoConnection->dsn());
+        assert($this->pdoConnection->dsn(), equals('dsn:bar'));
     }
 
     /**
@@ -86,9 +93,9 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function detailsReturnsDetailsFromConfiguration()
     {
         $this->dbConfig->setDetails('some interesting details about the db');
-        assertEquals(
-                'some interesting details about the db',
-                $this->pdoConnection->details()
+        assert(
+                $this->pdoConnection->details(),
+                equals('some interesting details about the db')
         );
     }
 
@@ -98,19 +105,19 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function propertyReturnsPropertyFromConfiguration()
     {
-        assertEquals('bar', $this->pdoConnection->property('baz'));
+        assert($this->pdoConnection->property('baz'), equals('bar'));
     }
 
     /**
      * assert that a call to an undefined pdo method throws a MethodInvocationException
      *
      * @test
-     * @expectedException  BadMethodCallException
-     * @expectedExceptionMessage  Call to undefined method stubbles\db\pdo\PdoDatabaseConnection::foo()
      */
     public function undefinedMethod()
     {
-        $this->pdoConnection->foo('bar');
+        expect(function() { $this->pdoConnection->foo('bar'); })
+                ->throws(\BadMethodCallException::class)
+                ->withMessage('Call to undefined method stubbles\db\pdo\PdoDatabaseConnection::foo()');
     }
 
     /**
@@ -147,8 +154,6 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function connectThrowsDatabaseExceptionWhenPdoFails()
     {
@@ -159,7 +164,9 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                     throw new \PDOException('error');
                 }
         );
-        $this->pdoConnection->connect();
+        expect(function() { $this->pdoConnection->connect(); })
+                ->throws(DatabaseException::class)
+                ->message(contains('error'));
     }
 
     /**
@@ -194,7 +201,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                  66,
                  function(PdoDatabaseConnection $pdoConnection)
                  {
-                     assertEquals(66, $pdoConnection->exec('foo'));
+                     assert($pdoConnection->exec('foo'), equals(66));
                  }
                 ],
                 ['lastInsertId',
@@ -202,7 +209,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                  function(PdoDatabaseConnection $pdoConnection)
                  {
                      $pdoConnection->connect(); // must be connected
-                     assertEquals(5, $pdoConnection->getLastInsertId());
+                     assert($pdoConnection->getLastInsertId(), equals(5));
                  }
                 ]
         ];
@@ -231,13 +238,13 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function delegatedMethodCallWrapsPdoExceptionToDatabaseException()
     {
         $this->callThrowsException('commit');
-        $this->pdoConnection->commit();
+        expect(function() { $this->pdoConnection->commit(); })
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 
     /**
@@ -246,22 +253,22 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function prepareDelegatesToPdoInstanceAndReturnsPdoStatement()
     {
         $this->pdo->mapCalls(['prepare' => NewInstance::of('\PdoStatement')]);
-        assertInstanceOf(
-                PdoStatement::class,
-                $this->pdoConnection->prepare('foo')
+        assert(
+                $this->pdoConnection->prepare('foo'),
+                isInstanceOf(PdoStatement::class)
         );
         verify($this->pdo, 'prepare')->received('foo', []);
     }
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function prepareThrowsDatabaseExceptionWhenStatementCreationFails()
     {
         $this->callThrowsException('prepare');
-        $this->pdoConnection->prepare('foo');
+        expect(function() { $this->pdoConnection->prepare('foo'); })
+                ->throws(DatabaseException::class)
+                ->message(contains('error'));
     }
 
     /**
@@ -270,9 +277,9 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function queryWithOutFetchMode()
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
-        assertInstanceOf(
-                PdoQueryResult::class,
-                $this->pdoConnection->query('foo')
+        assert(
+                $this->pdoConnection->query('foo'),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')->received('foo');
     }
@@ -283,12 +290,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function queryWithNoSpecialFetchMode()
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
-        assertInstanceOf(
-                PdoQueryResult::class,
+        assert(
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_ASSOC]
-                )
+                ),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')->received('foo', \PDO::FETCH_ASSOC);
     }
@@ -299,23 +306,24 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function queryWithFetchModeColumn()
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
-        assertInstanceOf(
-                PdoQueryResult::class,
+        assert(
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
-                )
+                ),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')->received('foo', \PDO::FETCH_COLUMN, 5);
     }
 
     /**
      * @test
-     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeColumnButMissingOptionThrowsIllegalArgumentException()
     {
-        $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_COLUMN]);
+        expect(function() {
+                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_COLUMN]);
+        })->throws(\InvalidArgumentException::class);
     }
 
     /**
@@ -325,12 +333,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
         $class = new \stdClass();
-        assertInstanceOf(
-                PdoQueryResult::class,
+        assert(
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
-                )
+                ),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_INTO, $class);
@@ -338,11 +346,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeIntoButMissingOptionThrowsIllegalArgumentException()
     {
-        $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_INTO]);
+        expect(function() {
+                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_INTO]);
+        })->throws(\InvalidArgumentException::class);
     }
 
     /**
@@ -351,12 +360,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function queryWithFetchModeClass()
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
-        assertInstanceOf(
-                PdoQueryResult::class,
+        assert(
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
-                )
+                ),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_CLASS, 'MyClass', []);
@@ -364,11 +373,12 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  InvalidArgumentException
      */
     public function queryWithFetchModeClassButMissingOptionThrowsIllegalArgumentException()
     {
-        $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS]);
+        expect(function() {
+                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS]);
+        })->throws(\InvalidArgumentException::class);
     }
 
     /**
@@ -377,15 +387,15 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     public function queryWithFetchModeClassWithCtorArgs()
     {
         $this->pdo->mapCalls(['query' => NewInstance::of('\PDOStatement')]);
-        assertInstanceOf(
-                PdoQueryResult::class,
+        assert(
                 $this->pdoConnection->query(
                         'foo',
                         ['fetchMode' => \PDO::FETCH_CLASS,
                          'classname' => 'MyClass',
                          'ctorargs' => ['foo']
                         ]
-                )
+                ),
+                isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
                 ->received('foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']);
@@ -393,44 +403,46 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function queryThrowsDatabaseExceptionOnFailure()
     {
         $this->callThrowsException('query');
-        $this->pdoConnection->query('foo');
+        expect(function() { $this->pdoConnection->query('foo'); })
+                ->throws(DatabaseException::class)
+                ->message(contains('error'));
     }
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function execThrowsDatabaseExceptionOnFailure()
     {
         $this->callThrowsException('exec');
-        $this->pdoConnection->exec('foo');
+        expect(function() { $this->pdoConnection->exec('foo'); })
+                ->throws(DatabaseException::class)
+                ->message(contains('error'));
     }
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  Not connected: can not retrieve last insert id
      */
     public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected()
     {
-        $this->pdoConnection->getLastInsertId();
+        expect(function() { $this->pdoConnection->getLastInsertId(); })
+                ->throws(DatabaseException::class)
+                ->withMessage('Not connected: can not retrieve last insert id');
     }
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
-     * @expectedExceptionMessage  error
      */
     public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails()
     {
         $this->callThrowsException('lastInsertId');
-        $this->pdoConnection->connect()->getLastInsertId();
+        expect(function() {
+                $this->pdoConnection->connect()->getLastInsertId();
+        })
+        ->throws(DatabaseException::class)
+        ->message(contains('error'));
     }
 }

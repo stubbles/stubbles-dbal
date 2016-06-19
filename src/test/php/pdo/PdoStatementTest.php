@@ -9,7 +9,14 @@
  */
 namespace stubbles\db\pdo;
 use bovigo\callmap\NewInstance;
+use stubbles\db\DatabaseException;
 
+use function bovigo\assert\assert;
+use function bovigo\assert\assertTrue;
+use function bovigo\assert\expect;
+use function bovigo\assert\predicate\contains;
+use function bovigo\assert\predicate\equals;
+use function bovigo\assert\predicate\isInstanceOf;
 use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
 /**
@@ -57,7 +64,6 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingBindParamThrowsDatabaseException()
     {
@@ -65,7 +71,9 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
         $this->basePdoStatement->mapCalls(
                 ['bindParam' => throws(new \PDOException('error'))]
         );
-        $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
+        expect(function() {
+                $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
+        })->throws(DatabaseException::class);
     }
 
     /**
@@ -81,14 +89,15 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingBindValueThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
                 ['bindValue' => throws(new \PDOException('error'))]
         );
-        $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
+        expect(function() {
+                $this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT);
+        })->throws(DatabaseException::class);
     }
 
     /**
@@ -98,7 +107,7 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
     {
         $this->basePdoStatement->mapCalls(['execute' => true]);
         $result = $this->pdoStatement->execute([]);
-        assertInstanceOf(PdoQueryResult::class, $result);
+        assert($result, isInstanceOf(PdoQueryResult::class));
     }
 
     /**
@@ -114,24 +123,24 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
      */
     public function wrongExecuteThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(['execute' => false]);
-        $this->pdoStatement->execute([]);
+        expect(function() { $this->pdoStatement->execute([]); })
+                ->throws(DatabaseException::class);
     }
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingExecuteThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
                 ['execute' => throws(new \PDOException('error'))]
         );
-        $this->pdoStatement->execute();
+        expect(function() { $this->pdoStatement->execute(); })
+                ->throws(DatabaseException::class);
     }
 
     /**
@@ -145,13 +154,13 @@ class PdoStatementTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException  stubbles\db\DatabaseException
      */
     public function failingCleanThrowsDatabaseException()
     {
         $this->basePdoStatement->mapCalls(
                 ['closeCursor' => throws(new \PDOException('error'))]
         );
-        $this->pdoStatement->clean();
+        expect(function() { $this->pdoStatement->clean(); })
+                ->throws(DatabaseException::class);
     }
 }

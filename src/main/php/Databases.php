@@ -9,7 +9,7 @@
  */
 namespace stubbles\db;
 use stubbles\ioc\InjectionProvider;
-use stubbles\lang\iterator\MappingIterator;
+use stubbles\sequence\iterator\MappingIterator;
 /**
  * IoC provider for database instances.
  *

@@ -26,7 +26,7 @@ interface DatabaseConfigurations extends \Traversable
     /**
      * returns database configuration for given id
      *
-     * @param   string                      $id
+     * @param   string  $id
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function get($id);

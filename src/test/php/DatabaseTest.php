@@ -10,6 +10,8 @@
 namespace stubbles\db;
 use bovigo\callmap\NewInstance;
 
+use function bovigo\assert\assert;
+use function bovigo\assert\predicate\equals;
 use function bovigo\callmap\onConsecutiveCalls;
 /**
  * Test for stubbles\db\Database.
@@ -62,12 +64,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function queryExecutesQueryAndReturnsAmountOfAffectedRecords()
     {
         $this->createQueryResult()->mapCalls(['count' => 1]);
-        assertEquals(
-                1,
+        assert(
                 $this->database->query(
                         'INSERT INTO baz VALUES (:col)',
                         [':col' => 'yes']
-                )
+                ),
+                equals(1)
         );
     }
 
@@ -78,12 +80,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn()
     {
         $this->createQueryResult()->mapCalls(['fetchOne' => 'bar']);
-        assertEquals(
-                'bar',
+        assert(
                 $this->database->fetchOne(
                         'SELECT foo FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )
+                ),
+                equals('bar')
         );
     }
 
@@ -99,14 +101,15 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                         false
                 )]
         );
-        assertEquals(
-                [['foo' => 'bar', 'blubb' => '303'],
-                 ['foo' => 'baz', 'blubb' => '909']
-                ],
+        assert(
                 $this->database->fetchAll(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )->data()
+                )->data(),
+                equals([
+                        ['foo' => 'bar', 'blubb' => '303'],
+                        ['foo' => 'baz', 'blubb' => '909']
+                ])
         );
     }
 
@@ -117,12 +120,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function fetchRowExecutesQueryAndFetchesFirstResultRow()
     {
         $this->createQueryResult()->mapCalls(['fetch' => ['foo' => 'bar']]);
-        assertEquals(
-                ['foo' => 'bar'],
+        assert(
                 $this->database->fetchRow(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )
+                ),
+                equals(['foo' => 'bar'])
         );
     }
 
@@ -134,12 +137,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $this->createQueryResult()->mapCalls(
                 ['fetchOne' => onConsecutiveCalls('bar', 'baz', false)]
         );
-        assertEquals(
-                ['bar', 'baz'],
+        assert(
                 $this->database->fetchColumn(
                         'SELECT foo FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )->data()
+                )->data(),
+                equals(['bar', 'baz'])
         );
     }
 }
