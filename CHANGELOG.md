@@ -1,10 +1,10 @@
-7.0.0 (201?-??-??)
+7.0.0 (2016-06-19)
 ------------------
 
 ### BC breaks
 
   * Raised minimum required PHP version to 5.6
-  * Methods which threw `stubbles\lang\exceptions\ConfigurationException` now throw a `\OutOfBoundsException`
+  * Methods which threw `stubbles\lang\exceptions\ConfigurationException` now throw a `\OutOfBoundsException` or `\LogicException`
 
 
 6.0.0 (2015-05-28)
