@@ -131,22 +131,22 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         return function(DatabaseConfiguration $configuration)
-               {
-                   if (!$configuration->hasDriverOptions()) {
-                       return new PDO(
-                                $configuration->getDsn(),
-                                $configuration->getUserName(),
-                                $configuration->getPassword()
-                       );
-                   }
+        {
+            if (!$configuration->hasDriverOptions()) {
+                return new PDO(
+                        $configuration->getDsn(),
+                        $configuration->getUserName(),
+                        $configuration->getPassword()
+                );
+            }
 
-                   return new PDO(
-                            $configuration->getDsn(),
-                            $configuration->getUserName(),
-                            $configuration->getPassword(),
-                            $configuration->getDriverOptions()
-                   );
-               };
+            return new PDO(
+                    $configuration->getDsn(),
+                    $configuration->getUserName(),
+                    $configuration->getPassword(),
+                    $configuration->getDriverOptions()
+            );
+        };
     }
 
     /**
@@ -177,7 +177,7 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         try {
-            return call_user_func_array([$this->pdo, $method], $arguments);
+            return $this->pdo->$method(...$arguments);
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
