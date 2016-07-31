@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace stubbles\db;
 use bovigo\callmap\NewInstance;
+use stubbles\sequence\assert\Provides;
 
 use function bovigo\assert\assert;
 use function bovigo\assert\predicate\equals;
@@ -102,8 +103,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 $this->database->fetchAll(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )->data(),
-                equals([
+                ),
+                Provides::data([
                         ['foo' => 'bar', 'blubb' => '303'],
                         ['foo' => 'baz', 'blubb' => '909']
                 ])
@@ -142,8 +143,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 $this->database->fetchColumn(
                         'SELECT foo FROM baz WHERE col = :col',
                         [':col' => 'yes']
-                )->data(),
-                equals(['bar', 'baz'])
+                ),
+                Provides::data(['bar', 'baz'])
         );
     }
 }
