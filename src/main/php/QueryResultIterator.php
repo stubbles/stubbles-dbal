@@ -99,9 +99,7 @@ class QueryResultIterator implements \Iterator
             );
         } else {
             $this->current = $this->queryResult->fetchOne(
-                    isset($this->driverOptions['columnIndex']) ?
-                            $this->driverOptions['columnIndex'] :
-                            0
+                    $this->driverOptions['columnIndex'] ?? 0
             );
         }
     }

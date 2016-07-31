@@ -57,7 +57,10 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
             return $this->configurations[$id];
         }
 
-        throw new \OutOfBoundsException('No database configuration known for database requested with id ' . $id);
+        throw new \OutOfBoundsException(
+                'No database configuration known for database requested with id '
+                . $id
+        );
     }
 
     /**

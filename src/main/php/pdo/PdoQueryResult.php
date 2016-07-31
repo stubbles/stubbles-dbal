@@ -74,8 +74,8 @@ class PdoQueryResult implements QueryResult
         try {
             return $this->pdoStatement->fetch(
                     $fetchMode,
-                    ((!isset($driverOptions['cursorOrientation'])) ? (null) : ($driverOptions['cursorOrientation'])),
-                    ((!isset($driverOptions['cursorOffset'])) ? (null) : ($driverOptions['cursorOffset']))
+                    $driverOptions['cursorOrientation'] ?? null,
+                    $driverOptions['cursorOffset'] ?? null
             );
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
@@ -119,7 +119,7 @@ class PdoQueryResult implements QueryResult
             if (PDO::FETCH_COLUMN == $fetchMode) {
                 return $this->pdoStatement->fetchAll(
                         PDO::FETCH_COLUMN,
-                        (!(isset($driverOptions['columnIndex'])) ? (0) : ($driverOptions['columnIndex']))
+                        $driverOptions['columnIndex'] ?? 0
                 );
             }
 
@@ -131,7 +131,7 @@ class PdoQueryResult implements QueryResult
                 return $this->pdoStatement->fetchAll(
                         PDO::FETCH_CLASS,
                         $driverOptions['classname'],
-                        (!(isset($driverOptions['arguments'])) ? (null) : ($driverOptions['arguments']))
+                        $driverOptions['arguments'] ?? null
                 );
             }
 

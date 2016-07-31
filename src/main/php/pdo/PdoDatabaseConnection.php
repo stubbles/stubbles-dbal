@@ -234,10 +234,9 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         try {
-            $result = new PdoStatement(
+            return new PdoStatement(
                     $this->pdo->prepare($statement, $driverOptions)
             );
-            return $result;
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
@@ -270,69 +269,65 @@ class PdoDatabaseConnection implements DatabaseConnection
         }
 
         try {
-            if (isset($driverOptions['fetchMode'])) {
-                switch ($driverOptions['fetchMode']) {
-                    case PDO::FETCH_COLUMN:
-                        if (!isset($driverOptions['colNo'])) {
-                            throw new \InvalidArgumentException(
-                                    'Fetch mode COLUMN requires driver option colNo.'
-                            );
-                        }
-
-                        $pdoStatement = $this->pdo->query(
-                                $sql,
-                                $driverOptions['fetchMode'],
-                                $driverOptions['colNo']
-                        );
-                        break;
-
-                    case PDO::FETCH_INTO:
-                        if (!isset($driverOptions['object'])) {
-                            throw new \InvalidArgumentException(
-                                    'Fetch mode INTO requires driver option object.'
-                            );
-                        }
-
-                        $pdoStatement = $this->pdo->query(
-                                $sql,
-                                $driverOptions['fetchMode'],
-                                $driverOptions['object']
-                        );
-                        break;
-
-                    case PDO::FETCH_CLASS:
-                        if (!isset($driverOptions['classname'])) {
-                            throw new \InvalidArgumentException(
-                                    'Fetch mode CLASS requires driver option classname.'
-                            );
-                        }
-
-                        if (!isset($driverOptions['ctorargs'])) {
-                            $driverOptions['ctorargs'] = [];
-                        }
-
-                        $pdoStatement = $this->pdo->query(
-                                $sql,
-                                $driverOptions['fetchMode'],
-                                $driverOptions['classname'],
-                                $driverOptions['ctorargs']
-                        );
-                        break;
-
-                    default:
-                        $pdoStatement = $this->pdo->query(
-                                $sql,
-                                $driverOptions['fetchMode']
-                        );
-                }
-            } else {
-                $pdoStatement = $this->pdo->query($sql);
+            if (!isset($driverOptions['fetchMode'])) {
+                return new PdoQueryResult($this->pdo->query($sql));
             }
+
+            switch ($driverOptions['fetchMode']) {
+                case PDO::FETCH_COLUMN:
+                    if (!isset($driverOptions['colNo'])) {
+                        throw new \InvalidArgumentException(
+                                'Fetch mode COLUMN requires driver option colNo.'
+                        );
+                    }
+
+                    $pdoStatement = $this->pdo->query(
+                            $sql,
+                            $driverOptions['fetchMode'],
+                            $driverOptions['colNo']
+                    );
+                    break;
+
+                case PDO::FETCH_INTO:
+                    if (!isset($driverOptions['object'])) {
+                        throw new \InvalidArgumentException(
+                                'Fetch mode INTO requires driver option object.'
+                        );
+                    }
+
+                    $pdoStatement = $this->pdo->query(
+                            $sql,
+                            $driverOptions['fetchMode'],
+                            $driverOptions['object']
+                    );
+                    break;
+
+                case PDO::FETCH_CLASS:
+                    if (!isset($driverOptions['classname'])) {
+                        throw new \InvalidArgumentException(
+                                'Fetch mode CLASS requires driver option classname.'
+                        );
+                    }
+
+                    $pdoStatement = $this->pdo->query(
+                            $sql,
+                            $driverOptions['fetchMode'],
+                            $driverOptions['classname'],
+                            $driverOptions['ctorargs'] ?? []
+                    );
+                    break;
+
+                default:
+                    $pdoStatement = $this->pdo->query(
+                            $sql,
+                            $driverOptions['fetchMode']
+                    );
+            }
+
+            return new PdoQueryResult($pdoStatement);
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
-
-        return new PdoQueryResult($pdoStatement);
     }
 
     /**
