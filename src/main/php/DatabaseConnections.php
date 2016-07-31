@@ -54,7 +54,7 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
      * @param   string  $name
      * @return  \stubbles\db\DatabaseConnection
      */
-    public function get($name = null)
+    public function get(string $name = null): DatabaseConnection
     {
         if (null == $name) {
             $name = DatabaseConfiguration::DEFAULT_ID;

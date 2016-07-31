@@ -47,7 +47,7 @@ class Databases implements \IteratorAggregate, InjectionProvider
      * @param   string  $name
      * @return  \stubbles\db\Database
      */
-    public function get($name = null)
+    public function get(string $name = null): Database
     {
         return new Database($this->connections->get($name));
     }
@@ -57,7 +57,7 @@ class Databases implements \IteratorAggregate, InjectionProvider
      *
      * @return  \Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new MappingIterator(
                 $this->connections,
