@@ -5,7 +5,7 @@
     "license": "BSD-3-Clause",
     "description": "Database abstraction layer.",
     "require": {
-        "php": ">=5.6.0",
+        "php": "^7.0",
         "ext-pdo": "*",
         "stubbles/ioc": "^7.1",
         "stubbles/sequence": "^7.0",
@@ -24,7 +24,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "7.0.x-dev"
+            "dev-master": "8.0.x-dev"
         }
     },
     "minimum-stability": "dev",

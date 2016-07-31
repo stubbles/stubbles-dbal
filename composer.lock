@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "426664ae193fbbae55b63f4e6634f03f",
-    "content-hash": "0efa6bd5b48cd55bf636d70086c69a56",
+    "hash": "3994ec139042033468cb35f19b2304b4",
+    "content-hash": "1c087d8980bda12ea8b07a240a3076ff",
     "packages": [
         {
             "name": "stubbles/ioc",
@@ -1631,7 +1631,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0",
+        "php": "^7.0",
         "ext-pdo": "*"
     },
     "platform-dev": []
