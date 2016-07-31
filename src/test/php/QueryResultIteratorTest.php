@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -8,12 +9,12 @@
  * @package  stubbles\db
  */
 namespace stubbles\db;
-use bovigo\callmap\InvocationResults;
 use bovigo\callmap\NewInstance;
 
 use function bovigo\assert\assert;
 use function bovigo\assert\expect;
 use function bovigo\assert\predicate\equals;
+use function bovigo\callmap\onConsecutiveCalls;
 /**
  * Test for stubbles\db\QueryResultIterator.
  *
@@ -45,18 +46,15 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
      */
     private function createIterator(
             array $results,
-            $fetchMode = \PDO::FETCH_ASSOC,
-            array $driverOptions = [])
-    {
+            int $fetchMode = \PDO::FETCH_ASSOC,
+            array $driverOptions = []
+    ): QueryResultIterator {
         $results[] = false;
-        $this->queryResult->mapCalls(
-                // FIXME replace by callmap\onConsecutiveCalls(...$results)
-                // as soon as PHP 5.6 is the minimum version, as
-                // InvocationResults doesn't belong to the public API
-                ['fetch'    => new InvocationResults($results),
-                 'fetchOne' => new InvocationResults(['baz', false])
-                ]
-        );
+        $this->queryResult->mapCalls([
+                'fetch'    => onConsecutiveCalls(...$results),
+                'fetchOne' => onConsecutiveCalls('baz', false),
+                'free'     => true
+        ]);
         $queryResultIterator = new QueryResultIterator(
                 $this->queryResult,
                 $fetchMode,

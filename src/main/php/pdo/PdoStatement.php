@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -9,6 +10,7 @@
  */
 namespace stubbles\db\pdo;
 use stubbles\db\DatabaseException;
+use stubbles\db\QueryResult;
 use stubbles\db\Statement;
 use PDOException;
 /**
@@ -51,7 +53,7 @@ class PdoStatement implements Statement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindParam
      */
-    public function bindParam($param, &$variable, $type = null, $length = null)
+    public function bindParam($param, &$variable, $type = null, int $length = null): bool
     {
         try {
             return $this->pdoStatement->bindParam($param, $variable, $type, $length, null);
@@ -73,7 +75,7 @@ class PdoStatement implements Statement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindValue
      */
-    public function bindValue($param, $value, $type = null)
+    public function bindValue($param, $value, $type = null): bool
     {
         try {
             return $this->pdoStatement->bindValue($param, $value, $type);
@@ -92,7 +94,7 @@ class PdoStatement implements Statement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-execute
      */
-    public function execute(array $values = [])
+    public function execute(array $values = []): QueryResult
     {
         try {
             if ($this->pdoStatement->execute($values)) {
@@ -114,7 +116,7 @@ class PdoStatement implements Statement
      *
      * @return  bool  true on success, false on failure
      */
-    public function clean()
+    public function clean(): bool
     {
         try {
             return $this->pdoStatement->closeCursor();

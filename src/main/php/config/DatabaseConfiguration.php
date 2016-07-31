@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -78,7 +79,7 @@ class DatabaseConfiguration
      * @param   array   $properties
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public static function fromArray($id, $dsn, array $properties)
+    public static function fromArray(string $id, string $dsn, array $properties): DatabaseConfiguration
     {
         $self = new self($id, $dsn);
         if (isset($properties['username'])) {
@@ -111,7 +112,7 @@ class DatabaseConfiguration
      * @param  string  $id   id of connection
      * @param  string  $dsn  data source name
      */
-    public function __construct($id, $dsn)
+    public function __construct(string $id, string $dsn)
     {
         $this->id  = $id;
         $this->dsn = $dsn;
@@ -126,7 +127,7 @@ class DatabaseConfiguration
      *
      * @return  string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -136,7 +137,7 @@ class DatabaseConfiguration
      *
      * @return  string
      */
-    public function getDsn()
+    public function getDsn(): string
     {
         return $this->dsn;
     }
@@ -147,7 +148,7 @@ class DatabaseConfiguration
      * @param   string  $userName
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function setUserName($userName)
+    public function setUserName(string $userName): self
     {
         $this->userName = $userName;
         return $this;
@@ -169,7 +170,7 @@ class DatabaseConfiguration
      * @param   \stubbles\values\Secret  $password
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function setPassword(Secret $password)
+    public function setPassword(Secret $password): self
     {
         $this->password = $password;
         return $this;
@@ -195,7 +196,7 @@ class DatabaseConfiguration
      * @param   array  $driverOptions
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function setDriverOptions(array $driverOptions)
+    public function setDriverOptions(array $driverOptions): self
     {
         $this->driverOptions = $driverOptions;
         return $this;
@@ -206,7 +207,7 @@ class DatabaseConfiguration
      *
      * @return  bool
      */
-    public function hasDriverOptions()
+    public function hasDriverOptions(): bool
     {
         return (count($this->driverOptions) > 0);
     }
@@ -216,7 +217,7 @@ class DatabaseConfiguration
      *
      * @return  array
      */
-    public function getDriverOptions()
+    public function getDriverOptions(): array
     {
         return $this->driverOptions;
     }
@@ -227,7 +228,7 @@ class DatabaseConfiguration
      * @param   string  $initialQuery
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function setInitialQuery($initialQuery)
+    public function setInitialQuery(string $initialQuery): self
     {
         $this->initialQuery = $initialQuery;
         return $this;
@@ -236,9 +237,9 @@ class DatabaseConfiguration
     /**
      * checks if an initial query should be send
      *
-     * @return  string
+     * @return  bool
      */
-    public function hasInitialQuery()
+    public function hasInitialQuery(): bool
     {
         return (null != $this->initialQuery);
     }
@@ -260,7 +261,7 @@ class DatabaseConfiguration
      * @return  \stubbles\db\config\DatabaseConfiguration
      * @since   2.1.0
      */
-    public function setDetails($details)
+    public function setDetails(string $details): self
     {
         $this->details = $details;
         return $this;
@@ -285,12 +286,8 @@ class DatabaseConfiguration
      * @return  string
      * @since   2.2.0
      */
-    public function getProperty($name, $default = null)
+    public function getProperty(string $name, $default = null)
     {
-        if (isset($this->properties[$name])) {
-            return $this->properties[$name];
-        }
-
-        return $default;
+        return $this->properties[$name] ?? $default;
     }
 }

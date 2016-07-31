@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -10,12 +11,14 @@
 namespace stubbles\db\config;
 use stubbles\values\Secret;
 
-use function bovigo\assert\assert;
-use function bovigo\assert\assertEmptyArray;
-use function bovigo\assert\assertFalse;
-use function bovigo\assert\assertNull;
-use function bovigo\assert\assertTrue;
-use function bovigo\assert\predicate\equals;
+use function bovigo\assert\{
+    assert,
+    assertEmptyArray,
+    assertFalse,
+    assertNull,
+    assertTrue,
+    predicate\equals
+};
 /**
  * Test for stubbles\db\config\DatabaseConfiguration.
  *

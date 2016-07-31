@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -28,7 +29,7 @@ interface Statement
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function bindParam($param, &$variable, $type = null, $length = null);
+    public function bindParam($param, &$variable, $type = null, int $length = null): bool;
 
     /**
      * bind a value to the parameter of a prepared query
@@ -42,7 +43,7 @@ interface Statement
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function bindValue($param, $value, $type = null);
+    public function bindValue($param, $value, $type = null): bool;
 
     /**
      * executes a prepared statement
@@ -53,7 +54,7 @@ interface Statement
      * @return  \stubbles\db\QueryResult
      * @throws  \stubbles\db\DatabaseException
      */
-    public function execute(array $values = []);
+    public function execute(array $values = []): QueryResult;
 
     /**
      * releases resources allocated for the specified prepared query
@@ -65,5 +66,5 @@ interface Statement
      * @return  bool  true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function clean();
+    public function clean(): bool;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -43,8 +44,11 @@ class QueryResultIterator implements \Iterator
      * @param  int                       $fetchMode      mode to use for fetching the data
      * @param  array                     $driverOptions  map of driver specific arguments
      */
-    public function __construct(QueryResult $queryResult, $fetchMode, array $driverOptions)
-    {
+    public function __construct(
+            QueryResult $queryResult,
+            int $fetchMode = null,
+            array $driverOptions = []
+    ) {
         $this->queryResult   = $queryResult;
         $this->fetchMode     = $fetchMode;
         $this->driverOptions = $driverOptions;
@@ -77,7 +81,7 @@ class QueryResultIterator implements \Iterator
      *
      * @return  int
      */
-    public function key()
+    public function key(): int
     {
         return $this->key;
     }
@@ -121,7 +125,7 @@ class QueryResultIterator implements \Iterator
      *
      * @return  bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return false !== $this->current;
     }

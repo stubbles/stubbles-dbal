@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -27,7 +28,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
      *
      * @param  \stubbles\db\config\DatabaseConfiguration[]  $configurations  map of configurations which should be available
      */
-    public function __construct($configurations)
+    public function __construct(array $configurations)
     {
         $this->configurations = $configurations;
     }
@@ -38,7 +39,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
      * @param   string  $id
      * @return  bool
      */
-    public function contain($id)
+    public function contain(string $id): bool
     {
         return isset($this->configurations[$id]);
     }
@@ -50,7 +51,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
      * @return  \stubbles\db\config\DatabaseConfiguration
      * @throws  \OutOfBoundsException  in case no config for given id exists
      */
-    public function get($id)
+    public function get(string $id): DatabaseConfiguration
     {
         if (isset($this->configurations[$id])) {
             return $this->configurations[$id];
@@ -64,7 +65,7 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
      *
      * @return  \Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->configurations);
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -12,12 +13,14 @@ use bovigo\callmap\NewInstance;
 use stubbles\db\DatabaseException;
 use stubbles\db\config\DatabaseConfiguration;
 
-use function bovigo\assert\assert;
-use function bovigo\assert\assertTrue;
-use function bovigo\assert\expect;
-use function bovigo\assert\predicate\contains;
-use function bovigo\assert\predicate\equals;
-use function bovigo\assert\predicate\isInstanceOf;
+use function bovigo\assert\{
+    assert,
+    assertTrue,
+    expect,
+    predicate\contains,
+    predicate\equals,
+    predicate\isInstanceOf
+};
 use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
 /**
@@ -117,7 +120,10 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
     {
         expect(function() { $this->pdoConnection->foo('bar'); })
                 ->throws(\BadMethodCallException::class)
-                ->withMessage('Call to undefined method stubbles\db\pdo\PdoDatabaseConnection::foo()');
+                ->withMessage(
+                        'Call to undefined method ' . PdoDatabaseConnection::class
+                        . '::foo()'
+                );
     }
 
     /**
@@ -169,12 +175,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
                 ->message(contains('error'));
     }
 
-    /**
-     * data provider for method delegation test
-     *
-     * @return  array
-     */
-    public function getMethodCalls()
+    public function methodCalls(): array
     {
         return [['beginTransaction',
                  true,
@@ -217,23 +218,20 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider  getMethodCalls
+     * @dataProvider  methodCalls
      */
-    public function delegatesMethodCallsToPdoInstance($method, $returnValue, \Closure $assertion)
+    public function delegatesMethodCallsToPdoInstance(string $method, $returnValue, callable $assertion)
     {
         $this->pdo->mapCalls([$method => $returnValue]);
         $assertion($this->pdoConnection);
 
     }
 
-    /**
-     * @param  string  $method
-     */
-    private function callThrowsException($method)
+    private function callThrowsException(string $method)
     {
-        $this->pdo->mapCalls(
-                [$method => throws(new \PDOException('error'))]
-        );
+        $this->pdo->mapCalls([
+                $method => throws(new \PDOException('error'))
+        ]);
     }
 
     /**
@@ -442,7 +440,7 @@ class PdoDatabaseConnectionTest extends \PHPUnit_Framework_TestCase
         expect(function() {
                 $this->pdoConnection->connect()->getLastInsertId();
         })
-        ->throws(DatabaseException::class)
-        ->message(contains('error'));
+                ->throws(DatabaseException::class)
+                ->message(contains('error'));
     }
 }

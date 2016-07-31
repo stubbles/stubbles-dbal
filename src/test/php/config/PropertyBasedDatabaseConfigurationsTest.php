@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -10,11 +11,13 @@
 namespace stubbles\db\config;
 use org\bovigo\vfs\vfsStream;
 
-use function bovigo\assert\assert;
-use function bovigo\assert\assertFalse;
-use function bovigo\assert\assertTrue;
-use function bovigo\assert\expect;
-use function bovigo\assert\predicate\equals;
+use function bovigo\assert\{
+    assert,
+    assertFalse,
+    assertTrue,
+    expect,
+    predicate\equals
+};
 use function stubbles\reflect\annotationsOf;
 use function stubbles\reflect\annotationsOfConstructorParameter;
 /**
@@ -47,13 +50,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
         );
     }
 
-    /**
-     * creates config folder and returns its url
-     *
-     * @param   string  name of config file
-     * @return  string
-     */
-    private function createConfigFolder($filename = 'rdbms.ini')
+    private function createConfigFolder(string $filename = 'rdbms.ini'): string
     {
         $root = vfsStream::setup();
         $this->configFile = vfsStream::newFile($filename)->at($root);
@@ -65,15 +62,13 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function annotationsPresentOnClass()
     {
-        assertTrue(annotationsOf($this->propertyBasedConfigurations)
-                ->contain('Singleton')
+        assertTrue(
+                annotationsOf($this->propertyBasedConfigurations)
+                        ->contain('Singleton')
         );
     }
 
-    /**
-     * @return  array
-     */
-    public function annotatedParameters()
+    public function annotatedParameters(): array
     {
         return [
             ['configPath', 'stubbles.config.path'],
@@ -86,8 +81,10 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      * @test
      * @dataProvider  annotatedParameters
      */
-    public function annotationsPresentOnConstructor($parameterName, $expectedName)
-    {
+    public function annotationsPresentOnConstructor(
+            string $parameterName,
+            string $expectedName
+    ) {
         $annotations = annotationsOfConstructorParameter(
                 $parameterName,
                 $this->propertyBasedConfigurations

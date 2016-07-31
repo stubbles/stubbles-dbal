@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -11,12 +12,14 @@ namespace stubbles\db\pdo;
 use bovigo\callmap\NewInstance;
 use stubbles\db\DatabaseException;
 
-use function bovigo\assert\assert;
-use function bovigo\assert\assertTrue;
-use function bovigo\assert\expect;
-use function bovigo\assert\predicate\contains;
-use function bovigo\assert\predicate\equals;
-use function bovigo\assert\predicate\isInstanceOf;
+use function bovigo\assert\{
+    assert,
+    assertTrue,
+    expect,
+    predicate\contains,
+    predicate\equals,
+    predicate\isInstanceOf
+};
 use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
 /**

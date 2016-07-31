@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -22,7 +23,7 @@ interface QueryResult
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function bindColumn($column, &$variable, $type = null);
+    public function bindColumn($column, &$variable, $type = null): bool;
 
     /**
      * fetch a result
@@ -32,16 +33,16 @@ interface QueryResult
      * @return  mixed
      * @throws  \stubbles\db\DatabaseException
      */
-    public function fetch($fetchMode = null, array $driverOptions = []);
+    public function fetch(int $fetchMode = null, array $driverOptions = []);
 
     /**
      * fetch single column from the next row from a result set
      *
      * @param   int     $columnNumber  optional  the column number to fetch, default is first column
-     * @return  string
+     * @return  string|false
      * @throws  \stubbles\db\DatabaseException
      */
-    public function fetchOne($columnNumber = 0);
+    public function fetchOne(int $columnNumber = 0);
 
     /**
      * returns an array containing all of the result set rows
@@ -51,7 +52,7 @@ interface QueryResult
      * @return  array
      * @throws  \stubbles\db\DatabaseException
      */
-    public function fetchAll($fetchMode = null, array $driverOptions = []);
+    public function fetchAll(int $fetchMode = null, array $driverOptions = []): array;
 
     /**
      * moves the internal result pointer to the next result row
@@ -59,7 +60,7 @@ interface QueryResult
      * @return  bool  true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function next();
+    public function next(): bool;
 
     /**
      * returns the number of rows affected by the last SQL statement
@@ -67,7 +68,7 @@ interface QueryResult
      * @return  int
      * @throws  \stubbles\db\DatabaseException
      */
-    public function count();
+    public function count(): int;
 
     /**
      * releases resources allocated of the result set
@@ -75,5 +76,5 @@ interface QueryResult
      * @return  bool  true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function free();
+    public function free(): bool;
 }

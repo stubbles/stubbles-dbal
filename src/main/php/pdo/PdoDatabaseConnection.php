@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -10,6 +11,8 @@
 namespace stubbles\db\pdo;
 use stubbles\db\DatabaseConnection;
 use stubbles\db\DatabaseException;
+use stubbles\db\QueryResult;
+use stubbles\db\Statement;
 use stubbles\db\config\DatabaseConfiguration;
 use PDO;
 use PDOException;
@@ -44,7 +47,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @param   \stubbles\db\config\DatabaseConfiguration  $configuration  database configuration required to establish the connection
      */
-    public function __construct(DatabaseConfiguration $configuration, \Closure $pdoCreator = null)
+    public function __construct(DatabaseConfiguration $configuration, callable $pdoCreator = null)
     {
         $this->configuration = $configuration;
         $this->pdoCreator    = $pdoCreator;
@@ -64,7 +67,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  string
      * @since   2.1.0
      */
-    public function dsn()
+    public function dsn(): string
     {
         return $this->configuration->getDsn();
     }
@@ -88,7 +91,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  string
      * @since   2.2.0
      */
-    public function property($name, $default = null)
+    public function property(string $name, $default = null)
     {
         return $this->configuration->getProperty($name, $default);
     }
@@ -99,7 +102,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  \stubbles\db\pdo\PdoDatabaseConnection
      * @throws  \stubbles\db\DatabaseException
      */
-    public function connect()
+    public function connect(): DatabaseConnection
     {
         if (null !== $this->pdo) {
             return $this;
@@ -122,15 +125,15 @@ class PdoDatabaseConnection implements DatabaseConnection
 
     /**
      *
-     * @return  \Closure
+     * @return  callable
      */
-    private function getPdoCreator()
+    private function getPdoCreator(): callable
     {
         if (null !== $this->pdoCreator) {
             return $this->pdoCreator;
         }
 
-        return function(DatabaseConfiguration $configuration)
+        return function(DatabaseConfiguration $configuration): PDO
         {
             if (!$configuration->hasDriverOptions()) {
                 return new PDO(
@@ -166,14 +169,16 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @throws  \stubbles\db\DatabaseException
      * @throws  \BadMethodCallException
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         if (null === $this->pdo) {
             $this->connect();
         }
 
         if (!method_exists($this->pdo, $method)) {
-            throw new \BadMethodCallException('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
+            throw new \BadMethodCallException(
+                    'Call to undefined method ' . __CLASS__ . '::' . $method . '()'
+            );
         }
 
         try {
@@ -188,7 +193,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @return  bool
      */
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         return $this->__call('beginTransaction', []);
     }
@@ -198,7 +203,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @return  bool
      */
-    public function commit()
+    public function commit(): bool
     {
         return $this->__call('commit', []);
     }
@@ -208,7 +213,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      *
      * @return  bool
      */
-    public function rollback()
+    public function rollback(): bool
     {
         return $this->__call('rollBack', []);
     }
@@ -222,7 +227,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdo-prepare
      */
-    public function prepare($statement, array $driverOptions = [])
+    public function prepare(string $statement, array $driverOptions = []): Statement
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -258,7 +263,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @see     http://php.net/pdo-query
      * @see     http://php.net/pdostatement-setfetchmode for the details on the fetch mode options
      */
-    public function query($sql, array $driverOptions = [])
+    public function query(string $sql, array $driverOptions = []): QueryResult
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -337,7 +342,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  int     number of effected rows
      * @throws  \stubbles\db\DatabaseException
      */
-    public function exec($statement)
+    public function exec(string $statement): int
     {
         if (null === $this->pdo) {
             $this->connect();
@@ -357,7 +362,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  int
      * @throws  \stubbles\db\DatabaseException
      */
-    public function getLastInsertId($name = null)
+    public function getLastInsertId(string $name = null)
     {
         if (null === $this->pdo) {
             throw new DatabaseException('Not connected: can not retrieve last insert id');

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -43,12 +44,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $this->database     = new Database($this->dbConnection);
     }
 
-    /**
-     * creates a mocked query result
-     *
-     * @return  \bovigo\callmap\Proxy
-     */
-    private function createQueryResult()
+    private function createQueryResult(): QueryResult
     {
         $statement   = NewInstance::of(Statement::class);
         $queryResult = NewInstance::of(QueryResult::class);
@@ -94,13 +90,14 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchAllExecutesQueryAndFetchesCompleteResult()
     {
-        $this->createQueryResult()->mapCalls(
-                ['fetch' => onConsecutiveCalls(
+        $this->createQueryResult()->mapCalls([
+                'fetch' => onConsecutiveCalls(
                         ['foo' => 'bar', 'blubb' => '303'],
                         ['foo' => 'baz', 'blubb' => '909'],
                         false
-                )]
-        );
+                ),
+                'free'  => true
+        ]);
         assert(
                 $this->database->fetchAll(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
@@ -119,7 +116,10 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchRowExecutesQueryAndFetchesFirstResultRow()
     {
-        $this->createQueryResult()->mapCalls(['fetch' => ['foo' => 'bar']]);
+        $this->createQueryResult()->mapCalls([
+                'fetch' => ['foo' => 'bar'],
+                'free'  => true
+        ]);
         assert(
                 $this->database->fetchRow(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
@@ -134,9 +134,10 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
     {
-        $this->createQueryResult()->mapCalls(
-                ['fetchOne' => onConsecutiveCalls('bar', 'baz', false)]
-        );
+        $this->createQueryResult()->mapCalls([
+                'fetchOne' => onConsecutiveCalls('bar', 'baz', false),
+                'free'     => true
+        ]);
         assert(
                 $this->database->fetchColumn(
                         'SELECT foo FROM baz WHERE col = :col',

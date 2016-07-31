@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -64,7 +65,9 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
             return $this->connections[$name];
         }
 
-        $this->connections[$name] = new PdoDatabaseConnection($this->configurations->get($name));
+        $this->connections[$name] = new PdoDatabaseConnection(
+                $this->configurations->get($name)
+        );
         return $this->connections[$name];
     }
 
@@ -73,7 +76,7 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
      *
      * @return  \Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new MappingIterator(
                 $this->configurations,

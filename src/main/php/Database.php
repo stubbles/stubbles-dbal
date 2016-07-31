@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -40,7 +41,7 @@ class Database
      * @return  string
      * @since   4.0.0
      */
-    public function dsn()
+    public function dsn(): string
     {
         return $this->dbConnection->dsn();
     }
@@ -53,7 +54,7 @@ class Database
      * @return  int
      * @since   3.1.0
      */
-    public function query($sql, array $values = [])
+    public function query(string $sql, array $values = []): int
     {
         return $this->dbConnection->prepare($sql)
                 ->execute($values)
@@ -70,7 +71,7 @@ class Database
      * @throws  \stubbles\db\DatabaseException
      * @since   3.1.0
      */
-    public function fetchOne($sql, array $values = [], $columnNumber = 0)
+    public function fetchOne(string $sql, array $values = [], int $columnNumber = 0): string
     {
         return $this->dbConnection->prepare($sql)
                 ->execute($values)
@@ -92,15 +93,17 @@ class Database
      * @param   array   $driverOptions  optional  driver specific arguments
      * @return  \stubbles\sequence\Sequence
      */
-    public function fetchAll($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
-    {
-        return Sequence::of(
-                new QueryResultIterator(
-                        $this->dbConnection->prepare($sql)->execute($values),
-                        $fetchMode,
-                        $driverOptions
-                )
-        );
+    public function fetchAll(
+            string $sql,
+            array $values = [],
+            int $fetchMode = null,
+            array $driverOptions = []
+    ): Sequence {
+        return Sequence::of(new QueryResultIterator(
+                $this->dbConnection->prepare($sql)->execute($values),
+                $fetchMode,
+                $driverOptions
+        ));
     }
 
     /**
@@ -113,8 +116,12 @@ class Database
      * @return  array
      * @since   2.4.0
      */
-    public function fetchRow($sql, array $values = [], $fetchMode = null, array $driverOptions = [])
-    {
+    public function fetchRow(
+            string $sql,
+            array $values = [],
+            int $fetchMode = null,
+            array $driverOptions = []
+    ): array {
         return $this->dbConnection->prepare($sql)
                 ->execute($values)
                 ->fetch($fetchMode, $driverOptions);
@@ -133,8 +140,11 @@ class Database
      * @param   int     $columnIndex  number of column to fetch
      * @return  \stubbles\sequence\Sequence
      */
-    public function fetchColumn($sql, array $values = [], $columnIndex = 0)
-    {
+    public function fetchColumn(
+            string $sql,
+            array $values = [],
+            int $columnIndex = 0
+    ): Sequence {
         return $this->fetchAll(
                 $sql,
                 $values,

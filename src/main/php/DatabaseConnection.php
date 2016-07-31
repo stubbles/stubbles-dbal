@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -21,7 +22,7 @@ interface DatabaseConnection
      * @return  string
      * @since   2.1.0
      */
-    public function dsn();
+    public function dsn(): string;
 
     /**
      * returns details about the connection
@@ -39,7 +40,7 @@ interface DatabaseConnection
      * @return  string
      * @since   2.2.0
      */
-    public function property($name, $default = null);
+    public function property(string $name, $default = null);
 
     /**
      * establishes the connection
@@ -47,7 +48,7 @@ interface DatabaseConnection
      * @return  \stubbles\db\DatabaseConnection
      * @throws  \stubbles\db\DatabaseException
      */
-    public function connect();
+    public function connect(): self;
 
     /**
      * disconnects the database
@@ -60,7 +61,7 @@ interface DatabaseConnection
      * @return  bool
      * @throws  \stubbles\db\DatabaseException
      */
-    public function beginTransaction();
+    public function beginTransaction(): bool;
 
     /**
      * commit a transaction
@@ -68,7 +69,7 @@ interface DatabaseConnection
      * @return  bool
      * @throws  \stubbles\db\DatabaseException
      */
-    public function commit();
+    public function commit(): bool;
 
     /**
      * rollback a transaction
@@ -76,7 +77,7 @@ interface DatabaseConnection
      * @return  bool
      * @throws  \stubbles\db\DatabaseException
      */
-    public function rollback();
+    public function rollback(): bool;
 
     /**
      * creates a prepared statement
@@ -86,7 +87,7 @@ interface DatabaseConnection
      * @return  \stubbles\db\Statement
      * @throws  \stubbles\db\DatabaseException
      */
-    public function prepare($statement, array $driverOptions = []);
+    public function prepare(string $statement, array $driverOptions = []): Statement;
 
     /**
      * executes a SQL statement
@@ -96,7 +97,7 @@ interface DatabaseConnection
      * @return  \stubbles\db\QueryResult
      * @throws  \stubbles\db\DatabaseException
      */
-    public function query($sql, array $driverOptions = []);
+    public function query(string $sql, array $driverOptions = []): QueryResult;
 
     /**
      * execute an SQL statement and return the number of affected rows
@@ -105,7 +106,7 @@ interface DatabaseConnection
      * @return  int     number of effected rows
      * @throws  \stubbles\db\DatabaseException
      */
-    public function exec($statement);
+    public function exec(string $statement): int;
 
     /**
      * returns the last insert id
@@ -114,5 +115,5 @@ interface DatabaseConnection
      * @return  int
      * @throws  \stubbles\db\DatabaseException
      */
-    public function getLastInsertId($name = null);
+    public function getLastInsertId(string $name = null);
 }

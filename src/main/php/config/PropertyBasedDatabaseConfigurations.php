@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -50,8 +51,11 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      * @Named{descriptor}('stubbles.db.descriptor')
      * @Named{fallback}('stubbles.db.fallback')
      */
-    public function  __construct($configPath, $descriptor = 'rdbms', $fallback = true)
-    {
+    public function  __construct(
+            string $configPath,
+            string $descriptor = 'rdbms',
+            bool $fallback = true
+    ) {
         $this->configPath = $configPath;
         $this->descriptor = $descriptor;
         $this->fallback   = $fallback;
@@ -62,9 +66,11 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @return bool
      */
-    private function hasFallback()
+    private function hasFallback(): bool
     {
-        return ($this->fallback && $this->properties()->containSection(DatabaseConfiguration::DEFAULT_ID));
+        return ($this->fallback
+                && $this->properties()->containSection(DatabaseConfiguration::DEFAULT_ID)
+        );
     }
 
     /**
@@ -73,7 +79,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      * @param   string  $id
      * @return  bool
      */
-    public function contain($id)
+    public function contain(string $id): bool
     {
         if ($this->properties()->containSection($id)) {
             return true;
@@ -90,7 +96,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      * @throws  \OutOfBoundsException  in case no configuration for given id is found and fallback is disabled
      * @throws  \LogicException  in case the found configuration misses the dsn property
      */
-    public function get($id)
+    public function get(string $id)
     {
         if (!$this->properties()->containSection($id)) {
             if (!$this->hasFallback()) {
@@ -116,7 +122,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @return  \stubbles\values\Properties
      */
-    protected function properties()
+    protected function properties(): Properties
     {
         if (null === $this->dbProperties) {
             $this->dbProperties = Properties::fromFile($this->configPath . '/' . $this->descriptor . '.ini');
@@ -130,7 +136,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
      *
      * @return  \Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new MappingIterator(
                 $this->properties(),

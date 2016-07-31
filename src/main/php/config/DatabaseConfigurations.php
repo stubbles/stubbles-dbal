@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * This file is part of stubbles.
  *
@@ -21,7 +22,7 @@ interface DatabaseConfigurations extends \Traversable
      * @param   string  $id
      * @return  bool
      */
-    public function contain($id);
+    public function contain(string $id): bool;
 
     /**
      * returns database configuration for given id
@@ -29,5 +30,5 @@ interface DatabaseConfigurations extends \Traversable
      * @param   string  $id
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function get($id);
+    public function get(string $id);
 }
