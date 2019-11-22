@@ -72,7 +72,7 @@ class PdoQueryResultTest extends TestCase
         $this->basePdoStatement->returns(
                 ['bindColumn' => throws(new \PDOException('error'))]
         );
-        expect(function() {
+        expect(function() use($bar) {
                 $this->pdoQueryResult->bindColumn('foo', $bar, \PDO::PARAM_INT);
         })->throws(DatabaseException::class);
     }

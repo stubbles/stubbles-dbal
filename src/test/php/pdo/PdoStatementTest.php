@@ -70,7 +70,7 @@ class PdoStatementTest extends TestCase
         $this->basePdoStatement->returns(
                 ['bindParam' => throws(new \PDOException('error'))]
         );
-        expect(function() {
+        expect(function() use($bar) {
                 $this->pdoStatement->bindParam('foo', $bar, \PDO::PARAM_INT, 2);
         })->throws(DatabaseException::class);
     }
