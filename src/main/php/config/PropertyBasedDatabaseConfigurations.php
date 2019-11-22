@@ -110,7 +110,7 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
 
         return DatabaseConfiguration::fromArray(
                 $id,
-                $this->properties()->value($id, 'dsn'),
+                (string) $this->properties()->value($id, 'dsn'),
                 $this->properties()->section($id)
         );
     }

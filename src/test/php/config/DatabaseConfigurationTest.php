@@ -13,6 +13,7 @@ use stubbles\values\Secret;
 use function bovigo\assert\{
     assertThat,
     assertEmptyArray,
+    assertEmptyString,
     assertFalse,
     assertNull,
     assertTrue,
@@ -117,7 +118,7 @@ class DatabaseConfigurationTest extends TestCase
     public function hasNoInitialQueryByDefault()
     {
         assertFalse($this->dbConfig->hasInitialQuery());
-        assertNull($this->dbConfig->getInitialQuery());
+        assertEmptyString($this->dbConfig->getInitialQuery());
     }
 
     /**
@@ -165,7 +166,7 @@ class DatabaseConfigurationTest extends TestCase
         assertFalse($dbConfig->hasDriverOptions());
         assertEmptyArray($dbConfig->getDriverOptions());
         assertFalse($dbConfig->hasInitialQuery());
-        assertNull($dbConfig->getInitialQuery());
+        assertEmptyString($dbConfig->getInitialQuery());
         assertNull($this->dbConfig->getDetails());
     }
 
