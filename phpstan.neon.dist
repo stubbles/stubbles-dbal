@@ -6,3 +6,6 @@ parameters:
       # False positive
       - '#Call to an undefined method stubbles\\reflect\\annotation\\Annotation::#'
       - '#Call to an undefined method stubbles\\db\\(.)+::returns\(\).#'
+      -
+          message: '#Method stubbles\\db\\DatabaseTest::createQueryResult\(\) should return stubbles\\db\\QueryResult but returns bovigo\\callmap\\ClassProxy#'
+          path: src/test/php/DatabaseTest.php
