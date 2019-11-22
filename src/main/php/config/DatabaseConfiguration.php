@@ -52,7 +52,7 @@ class DatabaseConfiguration
      *
      * @type  string
      */
-    private $initialQuery;
+    private $initialQuery = '';
     /**
      * some details about the database
      *
@@ -157,7 +157,7 @@ class DatabaseConfiguration
      *
      * @return  string
      */
-    public function getUserName()
+    public function getUserName(): ?string
     {
         return $this->userName;
     }
@@ -179,7 +179,7 @@ class DatabaseConfiguration
      *
      * @return  string
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         if (null !== $this->password) {
             return $this->password->unveil();
@@ -247,7 +247,7 @@ class DatabaseConfiguration
      *
      * @return  string
      */
-    public function getInitialQuery()
+    public function getInitialQuery(): string
     {
         return $this->initialQuery;
     }
@@ -271,7 +271,7 @@ class DatabaseConfiguration
      * @return  string
      * @since   2.1.0
      */
-    public function getDetails()
+    public function getDetails(): ?string
     {
         return $this->details;
     }

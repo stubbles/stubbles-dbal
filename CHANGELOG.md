@@ -5,6 +5,7 @@
 ### BC breaks
 
 * raised minimum required PHP version to 7.3.0
+* added more type hints
 
 ## 8.0.0 (2016-07-31)
 
