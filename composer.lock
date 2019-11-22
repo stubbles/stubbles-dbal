@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc109060f014383963d7b96a058d3204",
+    "content-hash": "93139f256125ec1a925339097e6eddb6",
     "packages": [
         {
             "name": "stubbles/ioc",
@@ -1853,7 +1853,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.0",
+        "php": "^7.3",
         "ext-pdo": "*"
     },
     "platform-dev": []

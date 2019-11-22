@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.0.0 (2019-11-??)
+
+### BC breaks
+
+* raised minimum required PHP version to 7.3.0
+
 ## 8.0.0 (2016-07-31)
 
 ### BC breaks
