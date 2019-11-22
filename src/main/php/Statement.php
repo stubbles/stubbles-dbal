@@ -20,10 +20,10 @@ interface Statement
      * bindValue() the value of the variable at the time of execution will be
      * used, not the value at the time when this method is called.
      *
-     * @param   int|string  $param      the order number of the parameter or its name
-     * @param   mixed       &$variable  the variable to bind to the parameter
-     * @param   int|string  $type       optional  type of the parameter
-     * @param   int         $length     optional  length of the data type
+     * @param   int|string  $param     the order number of the parameter or its name
+     * @param   mixed       $variable  the variable to bind to the parameter
+     * @param   int|string  $type      optional  type of the parameter
+     * @param   int         $length    optional  length of the data type
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */

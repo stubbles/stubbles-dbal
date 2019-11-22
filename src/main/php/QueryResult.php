@@ -15,9 +15,9 @@ interface QueryResult
     /**
      * bind a result column to a variable
      *
-     * @param   int|string  $column     column number or name to bind the variable to
-     * @param   mixed       &$variable  the variable to bind to the column
-     * @param   int|string  $type       optional  type of the variable to bind
+     * @param   int|string  $column    column number or name to bind the variable to
+     * @param   mixed       $variable  the variable to bind to the column
+     * @param   int|string  $type      optional  type of the variable to bind
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */

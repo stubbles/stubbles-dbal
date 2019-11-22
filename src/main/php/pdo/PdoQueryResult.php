@@ -38,9 +38,9 @@ class PdoQueryResult implements QueryResult
     /**
      * bind a result column to a variable
      *
-     * @param   int|string  $column     column number or name to bind the variable to
-     * @param   mixed       &$variable  the variable to bind to the column
-     * @param   int|string  $type       optional  type of the binded variable
+     * @param   int|string  $column    column number or name to bind the variable to
+     * @param   mixed       $variable  the variable to bind to the column
+     * @param   int|string  $type      optional  type of the binded variable
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindColumn
