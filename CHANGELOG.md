@@ -7,6 +7,7 @@
 * raised minimum required PHP version to 7.3.0
 * added more type hints
 * `stubbles\db\config\DatabaseConfiguration::getInitialQuery()` now returns an empty string if no initial query configured
+* parameter `$type` of `stubbles\db\Statement::bindParam()` and `stubbles\db\Statement::bindValue()` must be an int
 
 ## 8.0.0 (2016-07-31)
 

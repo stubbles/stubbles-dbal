@@ -45,14 +45,18 @@ class PdoStatement implements Statement
      *
      * @param   int|string  $param     the order number of the parameter or its name
      * @param   mixed       $variable  the variable to bind to the parameter
-     * @param   int|string  $type      optional  type of the parameter
+     * @param   int         $type      optional  type of the parameter
      * @param   int         $length    optional  length of the data type
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindParam
      */
-    public function bindParam($param, &$variable, $type = null, int $length = null): bool
+    public function bindParam($param, &$variable, int $type = null, int $length = null): bool
     {
+        if (null === $type) {
+            $type = \PDO::PARAM_STR;
+        }
+
         try {
             return $this->pdoStatement->bindParam($param, $variable, $type, $length, null);
         } catch (PDOException $pdoe) {
@@ -68,13 +72,17 @@ class PdoStatement implements Statement
      *
      * @param   int|string  $param  the order number of the parameter or its name
      * @param   mixed       $value  the value to bind
-     * @param   int|string  $type   optional  type of the parameter
+     * @param   int         $type   optional  type of the parameter
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindValue
      */
-    public function bindValue($param, $value, $type = null): bool
+    public function bindValue($param, $value, int $type = null): bool
     {
+        if (null === $type) {
+            $type = \PDO::PARAM_STR;
+        }
+
         try {
             return $this->pdoStatement->bindValue($param, $value, $type);
         } catch (PDOException $pdoe) {
