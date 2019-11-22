@@ -87,7 +87,7 @@ class QueryResultIterator implements \Iterator
     /**
      * iterates to next result element
      */
-    public function next()
+    public function next(): void
     {
         $this->key++;
         if (\PDO::FETCH_COLUMN !== $this->fetchMode) {
@@ -107,7 +107,7 @@ class QueryResultIterator implements \Iterator
      *
      * @throws  \BadMethodCallException
      */
-    public function rewind()
+    public function rewind(): void
     {
         if (null === $this->current) {
             $this->next();

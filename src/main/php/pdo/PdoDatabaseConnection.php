@@ -76,7 +76,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      * @return  string
      * @since   2.1.0
      */
-    public function details()
+    public function details(): ?string
     {
         return $this->configuration->getDetails();
     }
@@ -153,7 +153,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * disconnects the database
      */
-    public function disconnect()
+    public function disconnect(): void
     {
         $this->pdo = null;
     }

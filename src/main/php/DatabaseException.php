@@ -18,7 +18,7 @@ class DatabaseException extends \Exception
      * @param  string      $message   exception message
      * @param  \Exception  $previous  exception that caused this exception
      */
-    public function __construct($message, \Exception $previous = null)
+    public function __construct(string $message, \Exception $previous = null)
     {
         parent::__construct($message, 0, $previous);
     }

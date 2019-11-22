@@ -28,7 +28,7 @@ interface DatabaseConnection
      * @return  string
      * @since   2.1.0
      */
-    public function details();
+    public function details(): ?string;
 
     /**
      * returns property with given name or given default if property not set
@@ -51,7 +51,7 @@ interface DatabaseConnection
     /**
      * disconnects the database
      */
-    public function disconnect();
+    public function disconnect(): void;
 
     /**
      * start a transaction
