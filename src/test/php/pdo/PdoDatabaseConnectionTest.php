@@ -199,7 +199,7 @@ class PdoDatabaseConnectionTest extends TestCase
                  }
                 ],
                 ['lastInsertId',
-                 5,
+                 '5',
                  function(PdoDatabaseConnection $pdoConnection)
                  {
                      $pdoConnection->connect(); // must be connected

@@ -352,10 +352,10 @@ class PdoDatabaseConnection implements DatabaseConnection
      * returns the last insert id
      *
      * @param   string  $name  name of the sequence object from which the ID should be returned.
-     * @return  int
+     * @return  string
      * @throws  \stubbles\db\DatabaseException
      */
-    public function getLastInsertId(string $name = null)
+    public function getLastInsertId(string $name = null): string
     {
         if (null === $this->pdo) {
             throw new DatabaseException('Not connected: can not retrieve last insert id');

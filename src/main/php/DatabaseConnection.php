@@ -110,8 +110,8 @@ interface DatabaseConnection
      * returns the last insert id
      *
      * @param   string  $name  optional  identifier to where to retrieve the last insert id from
-     * @return  int
+     * @return  string
      * @throws  \stubbles\db\DatabaseException
      */
-    public function getLastInsertId(string $name = null);
+    public function getLastInsertId(string $name = null): string;
 }
