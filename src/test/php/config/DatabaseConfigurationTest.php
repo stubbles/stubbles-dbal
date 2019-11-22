@@ -5,14 +5,13 @@ declare(strict_types=1);
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @package  stubbles\db
  */
 namespace stubbles\db\config;
+use PHPUnit\Framework\TestCase;
 use stubbles\values\Secret;
 
 use function bovigo\assert\{
-    assert,
+    assertThat,
     assertEmptyArray,
     assertFalse,
     assertNull,
@@ -25,7 +24,7 @@ use function bovigo\assert\{
  * @group  db
  * @group  config
  */
-class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
+class DatabaseConfigurationTest extends TestCase
 {
     /**
      * instance to test
@@ -34,10 +33,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     private $dbConfig;
 
-    /**
-     * set up test environment
-     */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dbConfig = new DatabaseConfiguration('foo', 'dsn:bar');
     }
@@ -47,7 +43,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function hasGivenId()
     {
-        assert($this->dbConfig->getId(), equals('foo'));
+        assertThat($this->dbConfig->getId(), equals('foo'));
     }
 
     /**
@@ -55,7 +51,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function hasGivenDsn()
     {
-        assert($this->dbConfig->getDsn(), equals('dsn:bar'));
+        assertThat($this->dbConfig->getDsn(), equals('dsn:bar'));
     }
 
     /**
@@ -71,7 +67,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function userNameCanBeSet()
     {
-        assert(
+        assertThat(
                 $this->dbConfig->setUserName('mikey')->getUserName(),
                 equals('mikey')
         );
@@ -90,7 +86,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function passwordCanBeSet()
     {
-        assert(
+        assertThat(
                 $this->dbConfig->setPassword(Secret::create('secret'))->getPassword(),
                 equals('secret')
         );
@@ -112,7 +108,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
     {
          $this->dbConfig->setDriverOptions(['foo' => 'bar']);
          assertTrue($this->dbConfig->hasDriverOptions());
-         assert($this->dbConfig->getDriverOptions(), equals(['foo' => 'bar']));
+         assertThat($this->dbConfig->getDriverOptions(), equals(['foo' => 'bar']));
     }
 
     /**
@@ -131,7 +127,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
     {
          $this->dbConfig->setInitialQuery('set names utf8');
          assertTrue($this->dbConfig->hasInitialQuery());
-         assert($this->dbConfig->getInitialQuery(), equals('set names utf8'));
+         assertThat($this->dbConfig->getInitialQuery(), equals('set names utf8'));
     }
 
     /**
@@ -149,7 +145,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function hasDetailsWhenSet()
     {
-        assert(
+        assertThat(
                 $this->dbConfig->setDetails('some interesting details about the db')
                         ->getDetails(),
                 equals('some interesting details about the db')
@@ -162,8 +158,8 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
     public function createFromArrayMinimalProperties()
     {
         $dbConfig = DatabaseConfiguration::fromArray('foo', 'dsn:bar', []);
-        assert($dbConfig->getId(), equals('foo'));
-        assert($dbConfig->getDSN(), equals('dsn:bar'));
+        assertThat($dbConfig->getId(), equals('foo'));
+        assertThat($dbConfig->getDSN(), equals('dsn:bar'));
         assertNull($dbConfig->getUserName());
         assertNull($dbConfig->getPassword());
         assertFalse($dbConfig->hasDriverOptions());
@@ -187,15 +183,15 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
                  'details'       => 'some interesting details about the db'
                 ]
         );
-        assert($dbConfig->getId(), equals('foo'));
-        assert($dbConfig->getDSN(), equals('dsn:bar'));
-        assert($dbConfig->getUserName(), equals('root'));
-        assert($dbConfig->getPassword(), equals('secret'));
+        assertThat($dbConfig->getId(), equals('foo'));
+        assertThat($dbConfig->getDSN(), equals('dsn:bar'));
+        assertThat($dbConfig->getUserName(), equals('root'));
+        assertThat($dbConfig->getPassword(), equals('secret'));
         assertFalse($dbConfig->hasDriverOptions());
         assertEmptyArray($dbConfig->getDriverOptions());
         assertTrue($dbConfig->hasInitialQuery());
-        assert($dbConfig->getInitialQuery(), equals('SET names utf8'));
-        assert($dbConfig->getDetails(), equals('some interesting details about the db'));
+        assertThat($dbConfig->getInitialQuery(), equals('SET names utf8'));
+        assertThat($dbConfig->getDetails(), equals('some interesting details about the db'));
     }
 
     /**
@@ -216,7 +212,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsDefaultIfPropertyNotSet()
     {
-        assert(
+        assertThat(
                 DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
                         ->getProperty('baz', 'bar'),
                 equals('bar')
@@ -229,7 +225,7 @@ class DatabaseConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsValueIfPropertySet()
     {
-        assert(
+        assertThat(
                 DatabaseConfiguration::fromArray('foo', 'dsn:bar', ['baz' => 'example'])
                         ->getProperty('baz', 'bar'),
                 equals('example')

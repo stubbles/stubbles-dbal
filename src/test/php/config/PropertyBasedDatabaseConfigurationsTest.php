@@ -5,14 +5,13 @@ declare(strict_types=1);
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @package  stubbles\db
  */
 namespace stubbles\db\config;
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 
 use function bovigo\assert\{
-    assert,
+    assertThat,
     assertFalse,
     assertTrue,
     expect,
@@ -26,7 +25,7 @@ use function stubbles\reflect\annotationsOfConstructorParameter;
  * @group  db
  * @group  config
  */
-class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCase
+class PropertyBasedDatabaseConfigurationsTest extends TestCase
 {
     /**
      * instance to test
@@ -40,10 +39,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     private $configFile;
 
-    /**
-     * set up test environment
-     */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
                 $this->createConfigFolder()
@@ -90,7 +86,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
                 $this->propertyBasedConfigurations
         );
         assertTrue($annotations->contain('Named'));
-        assert(
+        assertThat(
                 $annotations->firstNamed('Named')->getName(),
                 equals($expectedName)
         );
@@ -101,7 +97,7 @@ class PropertyBasedDatabaseConfigurationsTest extends \PHPUnit_Framework_TestCas
      */
     public function isDefaultImplementationForDatabaseInitializerInterface()
     {
-        assert(
+        assertThat(
                 annotationsOf(DatabaseConfigurations::class)
                         ->firstNamed('ImplementedBy')->__value()->getName(),
                 equals(get_class($this->propertyBasedConfigurations))
@@ -172,7 +168,7 @@ username="root"');
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        assert(
+        assertThat(
                 $this->propertyBasedConfigurations->get('foo')->getId(),
                 equals('foo')
         );
@@ -185,7 +181,7 @@ dsn="mysql:host=localhost;dbname=example"');
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
-        assert(
+        assertThat(
                 $this->propertyBasedConfigurations->get('foo')->getId(),
                 equals('default')
         );
@@ -233,7 +229,7 @@ dsn="mysql:host=localhost;dbname=example"');
         );
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
-        assert(
+        assertThat(
                 $propertyBasedConfigurations->get('foo')->getDsn(),
                 equals('mysql:host=localhost;dbname=example')
         );
@@ -255,6 +251,6 @@ dsn="mysql:host=example.com;dbname=other"');
             $result[] = $configuration->getId();
         }
 
-        assert($result, equals(['default', 'other']));
+        assertThat($result, equals(['default', 'other']));
     }
 }

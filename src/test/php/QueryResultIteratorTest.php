@@ -5,13 +5,12 @@ declare(strict_types=1);
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @package  stubbles\db
  */
 namespace stubbles\db;
 use bovigo\callmap\NewInstance;
+use PHPUnit\Framework\TestCase;
 
-use function bovigo\assert\assert;
+use function bovigo\assert\assertThat;
 use function bovigo\assert\expect;
 use function bovigo\assert\predicate\equals;
 use function bovigo\callmap\onConsecutiveCalls;
@@ -21,7 +20,7 @@ use function bovigo\callmap\onConsecutiveCalls;
  * @group  db
  * @since  5.0.0
  */
-class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
+class QueryResultIteratorTest extends TestCase
 {
     /**
      * mocked result to iterate over
@@ -30,10 +29,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
      */
     private $queryResult;
 
-    /**
-     * set up test environment
-     */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->queryResult = NewInstance::of(QueryResult::class);
     }
@@ -50,7 +46,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
             array $driverOptions = []
     ): QueryResultIterator {
         $results[] = false;
-        $this->queryResult->mapCalls([
+        $this->queryResult->returns([
                 'fetch'    => onConsecutiveCalls(...$results),
                 'fetchOne' => onConsecutiveCalls('baz', false),
                 'free'     => true
@@ -70,7 +66,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN, ['columnIndex' => 1]) as $result) {
-            assert($result, equals('baz'));
+            assertThat($result, equals('baz'));
         }
     }
 
@@ -81,7 +77,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN) as $result) {
-            assert($result, equals('baz'));
+            assertThat($result, equals('baz'));
         }
     }
 
@@ -95,7 +91,7 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
             $rounds++;
         }
 
-        assert($rounds, equals(0));
+        assertThat($rounds, equals(0));
     }
 
     /**
@@ -106,11 +102,11 @@ class QueryResultIteratorTest extends \PHPUnit_Framework_TestCase
         $results = [['foo'], ['bar']];
         $rounds = 0;
         foreach ($this->createIterator($results) as $key => $result) {
-            assert($result, equals($results[$key]));
+            assertThat($result, equals($results[$key]));
             $rounds++;
         }
 
-        assert($rounds, equals(2));
+        assertThat($rounds, equals(2));
     }
 
     /**

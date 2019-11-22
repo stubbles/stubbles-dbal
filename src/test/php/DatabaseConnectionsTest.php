@@ -5,14 +5,13 @@ declare(strict_types=1);
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @package  stubbles\db
  */
 namespace stubbles\db;
+use PHPUnit\Framework\TestCase;
 use stubbles\db\config\ArrayBasedDatabaseConfigurations;
 use stubbles\db\config\DatabaseConfiguration;
 
-use function bovigo\assert\assert;
+use function bovigo\assert\assertThat;
 use function bovigo\assert\predicate\equals;
 use function bovigo\assert\predicate\isSameAs;
 use function stubbles\reflect\annotationsOf;
@@ -21,7 +20,7 @@ use function stubbles\reflect\annotationsOf;
  *
  * @group  db
  */
-class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
+class DatabaseConnectionsTest extends TestCase
 {
     /**
      * instance to test
@@ -30,10 +29,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     private $databaseConnections;
 
-    /**
-     * set up test environment
-     */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->databaseConnections = new DatabaseConnections(
                 new ArrayBasedDatabaseConfigurations([
@@ -48,7 +44,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function isProviderForDatabaseConnection()
     {
-        assert(
+        assertThat(
                 annotationsOf(DatabaseConnection::class)
                     ->firstNamed('ProvidedBy')
                     ->__value()
@@ -62,7 +58,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsConnectionForRequestedDatabase()
     {
-        assert(
+        assertThat(
                 $this->databaseConnections->get('foo')->dsn(),
                 equals('dsn:bar')
         );
@@ -73,7 +69,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function usesDefaultConnectionWhenNoNameGiven()
     {
-        assert($this->databaseConnections->get()->dsn(), equals('dsn:baz'));
+        assertThat($this->databaseConnections->get()->dsn(), equals('dsn:baz'));
     }
 
     /**
@@ -81,7 +77,7 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
      */
     public function returnsSameInstanceWhenSameNameIsRequestedTwice()
     {
-        assert(
+        assertThat(
                 $this->databaseConnections->get('foo'),
                 isSameAs($this->databaseConnections->get('foo'))
         );
@@ -98,6 +94,6 @@ class DatabaseConnectionsTest extends \PHPUnit_Framework_TestCase
             $result[] = $connection->dsn();
         }
 
-        assert($result, equals(['dsn:bar', 'dsn:baz']));
+        assertThat($result, equals(['dsn:bar', 'dsn:baz']));
     }
 }

@@ -5,14 +5,13 @@ declare(strict_types=1);
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @package  stubbles\db
  */
 namespace stubbles\db;
 use bovigo\callmap\NewInstance;
+use PHPUnit\Framework\TestCase;
 use stubbles\sequence\assert\Provides;
 
-use function bovigo\assert\assert;
+use function bovigo\assert\assertThat;
 use function bovigo\assert\predicate\equals;
 use function bovigo\callmap\onConsecutiveCalls;
 /**
@@ -21,7 +20,7 @@ use function bovigo\callmap\onConsecutiveCalls;
  * @group  db
  * @since  2.1.0
  */
-class DatabaseTest extends \PHPUnit_Framework_TestCase
+class DatabaseTest extends TestCase
 {
     /**
      * instance to test
@@ -39,7 +38,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     /**
      * set up test environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->dbConnection = NewInstance::of(DatabaseConnection::class);
         $this->database     = new Database($this->dbConnection);
@@ -49,8 +48,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $statement   = NewInstance::of(Statement::class);
         $queryResult = NewInstance::of(QueryResult::class);
-        $this->dbConnection->mapCalls(['prepare' => $statement]);
-        $statement->mapCalls(['execute' => $queryResult]);
+        $this->dbConnection->returns(['prepare' => $statement]);
+        $statement->returns(['execute' => $queryResult]);
         return $queryResult;
     }
 
@@ -60,8 +59,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function queryExecutesQueryAndReturnsAmountOfAffectedRecords()
     {
-        $this->createQueryResult()->mapCalls(['count' => 1]);
-        assert(
+        $this->createQueryResult()->returns(['count' => 1]);
+        assertThat(
                 $this->database->query(
                         'INSERT INTO baz VALUES (:col)',
                         [':col' => 'yes']
@@ -76,8 +75,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn()
     {
-        $this->createQueryResult()->mapCalls(['fetchOne' => 'bar']);
-        assert(
+        $this->createQueryResult()->returns(['fetchOne' => 'bar']);
+        assertThat(
                 $this->database->fetchOne(
                         'SELECT foo FROM baz WHERE col = :col',
                         [':col' => 'yes']
@@ -91,7 +90,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchAllExecutesQueryAndFetchesCompleteResult()
     {
-        $this->createQueryResult()->mapCalls([
+        $this->createQueryResult()->returns([
                 'fetch' => onConsecutiveCalls(
                         ['foo' => 'bar', 'blubb' => '303'],
                         ['foo' => 'baz', 'blubb' => '909'],
@@ -99,7 +98,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
                 ),
                 'free'  => true
         ]);
-        assert(
+        assertThat(
                 $this->database->fetchAll(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
                         [':col' => 'yes']
@@ -117,11 +116,11 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchRowExecutesQueryAndFetchesFirstResultRow()
     {
-        $this->createQueryResult()->mapCalls([
+        $this->createQueryResult()->returns([
                 'fetch' => ['foo' => 'bar'],
                 'free'  => true
         ]);
-        assert(
+        assertThat(
                 $this->database->fetchRow(
                         'SELECT foo, blubb FROM baz WHERE col = :col',
                         [':col' => 'yes']
@@ -135,11 +134,11 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
     {
-        $this->createQueryResult()->mapCalls([
+        $this->createQueryResult()->returns([
                 'fetchOne' => onConsecutiveCalls('bar', 'baz', false),
                 'free'     => true
         ]);
-        assert(
+        assertThat(
                 $this->database->fetchColumn(
                         'SELECT foo FROM baz WHERE col = :col',
                         [':col' => 'yes']
