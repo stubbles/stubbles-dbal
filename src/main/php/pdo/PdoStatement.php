@@ -58,6 +58,10 @@ class PdoStatement implements Statement
         }
 
         try {
+            if (null === $length) {
+                return $this->pdoStatement->bindParam($param, $variable, $type);
+            }
+
             return $this->pdoStatement->bindParam($param, $variable, $type, $length, null);
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
