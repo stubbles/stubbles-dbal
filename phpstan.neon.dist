@@ -1,0 +1,8 @@
+parameters:
+  level: 2
+  paths:
+      - ./src
+  ignoreErrors:
+      # False positive
+      - '#Call to an undefined method stubbles\\reflect\\annotation\\Annotation::#'
+      - '#Call to an undefined method stubbles\\db\\(.)+::returns\(\).#'
