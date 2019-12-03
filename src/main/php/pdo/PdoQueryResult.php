@@ -72,8 +72,8 @@ class PdoQueryResult implements QueryResult
         try {
             return $this->pdoStatement->fetch(
                     $fetchMode,
-                    $driverOptions['cursorOrientation'] ?? null,
-                    $driverOptions['cursorOffset'] ?? null
+                    $driverOptions['cursorOrientation'] ?? PDO::FETCH_ORI_NEXT,
+                    $driverOptions['cursorOffset'] ?? 0
             );
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);

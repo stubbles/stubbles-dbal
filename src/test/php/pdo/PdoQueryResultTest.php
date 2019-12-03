@@ -19,7 +19,8 @@ use function bovigo\assert\{
     expect,
     predicate\contains,
     predicate\equals,
-    predicate\isInstanceOf
+    predicate\isInstanceOf,
+    predicate\isSameAs
 };
 use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
@@ -85,7 +86,7 @@ class PdoQueryResultTest extends TestCase
         $this->basePdoStatement->returns(['fetch' => true]);
         assertTrue($this->pdoQueryResult->fetch());
         verify($this->basePdoStatement, 'fetch')
-                ->received(\PDO::FETCH_ASSOC, null, null);
+            ->received(\PDO::FETCH_ASSOC, isSameAs(\PDO::FETCH_ORI_NEXT), isSameAs(0));
     }
 
     /**
@@ -95,13 +96,13 @@ class PdoQueryResultTest extends TestCase
     {
         $this->basePdoStatement->returns(['fetch' => false]);
         assertFalse(
-                $this->pdoQueryResult->fetch(
-                        \PDO::FETCH_ASSOC,
-                        ['cursorOrientation' => 'foo']
-                )
+            $this->pdoQueryResult->fetch(
+                \PDO::FETCH_ASSOC,
+                ['cursorOrientation' => \PDO::FETCH_ORI_FIRST]
+            )
         );
         verify($this->basePdoStatement, 'fetch')
-                ->received(\PDO::FETCH_ASSOC, 'foo', null);
+            ->received(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_FIRST, isSameAs(0));
     }
 
     /**
@@ -111,11 +112,11 @@ class PdoQueryResultTest extends TestCase
     {
         $this->basePdoStatement->returns(['fetch' => []]);
         assertEmptyArray($this->pdoQueryResult->fetch(
-                \PDO::FETCH_OBJ,
-                ['cursorOffset' => 50]
+            \PDO::FETCH_OBJ,
+            ['cursorOffset' => 50]
         ));
         verify($this->basePdoStatement, 'fetch')
-                ->received(\PDO::FETCH_OBJ, null, 50);
+            ->received(\PDO::FETCH_OBJ, isSameAs(\PDO::FETCH_ORI_NEXT), 50);
     }
 
     /**
@@ -125,17 +126,17 @@ class PdoQueryResultTest extends TestCase
     {
         $this->basePdoStatement->returns(['fetch' => 50]);
         assertThat(
-                $this->pdoQueryResult->fetch(
-                        \PDO::FETCH_BOTH,
-                        ['cursorOrientation' => 'foo',
-                         'cursorOffset'      => 50,
-                         'foo'               => 'bar'
-                        ]
-                ),
-                equals(50)
+            $this->pdoQueryResult->fetch(
+                \PDO::FETCH_BOTH,
+                ['cursorOrientation' => \PDO::FETCH_ORI_FIRST,
+                  'cursorOffset'      => 50,
+                  'foo'               => 'bar'
+                ]
+            ),
+            equals(50)
         );
         verify($this->basePdoStatement, 'fetch')
-                ->received(\PDO::FETCH_BOTH, 'foo', 50);
+            ->received(\PDO::FETCH_BOTH, \PDO::FETCH_ORI_FIRST, 50);
     }
 
     /**
