@@ -11,7 +11,7 @@ use bovigo\callmap\NewInstance;
 use PHPUnit\Framework\TestCase;
 use stubbles\sequence\assert\Provides;
 
-use function bovigo\assert\assertThat;
+use function bovigo\assert\{assertNull, assertThat};
 use function bovigo\assert\predicate\equals;
 use function bovigo\callmap\onConsecutiveCalls;
 /**
@@ -126,6 +126,24 @@ class DatabaseTest extends TestCase
                         [':col' => 'yes']
                 ),
                 equals(['foo' => 'bar'])
+        );
+    }
+
+    /**
+     * @test
+     * @since  9.0.2
+     */
+    public function fetchRowReturnsNullWhenUnderlyingConnectionReturnsFalse()
+    {
+        $this->createQueryResult()->returns([
+            'fetch' => false,
+            'free'  => true
+        ]);
+        assertNull(
+            $this->database->fetchRow(
+                'SELECT foo, blubb FROM baz WHERE col = :col',
+                [':col' => 'yes']
+            )
         );
     }
 

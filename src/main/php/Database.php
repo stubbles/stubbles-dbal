@@ -111,7 +111,7 @@ class Database
      * @param   array   $values         map of values in case $sql contains a prepared statement
      * @param   int     $fetchMode      optional  the mode to use for fetching the data
      * @param   array   $driverOptions  optional  driver specific arguments
-     * @return  array
+     * @return  mixed
      * @since   2.4.0
      */
     public function fetchRow(
@@ -119,10 +119,15 @@ class Database
             array $values = [],
             int $fetchMode = null,
             array $driverOptions = []
-    ): array {
-        return $this->dbConnection->prepare($sql)
-                ->execute($values)
-                ->fetch($fetchMode, $driverOptions);
+    ) {
+        $result = $this->dbConnection->prepare($sql)
+            ->execute($values)
+            ->fetch($fetchMode, $driverOptions);
+        if (false === $result) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**

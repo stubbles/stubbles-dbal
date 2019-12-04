@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.0.2 (2019-12-04)
+
+* removed `array` return type hint from `stubbles\db\Database`, can return other values
+
 ## 9.0.1 (2019-12-03)
 
 * fixed invalid default parameters for calls to `PDOStatement::fetch()`
