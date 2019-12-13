@@ -115,14 +115,14 @@ class PdoQueryResult implements QueryResult
     {
         try {
             if (null === $fetchMode) {
-                return $this->pdoStatement->fetchAll();
+                return $this->wrapResult($this->pdoStatement->fetchAll());
             }
 
             if (PDO::FETCH_COLUMN == $fetchMode) {
-                return $this->pdoStatement->fetchAll(
+                return $this->wrapResult($this->pdoStatement->fetchAll(
                         PDO::FETCH_COLUMN,
                         $driverOptions['columnIndex'] ?? 0
-                );
+                ));
             }
 
             if (PDO::FETCH_CLASS == $fetchMode) {
@@ -130,11 +130,11 @@ class PdoQueryResult implements QueryResult
                     throw new \InvalidArgumentException('Tried to use PDO::FETCH_CLASS but no classname given in driver options.');
                 }
 
-                return $this->pdoStatement->fetchAll(
+                return $this->wrapResult($this->pdoStatement->fetchAll(
                         PDO::FETCH_CLASS,
                         $driverOptions['classname'],
                         $driverOptions['arguments'] ?? null
-                );
+                ));
             }
 
             if (PDO::FETCH_FUNC == $fetchMode) {
@@ -142,16 +142,29 @@ class PdoQueryResult implements QueryResult
                     throw new \InvalidArgumentException('Tried to use PDO::FETCH_FUNC but no function given in driver options.');
                 }
 
-                return $this->pdoStatement->fetchAll(
+                return $this->wrapResult($this->pdoStatement->fetchAll(
                         PDO::FETCH_FUNC,
                         $driverOptions['function']
-                );
+                ));
             }
 
-            return $this->pdoStatement->fetchAll($fetchMode);
+            return $this->wrapResult($this->pdoStatement->fetchAll($fetchMode));
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
+    }
+
+    /**
+     * @param   array<string,mixed>|false  $result
+     * @return  array<string,mixed>
+     */
+    private function wrapResult($result): array
+    {
+        if (false === $result) {
+            throw new DatabaseException('An unknown error occurred.');
+        }
+
+        return $result;
     }
 
     /**
