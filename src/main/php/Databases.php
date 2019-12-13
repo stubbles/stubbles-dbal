@@ -13,6 +13,7 @@ use stubbles\sequence\iterator\MappingIterator;
  * IoC provider for database instances.
  *
  * @since  2.1.0
+ * @implements \IteratorAggregate<Database>
  */
 class Databases implements \IteratorAggregate, InjectionProvider
 {
@@ -54,9 +55,9 @@ class Databases implements \IteratorAggregate, InjectionProvider
     /**
      * returns an external iterator
      *
-     * @return  \Traversable
+     * @return  \Iterator<Database>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Iterator
     {
         return new MappingIterator(
                 $this->connections,

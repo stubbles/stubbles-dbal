@@ -14,6 +14,8 @@ use stubbles\ioc\InjectionProvider;
 use stubbles\sequence\iterator\MappingIterator;
 /**
  * List of available database connections.
+ *
+ * @implements \IteratorAggregate<DatabaseConnection>
  */
 class DatabaseConnections implements \IteratorAggregate, InjectionProvider
 {
@@ -72,9 +74,9 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
     /**
      * returns an external iterator
      *
-     * @return  \Traversable
+     * @return  \Iterator<DatabaseConnection>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Iterator
     {
         return new MappingIterator(
                 $this->configurations,

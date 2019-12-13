@@ -13,6 +13,7 @@ use stubbles\values\Properties;
  * Represents a list of available database configurations, configured in a property file.
  *
  * @Singleton
+ * @implements \IteratorAggregate<DatabaseConfiguration>
  */
 class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseConfigurations
 {
@@ -132,9 +133,9 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
     /**
      * returns an external iterator
      *
-     * @return  \Traversable
+     * @return  \Iterator<DatabaseConfiguration>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Iterator
     {
         return new MappingIterator(
                 $this->properties(),
