@@ -4,99 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a4e769994ccf823fe95846b0547bbdb",
+    "content-hash": "c9b4e005435362b37695e96487582338",
     "packages": [
-        {
-            "name": "stubbles/ioc",
-            "version": "v9.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stubbles/stubbles-ioc.git",
-                "reference": "ea9970e2ffe0425956581fd53bbd00d4b5a731c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stubbles/stubbles-ioc/zipball/ea9970e2ffe0425956581fd53bbd00d4b5a731c0",
-                "reference": "ea9970e2ffe0425956581fd53bbd00d4b5a731c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3",
-                "stubbles/reflect": "^9.0",
-                "stubbles/sequence": "^9.0",
-                "stubbles/values": "^9.0"
-            },
-            "require-dev": {
-                "bovigo/assert": "^5.0",
-                "bovigo/callmap": "^5.0.1",
-                "mikey179/vfsstream": "^1.6.7",
-                "phpunit/phpunit": "^8.4",
-                "stubbles/streams": "^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "9.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "stubbles\\": "src/main/php"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Dependency injection.",
-            "homepage": "http://stubbles.net/",
-            "time": "2019-11-12T12:55:54+00:00"
-        },
-        {
-            "name": "stubbles/reflect",
-            "version": "v9.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stubbles/stubbles-reflect.git",
-                "reference": "02dc86cffead215549f3f60abbc8fc66209b7fb7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stubbles/stubbles-reflect/zipball/02dc86cffead215549f3f60abbc8fc66209b7fb7",
-                "reference": "02dc86cffead215549f3f60abbc8fc66209b7fb7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3",
-                "stubbles/sequence": "^9.0",
-                "stubbles/values": "^9.0.1"
-            },
-            "require-dev": {
-                "bovigo/assert": "^5.0",
-                "mikey179/vfsstream": "^1.6.7",
-                "phpunit/phpunit": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "9.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "stubbles\\reflect\\": "src/main/php"
-                },
-                "files": [
-                    "src/main/php/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Reflection helper functions and annotations.",
-            "time": "2019-11-18T12:28:20+00:00"
-        },
         {
             "name": "stubbles/sequence",
             "version": "v9.0.0",
@@ -140,52 +49,6 @@
             "description": "Stream your iterators.",
             "homepage": "http://stubbles.net/",
             "time": "2019-10-29T11:00:01+00:00"
-        },
-        {
-            "name": "stubbles/values",
-            "version": "v9.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stubbles/stubbles-values.git",
-                "reference": "24901407a79f57b2293fd1005e57b0f9dae8ecc7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stubbles/stubbles-values/zipball/24901407a79f57b2293fd1005e57b0f9dae8ecc7",
-                "reference": "24901407a79f57b2293fd1005e57b0f9dae8ecc7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-iconv": "*",
-                "php": "^7.3"
-            },
-            "require-dev": {
-                "bovigo/assert": "^5.0",
-                "bovigo/callmap": "^5.0.1",
-                "mikey179/vfsstream": "^1.6.7",
-                "phpunit/phpunit": "^8.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "9.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "stubbles\\values\\": "src/main/php"
-                },
-                "files": [
-                    "src/main/php/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Useful classes to ease the work with values.",
-            "homepage": "http://stubbles.net/",
-            "time": "2019-10-29T15:59:41+00:00"
         }
     ],
     "packages-dev": [
@@ -1696,6 +1559,143 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-10-03T07:35:21+00:00"
+        },
+        {
+            "name": "stubbles/ioc",
+            "version": "v10.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stubbles/stubbles-ioc.git",
+                "reference": "173751c66f7fe6dbcdd19f328bf6c6e6e41ec130"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stubbles/stubbles-ioc/zipball/173751c66f7fe6dbcdd19f328bf6c6e6e41ec130",
+                "reference": "173751c66f7fe6dbcdd19f328bf6c6e6e41ec130",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "stubbles/reflect": "^9.1",
+                "stubbles/sequence": "^9.0",
+                "stubbles/values": "^9.1"
+            },
+            "require-dev": {
+                "bovigo/assert": "^5.1.1",
+                "bovigo/callmap": "^5.2.1",
+                "mikey179/vfsstream": "^1.6.8",
+                "phpunit/phpunit": "^8.4",
+                "stubbles/streams": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "9.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "stubbles\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Dependency injection.",
+            "homepage": "http://stubbles.net/",
+            "time": "2019-12-13T11:25:15+00:00"
+        },
+        {
+            "name": "stubbles/reflect",
+            "version": "v9.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stubbles/stubbles-reflect.git",
+                "reference": "76147ce73e6e398e8be1e6853e620da030cc66f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stubbles/stubbles-reflect/zipball/76147ce73e6e398e8be1e6853e620da030cc66f9",
+                "reference": "76147ce73e6e398e8be1e6853e620da030cc66f9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "stubbles/sequence": "^9.0",
+                "stubbles/values": "^9.1"
+            },
+            "require-dev": {
+                "bovigo/assert": "^5.1.1",
+                "mikey179/vfsstream": "^1.6.8",
+                "phpunit/phpunit": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "9.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "stubbles\\reflect\\": "src/main/php"
+                },
+                "files": [
+                    "src/main/php/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Reflection helper functions and annotations.",
+            "time": "2019-12-11T13:26:29+00:00"
+        },
+        {
+            "name": "stubbles/values",
+            "version": "v9.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stubbles/stubbles-values.git",
+                "reference": "82f8ceeddd20ea3ebc600623e01d6b6ee6a56696"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stubbles/stubbles-values/zipball/82f8ceeddd20ea3ebc600623e01d6b6ee6a56696",
+                "reference": "82f8ceeddd20ea3ebc600623e01d6b6ee6a56696",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "bovigo/assert": "^5.1.1",
+                "bovigo/callmap": "^5.2",
+                "mikey179/vfsstream": "^1.6.8",
+                "phpunit/phpunit": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "9.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "stubbles\\values\\": "src/main/php"
+                },
+                "files": [
+                    "src/main/php/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Useful classes to ease the work with values.",
+            "homepage": "http://stubbles.net/",
+            "time": "2019-12-10T14:47:56+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

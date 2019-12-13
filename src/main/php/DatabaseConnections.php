@@ -15,7 +15,8 @@ use stubbles\sequence\iterator\MappingIterator;
 /**
  * List of available database connections.
  *
- * @implements \IteratorAggregate<DatabaseConnection>
+ * @implements  \IteratorAggregate<DatabaseConnection>
+ * @implements  InjectionProvider<DatabaseConnection>
  */
 class DatabaseConnections implements \IteratorAggregate, InjectionProvider
 {

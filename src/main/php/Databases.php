@@ -13,7 +13,8 @@ use stubbles\sequence\iterator\MappingIterator;
  * IoC provider for database instances.
  *
  * @since  2.1.0
- * @implements \IteratorAggregate<Database>
+ * @implements  \IteratorAggregate<Database>
+ * @implements  InjectionProvider<Database>
  */
 class Databases implements \IteratorAggregate, InjectionProvider
 {
