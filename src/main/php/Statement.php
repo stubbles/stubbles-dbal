@@ -46,9 +46,9 @@ interface Statement
     /**
      * executes a prepared statement
      *
-     * @param   array  $values  optional  specifies all necessary information for bindParam()
-     *                                    the array elements must use keys corresponding to the
-     *                                    number of the position or name of the parameter
+     * @param   array<int|string,mixed>  $values  optional  specifies all necessary information for bindParam()
+     *                                            the array elements must use keys corresponding to the
+     *                                            number of the position or name of the parameter
      * @return  \stubbles\db\QueryResult
      * @throws  \stubbles\db\DatabaseException
      */

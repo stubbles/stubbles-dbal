@@ -11,27 +11,28 @@ namespace stubbles\db;
  * Allows to iterate over the query result.
  *
  * @since  5.0.0
+ * @implements  \Iterator<mixed>
  */
 class QueryResultIterator implements \Iterator
 {
     /**
-     * @type  \stubbles\db\QueryResult
+     * @var  \stubbles\db\QueryResult
      */
     private $queryResult;
     /**
-     * @type  int
+     * @var  int
      */
     private $fetchMode;
     /**
-     * @type  array
+     * @var  array<string,mixed>
      */
     private $driverOptions;
     /**
-     * @type  mixed
+     * @var  mixed
      */
     private $current;
     /**
-     * @type  int
+     * @var  int
      */
     private $key = -1;
 
@@ -40,7 +41,7 @@ class QueryResultIterator implements \Iterator
      *
      * @param  \stubbles\db\QueryResult  $queryResult    actual query result
      * @param  int                       $fetchMode      mode to use for fetching the data
-     * @param  array                     $driverOptions  map of driver specific arguments
+     * @param  array<string,mixed>       $driverOptions  map of driver specific arguments
      */
     public function __construct(
             QueryResult $queryResult,

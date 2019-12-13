@@ -11,6 +11,7 @@ namespace stubbles\db\config;
  * List of available database configurations, provided as array.
  *
  * @since  4.0.0
+ * @implements  \IteratorAggregate<DatabaseConfiguration>
  */
 class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseConfigurations
 {
@@ -64,9 +65,9 @@ class ArrayBasedDatabaseConfigurations implements \IteratorAggregate, DatabaseCo
     /**
      * returns an external iterator
      *
-     * @return  \Traversable
+     * @return  \Iterator<DatabaseConfiguration>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Iterator
     {
         return new \ArrayIterator($this->configurations);
     }

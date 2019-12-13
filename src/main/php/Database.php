@@ -19,7 +19,7 @@ class Database
     /**
      * actual connection to be used
      *
-     * @type  \stubbles\db\DatabaseConnection
+     * @var  \stubbles\db\DatabaseConnection
      */
     private $dbConnection;
 
@@ -47,8 +47,8 @@ class Database
     /**
      * sends a query to the database and returns amount of affected records
      *
-     * @param   string  $sql
-     * @param   array   $values
+     * @param   string                   $sql
+     * @param   array<int|string,mixed>  $values
      * @return  int
      * @since   3.1.0
      */
@@ -62,14 +62,14 @@ class Database
     /**
      * fetch single value from a result set
      *
-     * @param   string  $sql            sql query to fetch data with
-     * @param   array   $values         map of values in case $sql contains a prepared statement
-     * @param   int     $columnNumber  optional  the column number to fetch, default is first column
-     * @return  string
+     * @param   string                   $sql            sql query to fetch data with
+     * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
+     * @param   int                      $columnNumber  optional  the column number to fetch, default is first column
+     * @return  string|false
      * @throws  \stubbles\db\DatabaseException
      * @since   3.1.0
      */
-    public function fetchOne(string $sql, array $values = [], int $columnNumber = 0): string
+    public function fetchOne(string $sql, array $values = [], int $columnNumber = 0)
     {
         return $this->dbConnection->prepare($sql)
                 ->execute($values)
@@ -85,11 +85,11 @@ class Database
      * </code>
      * Now $blockedUsers contains all rows from the query.
      *
-     * @param   string  $sql            sql query to fetch data with
-     * @param   array   $values         map of values in case $sql contains a prepared statement
-     * @param   int     $fetchMode      optional  the mode to use for fetching the data
-     * @param   array   $driverOptions  optional  driver specific arguments
-     * @return  \stubbles\sequence\Sequence
+     * @param   string                   $sql            sql query to fetch data with
+     * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
+     * @param   int                      $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>      $driverOptions  optional  driver specific arguments
+     * @return  \stubbles\sequence\Sequence<mixed>
      */
     public function fetchAll(
             string $sql,
@@ -107,10 +107,10 @@ class Database
     /**
      * returns first result row for given sql query
      *
-     * @param   string  $sql            sql query to fetch data with
-     * @param   array   $values         map of values in case $sql contains a prepared statement
-     * @param   int     $fetchMode      optional  the mode to use for fetching the data
-     * @param   array   $driverOptions  optional  driver specific arguments
+     * @param   string                   $sql            sql query to fetch data with
+     * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
+     * @param   int                      $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>      $driverOptions  optional  driver specific arguments
      * @return  mixed
      * @since   2.4.0
      */
@@ -138,10 +138,10 @@ class Database
      * $userNames = $database->fetchColumn('SELECT username FROM users WHERE status = "blocked"');
      * </code>
      *
-     * @param   string  $sql          sql query to fetch data with
-     * @param   array   $values       map of values in case $sql contains a prepared statement
-     * @param   int     $columnIndex  number of column to fetch
-     * @return  \stubbles\sequence\Sequence
+     * @param   string                   $sql          sql query to fetch data with
+     * @param   array<int|string,mixed>  $values       map of values in case $sql contains a prepared statement
+     * @param   int                      $columnIndex  number of column to fetch
+     * @return  \stubbles\sequence\Sequence<mixed>
      */
     public function fetchColumn(
             string $sql,

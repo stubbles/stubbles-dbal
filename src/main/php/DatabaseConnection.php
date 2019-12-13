@@ -80,8 +80,8 @@ interface DatabaseConnection
     /**
      * creates a prepared statement
      *
-     * @param   string  $statement      sql statement
-     * @param   array   $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
+     * @param   string                $statement      sql statement
+     * @param   array<string,mixed>   $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
      * @return  \stubbles\db\Statement
      * @throws  \stubbles\db\DatabaseException
      */
@@ -90,8 +90,8 @@ interface DatabaseConnection
     /**
      * executes a SQL statement
      *
-     * @param   string  $sql            sql query to use
-     * @param   array   $driverOptions  optional  one or more driver specific options for the call to query()
+     * @param   string                $sql            sql query to use
+     * @param   array<string,mixed>   $driverOptions  optional  one or more driver specific options for the call to query()
      * @return  \stubbles\db\QueryResult
      * @throws  \stubbles\db\DatabaseException
      */

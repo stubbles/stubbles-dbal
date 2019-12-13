@@ -26,8 +26,8 @@ interface QueryResult
     /**
      * fetch a result
      *
-     * @param   int    $fetchMode      optional  the mode to use for fetching the data
-     * @param   array  $driverOptions  optional  driver specific arguments
+     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
      * @return  mixed
      * @throws  \stubbles\db\DatabaseException
      */
@@ -45,9 +45,9 @@ interface QueryResult
     /**
      * returns an array containing all of the result set rows
      *
-     * @param   int    $fetchMode      optional  the mode to use for fetching the data
-     * @param   array  $driverOptions  optional  driver specific arguments
-     * @return  array
+     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
+     * @return  array<string,mixed>
      * @throws  \stubbles\db\DatabaseException
      */
     public function fetchAll(int $fetchMode = null, array $driverOptions = []): array;

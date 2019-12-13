@@ -22,13 +22,13 @@ class DatabaseConnections implements \IteratorAggregate, InjectionProvider
     /**
      * database configuration reader
      *
-     * @type  \stubbles\db\config\DatabaseConfigurations
+     * @var  \stubbles\db\config\DatabaseConfigurations
      */
     private $configurations;
     /**
      * map of database connections
      *
-     * @type  array
+     * @var  array<string,DatabaseConnection>
      */
     private $connections  = [];
 

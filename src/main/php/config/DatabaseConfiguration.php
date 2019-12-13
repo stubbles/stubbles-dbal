@@ -20,49 +20,49 @@ class DatabaseConfiguration
     /**
      * id to use for the connection
      *
-     * @type  string
+     * @var  string
      */
     private $id;
     /**
      * Data Source Name, or DSN, contains the information required to connect to the database
      *
-     * @type  string
+     * @var  string
      */
     private $dsn;
     /**
      * user name
      *
-     * @type  string
+     * @var  string
      */
     private $userName;
     /**
      * password
      *
-     * @type  \stubbles\values\Secret
+     * @var  \stubbles\values\Secret
      */
     private $password;
     /**
      * a key=>value array of driver-specific connection options
      *
-     * @type  array
+     * @var  array<string,mixed>
      */
     private $driverOptions   = [];
     /**
      * initial query to be executed after commit
      *
-     * @type  string
+     * @var  string
      */
     private $initialQuery = '';
     /**
      * some details about the database
      *
-     * @type  string
+     * @var  string
      */
     private $details;
     /**
      * list of other properties for this connection
      *
-     * @type  array
+     * @var  array<string,mixed>
      */
     private $properties = [];
 
@@ -72,9 +72,9 @@ class DatabaseConfiguration
      * Please note that this method does not support driver options. Driver
      * options must be set separately.
      *
-     * @param   string  $id
-     * @param   string  $dsn
-     * @param   array   $properties
+     * @param   string               $id
+     * @param   string               $dsn
+     * @param   array<string,mixed>  $properties
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public static function fromArray(string $id, string $dsn, array $properties): DatabaseConfiguration
@@ -191,7 +191,7 @@ class DatabaseConfiguration
     /**
      * sets driver-specific connection options for database
      *
-     * @param   array  $driverOptions
+     * @param   array<string,mixed>  $driverOptions
      * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setDriverOptions(array $driverOptions): self
@@ -213,7 +213,7 @@ class DatabaseConfiguration
     /**
      * returns a key=>value array of driver-specific connection options
      *
-     * @return  array
+     * @return  array<string,mixed>
      */
     public function getDriverOptions(): array
     {
