@@ -6,6 +6,10 @@
 
 * changed parameter `$type` of `stubbles\db\QueryResult` to accept values of type `int` only
 
+### Other changes
+
+* added more phpstan related type hints
+
 ## 9.0.2 (2019-12-04)
 
 * removed `array` return type hint from `stubbles\db\Database`, can return other values
