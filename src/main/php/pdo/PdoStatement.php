@@ -21,14 +21,14 @@ class PdoStatement implements Statement
     /**
      * the wrapped pdo statement
      *
-     * @var  \PDOStatement
+     * @var  \PDOStatement<mixed>
      */
     protected $pdoStatement;
 
     /**
      * constructor
      *
-     * @param  \PDOStatement  $pdoStatement  the pdo statement to wrap
+     * @param  \PDOStatement<mixed>  $pdoStatement  the pdo statement to wrap
      */
     public function __construct(\PDOStatement $pdoStatement)
     {
@@ -97,9 +97,9 @@ class PdoStatement implements Statement
     /**
      * executes a prepared statement
      *
-     * @param   array  $values  optional  specifies all necessary information for bindParam()
-     *                                    the array elements must use keys corresponding to the
-     *                                    number of the position or name of the parameter
+     * @param   array<int|string,mixed>  $values  optional  specifies all necessary information for bindParam()
+     *                                            the array elements must use keys corresponding to the
+     *                                            number of the position or name of the parameter
      * @return  \stubbles\db\pdo\PdoQueryResult
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-execute

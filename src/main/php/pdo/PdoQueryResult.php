@@ -21,14 +21,14 @@ class PdoQueryResult implements QueryResult
     /**
      * result set
      *
-     * @type  \PDOStatement
+     * @type  \PDOStatement<mixed>
      */
     private $pdoStatement;
 
     /**
      * constructor
      *
-     * @param  \PDOStatement  $pdoStatement
+     * @param  \PDOStatement<mixed>  $pdoStatement
      */
     public function __construct(\PDOStatement $pdoStatement)
     {
@@ -61,8 +61,8 @@ class PdoQueryResult implements QueryResult
     /**
      * fetch a result
      *
-     * @param   int    $fetchMode      optional  the mode to use for fetching the data
-     * @param   array  $driverOptions  optional  driver specific arguments
+     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
      * @return  mixed
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-fetch
@@ -104,9 +104,9 @@ class PdoQueryResult implements QueryResult
     /**
      * returns an array containing all of the result set rows
      *
-     * @param   int    $fetchMode      optional  the mode to use for fetching the data
-     * @param   array  $driverOptions  optional  driver specific arguments
-     * @return  array
+     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
+     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
+     * @return  array<string,mixed>
      * @throws  \stubbles\db\DatabaseException
      * @throws  \InvalidArgumentException
      * @see     http://php.net/pdostatement-fetchAll
