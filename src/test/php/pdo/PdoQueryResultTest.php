@@ -61,7 +61,7 @@ class PdoQueryResultTest extends TestCase
         $this->basePdoStatement->returns(['bindColumn' => true]);
         assertTrue($this->pdoQueryResult->bindColumn('foo', $bar, \PDO::PARAM_INT));
         verify($this->basePdoStatement, 'bindColumn')
-                ->received('foo', $bar, \PDO::PARAM_INT, null, null);
+                ->received('foo', $bar, \PDO::PARAM_INT);
     }
 
     /**

@@ -40,15 +40,19 @@ class PdoQueryResult implements QueryResult
      *
      * @param   int|string  $column    column number or name to bind the variable to
      * @param   mixed       $variable  the variable to bind to the column
-     * @param   int|string  $type      optional  type of the binded variable
+     * @param   int         $type      optional  type of the bounded variable
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindColumn
      */
-    public function bindColumn($column, &$variable, $type = null): bool
+    public function bindColumn($column, &$variable, int $type = null): bool
     {
         try {
-            return $this->pdoStatement->bindColumn($column, $variable, $type, null, null);
+            if (null === $type) {
+              return $this->pdoStatement->bindColumn($column, $variable);
+            }
+
+            return $this->pdoStatement->bindColumn($column, $variable, $type);
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }

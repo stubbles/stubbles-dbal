@@ -1,5 +1,11 @@
 # Changelog
 
+## 10.0.0 (2019-12-??)
+
+### BC breaks
+
+* changed parameter `$type` of `stubbles\db\QueryResult` to accepts values of type `int` only
+
 ## 9.0.2 (2019-12-04)
 
 * removed `array` return type hint from `stubbles\db\Database`, can return other values

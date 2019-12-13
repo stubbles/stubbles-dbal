@@ -17,11 +17,11 @@ interface QueryResult
      *
      * @param   int|string  $column    column number or name to bind the variable to
      * @param   mixed       $variable  the variable to bind to the column
-     * @param   int|string  $type      optional  type of the variable to bind
+     * @param   int         $type      optional  type of the variable to bind
      * @return  bool        true on success, false on failure
      * @throws  \stubbles\db\DatabaseException
      */
-    public function bindColumn($column, &$variable, $type = null): bool;
+    public function bindColumn($column, &$variable, int $type = null): bool;
 
     /**
      * fetch a result
