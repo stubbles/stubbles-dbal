@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bac60d1fb7b07911a33b61182d268910",
+    "content-hash": "8a4e769994ccf823fe95846b0547bbdb",
     "packages": [
         {
             "name": "stubbles/ioc",

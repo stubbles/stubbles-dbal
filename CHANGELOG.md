@@ -1,10 +1,10 @@
 # Changelog
 
-## 10.0.0 (2019-12-??)
+## 10.0.0 (2019-12-13)
 
 ### BC breaks
 
-* changed parameter `$type` of `stubbles\db\QueryResult` to accepts values of type `int` only
+* changed parameter `$type` of `stubbles\db\QueryResult` to accept values of type `int` only
 
 ## 9.0.2 (2019-12-04)
 
