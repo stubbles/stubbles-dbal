@@ -36,7 +36,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * instance of pdo
      *
-     * @var  \PDO|null
+     * @var  \PDO
      */
     private  $pdo = null;
 
@@ -155,7 +155,7 @@ class PdoDatabaseConnection implements DatabaseConnection
      */
     public function disconnect(): void
     {
-        $this->pdo = null;
+        unset($this->pdo);
     }
 
     /**

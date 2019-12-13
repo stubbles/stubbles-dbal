@@ -20,7 +20,7 @@ class QueryResultIterator implements \Iterator
      */
     private $queryResult;
     /**
-     * @var  int
+     * @var  int|null
      */
     private $fetchMode;
     /**

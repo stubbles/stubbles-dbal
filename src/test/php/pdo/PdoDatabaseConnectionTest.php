@@ -47,7 +47,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * mock for pdo
      *
-     * @var  (\PDO&\bovigo\callmap\ClassProxy)|null
+     * @var  (\PDO&\bovigo\callmap\ClassProxy)
      */
     private $pdo;
 
@@ -70,7 +70,7 @@ class PdoDatabaseConnectionTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->pdo = null;
+        unset($this->pdo);
     }
 
     /**

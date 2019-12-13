@@ -2,13 +2,20 @@ includes:
   - vendor/bovigo/assert/src/main/resources/phpstan/bovigo-assert.neon
 parameters:
   inferPrivatePropertyTypeFromConstructor: true
-  level: 7
+  level: max
   paths:
       - ./src
   ignoreErrors:
       # False positive
       - '#Call to an undefined method stubbles\\reflect\\annotation\\Annotation::#'
-    # Test is explicit test that this will fail and throw an exception
+      # Test is explicit test that this will fail and throw an exception
       -
         message: '#Call to an undefined method stubbles\\db\\pdo\\PdoDatabaseConnection::foo\(\)#'
         path: src/test/php/pdo/PdoDatabaseConnectionTest.php
+      # Official documentation says otherwise
+      -
+        message: '#seqname of method PDO::lastInsertId\(\) expects string, string|null given#'
+        path: src/main/php/pdo/PdoDatabaseConnection.php
+      -
+        message: '#Method stubbles\\db\\pdo\\PdoQueryResult::fetchOne\(\) should return string|false but returns string|false|null#'
+        path: src/main/php/pdo/PdoQueryResult.php
