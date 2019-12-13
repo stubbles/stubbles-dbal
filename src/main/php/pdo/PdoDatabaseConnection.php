@@ -24,21 +24,21 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * database configuration required to establish the connection
      *
-     * @type  \stubbles\db\config\DatabaseConfiguration
+     * @var  \stubbles\db\config\DatabaseConfiguration
      */
     private $configuration;
     /**
      * closure to create a pdo instance
      *
-     * @type  \Closure
+     * @var  callable|null
      */
     private $pdoCreator;
     /**
      * instance of pdo
      *
-     * @type  \PDO
+     * @var  \PDO|null
      */
-    private  $pdo           = null;
+    private  $pdo = null;
 
     /**
      * constructor
@@ -161,8 +161,8 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * redirects calls on non-existing methods to the pdo object
      *
-     * @param   string  $method     name of the method to call
-     * @param   array   $arguments  list of arguments for the method call
+     * @param   string   $method     name of the method to call
+     * @param   mixed[]  $arguments  list of arguments for the method call
      * @return  mixed
      * @throws  \stubbles\db\DatabaseException
      * @throws  \BadMethodCallException
@@ -219,8 +219,8 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * creates a prepared statement
      *
-     * @param   string  $statement      SQL statement
-     * @param   array   $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
+     * @param   string               $statement      SQL statement
+     * @param   array<string,mixed>  $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
      * @return  \stubbles\db\pdo\PdoStatement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdo-prepare
@@ -252,8 +252,8 @@ class PdoDatabaseConnection implements DatabaseConnection
      * ctorargs  => (optional) if fetchMode == PDO::FETCH_CLASS this denotes the list of arguments for the constructor of the class to create and fetch the data into
      * </code>
      *
-     * @param   string  $sql            the sql query to use
-     * @param   array   $driverOptions  optional  how to fetch the data
+     * @param   string               $sql            the sql query to use
+     * @param   array<string,mixed>  $driverOptions  optional  how to fetch the data
      * @return  \stubbles\db\pdo\PdoQueryResult
      * @throws  \stubbles\db\DatabaseException
      * @throws  \InvalidArgumentException
@@ -268,7 +268,7 @@ class PdoDatabaseConnection implements DatabaseConnection
 
         try {
             if (!isset($driverOptions['fetchMode'])) {
-                return new PdoQueryResult($this->pdo->query($sql));
+                return new PdoQueryResult($this->handleFalse($this->pdo->query($sql)));
             }
 
             switch ($driverOptions['fetchMode']) {
@@ -322,10 +322,23 @@ class PdoDatabaseConnection implements DatabaseConnection
                     );
             }
 
-            return new PdoQueryResult($pdoStatement);
+            return new PdoQueryResult($this->handleFalse($pdoStatement));
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
         }
+    }
+
+    /**
+     * @param   \PDOStatement<mixed>|false  $pdoStatement
+     * @return  \PDOStatement<mixed>
+     */
+    private function handleFalse($pdoStatement): \PDOStatement
+    {
+        if (false === $pdoStatement) {
+            throw new DatabaseException('An unknown error occurred.');
+        }
+
+        return $pdoStatement;
     }
 
     /**
