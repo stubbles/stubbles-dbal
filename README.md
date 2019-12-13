@@ -16,7 +16,7 @@ _stubbles/dbal_ is distributed as [Composer](https://getcomposer.org/)
 package. To install it as a dependency of your package use the following
 command:
 
-    composer require "stubbles/dbal": "^9.0"
+    composer require "stubbles/dbal": "^10.0"
 
 ## Requirements
 
