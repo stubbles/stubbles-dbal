@@ -35,19 +35,19 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * instance to test
      *
-     * @type  \stubbles\db\pdo\PdoDatabaseConnection
+     * @var  \stubbles\db\pdo\PdoDatabaseConnection
      */
     private $pdoConnection;
     /**
      * configuration instance
      *
-     * @type  \stubbles\db\config\DatabaseConfiguration
+     * @var  \stubbles\db\config\DatabaseConfiguration
      */
     private $dbConfig;
     /**
      * mock for pdo
      *
-     * @type  \bovigo\callmap\Proxy
+     * @var  (\PDO&\bovigo\callmap\ClassProxy)|null
      */
     private $pdo;
 
@@ -77,7 +77,7 @@ class PdoDatabaseConnectionTest extends TestCase
      * @test
      * @since  2.1.0
      */
-    public function dsnReturnsDsnFromConfiguration()
+    public function dsnReturnsDsnFromConfiguration(): void
     {
         assertThat($this->pdoConnection->dsn(), equals('dsn:bar'));
     }
@@ -86,7 +86,7 @@ class PdoDatabaseConnectionTest extends TestCase
      * @test
      * @since  2.1.0
      */
-    public function detailsReturnsDetailsFromConfiguration()
+    public function detailsReturnsDetailsFromConfiguration(): void
     {
         $this->dbConfig->setDetails('some interesting details about the db');
         assertThat(
@@ -99,7 +99,7 @@ class PdoDatabaseConnectionTest extends TestCase
      * @test
      * @since  2.2.0
      */
-    public function propertyReturnsPropertyFromConfiguration()
+    public function propertyReturnsPropertyFromConfiguration(): void
     {
         assertThat($this->pdoConnection->property('baz'), equals('bar'));
     }
@@ -109,7 +109,7 @@ class PdoDatabaseConnectionTest extends TestCase
      *
      * @test
      */
-    public function undefinedMethod()
+    public function undefinedMethod(): void
     {
         expect(function() { $this->pdoConnection->foo('bar'); })
                 ->throws(\BadMethodCallException::class)
@@ -122,7 +122,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function connectWithoutInitialQuery()
+    public function connectWithoutInitialQuery(): void
     {
         $this->pdoConnection->connect();
         assertTrue(verify($this->pdo, 'query')->wasNeverCalled());
@@ -131,7 +131,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function connectExecutesInitialQuery()
+    public function connectExecutesInitialQuery(): void
     {
         $this->dbConfig->setInitialQuery('set names utf8');
         $this->pdo->returns(['query' => true]);
@@ -142,7 +142,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function connectExecutesInitialQueryOnlyOnce()
+    public function connectExecutesInitialQueryOnlyOnce(): void
     {
         $this->dbConfig->setInitialQuery('set names utf8');
         $this->pdo->returns(['query' => true]);
@@ -154,7 +154,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function connectThrowsDatabaseExceptionWhenPdoFails()
+    public function connectThrowsDatabaseExceptionWhenPdoFails(): void
     {
         $this->pdoConnection = new PdoDatabaseConnection(
                 $this->dbConfig,
@@ -168,6 +168,9 @@ class PdoDatabaseConnectionTest extends TestCase
                 ->message(contains('error'));
     }
 
+    /**
+     * @return  array<mixed[]>
+     */
     public function methodCalls(): array
     {
         return [['beginTransaction',
@@ -210,17 +213,20 @@ class PdoDatabaseConnectionTest extends TestCase
     }
 
     /**
+     * @param  string    $method       method to be called
+     * @param  mixed     $returnValue  value to return from method call
+     * @param  callable  $assertion    assertion to apply on connection after method call
      * @test
      * @dataProvider  methodCalls
      */
-    public function delegatesMethodCallsToPdoInstance(string $method, $returnValue, callable $assertion)
+    public function delegatesMethodCallsToPdoInstance(string $method, $returnValue, callable $assertion): void
     {
         $this->pdo->returns([$method => $returnValue]);
         $assertion($this->pdoConnection);
 
     }
 
-    private function callThrowsException(string $method)
+    private function callThrowsException(string $method): void
     {
         $this->pdo->returns([
                 $method => throws(new \PDOException('error'))
@@ -230,7 +236,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function delegatedMethodCallWrapsPdoExceptionToDatabaseException()
+    public function delegatedMethodCallWrapsPdoExceptionToDatabaseException(): void
     {
         $this->callThrowsException('commit');
         expect(function() { $this->pdoConnection->commit(); })
@@ -241,7 +247,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function prepareDelegatesToPdoInstanceAndReturnsPdoStatement()
+    public function prepareDelegatesToPdoInstanceAndReturnsPdoStatement(): void
     {
         $this->pdo->returns(['prepare' => NewInstance::of('\PdoStatement')]);
         assertThat(
@@ -254,7 +260,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function prepareThrowsDatabaseExceptionWhenStatementCreationFails()
+    public function prepareThrowsDatabaseExceptionWhenStatementCreationFails(): void
     {
         $this->callThrowsException('prepare');
         expect(function() { $this->pdoConnection->prepare('foo'); })
@@ -265,7 +271,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithOutFetchMode()
+    public function queryWithOutFetchMode(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         assertThat(
@@ -278,7 +284,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithNoSpecialFetchMode()
+    public function queryWithNoSpecialFetchMode(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         assertThat(
@@ -294,7 +300,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeColumn()
+    public function queryWithFetchModeColumn(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         assertThat(
@@ -310,7 +316,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeColumnButMissingOptionThrowsIllegalArgumentException()
+    public function queryWithFetchModeColumnButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
                 $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_COLUMN]);
@@ -320,7 +326,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeInto()
+    public function queryWithFetchModeInto(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         $class = new \stdClass();
@@ -338,7 +344,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeIntoButMissingOptionThrowsIllegalArgumentException()
+    public function queryWithFetchModeIntoButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
                 $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_INTO]);
@@ -348,7 +354,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeClass()
+    public function queryWithFetchModeClass(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         assertThat(
@@ -365,7 +371,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeClassButMissingOptionThrowsIllegalArgumentException()
+    public function queryWithFetchModeClassButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
                 $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS]);
@@ -375,7 +381,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryWithFetchModeClassWithCtorArgs()
+    public function queryWithFetchModeClassWithCtorArgs(): void
     {
         $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
         assertThat(
@@ -395,7 +401,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function queryThrowsDatabaseExceptionOnFailure()
+    public function queryThrowsDatabaseExceptionOnFailure(): void
     {
         $this->callThrowsException('query');
         expect(function() { $this->pdoConnection->query('foo'); })
@@ -406,7 +412,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function execThrowsDatabaseExceptionOnFailure()
+    public function execThrowsDatabaseExceptionOnFailure(): void
     {
         $this->callThrowsException('exec');
         expect(function() { $this->pdoConnection->exec('foo'); })
@@ -417,7 +423,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected()
+    public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected(): void
     {
         expect(function() { $this->pdoConnection->getLastInsertId(); })
                 ->throws(DatabaseException::class)
@@ -427,7 +433,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @test
      */
-    public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails()
+    public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails(): void
     {
         $this->callThrowsException('lastInsertId');
         expect(function() {

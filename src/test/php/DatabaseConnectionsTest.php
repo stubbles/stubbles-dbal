@@ -25,7 +25,7 @@ class DatabaseConnectionsTest extends TestCase
     /**
      * instance to test
      *
-     * @type  \stubbles\db\DatabaseConnections
+     * @var  \stubbles\db\DatabaseConnections
      */
     private $databaseConnections;
 
@@ -42,7 +42,7 @@ class DatabaseConnectionsTest extends TestCase
     /**
      * @test
      */
-    public function isProviderForDatabaseConnection()
+    public function isProviderForDatabaseConnection(): void
     {
         assertThat(
                 annotationsOf(DatabaseConnection::class)
@@ -56,7 +56,7 @@ class DatabaseConnectionsTest extends TestCase
     /**
      * @test
      */
-    public function returnsConnectionForRequestedDatabase()
+    public function returnsConnectionForRequestedDatabase(): void
     {
         assertThat(
                 $this->databaseConnections->get('foo')->dsn(),
@@ -67,7 +67,7 @@ class DatabaseConnectionsTest extends TestCase
     /**
      * @test
      */
-    public function usesDefaultConnectionWhenNoNameGiven()
+    public function usesDefaultConnectionWhenNoNameGiven(): void
     {
         assertThat($this->databaseConnections->get()->dsn(), equals('dsn:baz'));
     }
@@ -75,7 +75,7 @@ class DatabaseConnectionsTest extends TestCase
     /**
      * @test
      */
-    public function returnsSameInstanceWhenSameNameIsRequestedTwice()
+    public function returnsSameInstanceWhenSameNameIsRequestedTwice(): void
     {
         assertThat(
                 $this->databaseConnections->get('foo'),
@@ -87,7 +87,7 @@ class DatabaseConnectionsTest extends TestCase
      * @test
      * @since  4.0.0
      */
-    public function canIterateOverAvailableConnections()
+    public function canIterateOverAvailableConnections(): void
     {
         $result = [];
         foreach ($this->databaseConnections as $connection) {

@@ -25,13 +25,13 @@ class DatabaseTest extends TestCase
     /**
      * instance to test
      *
-     * @type  Database
+     * @var  Database
      */
     private $database;
     /**
      * mocked database connection
      *
-     * @type  \bovigo\callmap\Proxy
+     * @var  DatabaseConnection&\bovigo\callmap\ClassProxy
      */
     private $dbConnection;
 
@@ -44,6 +44,9 @@ class DatabaseTest extends TestCase
         $this->database     = new Database($this->dbConnection);
     }
 
+    /**
+     * @return  QueryResult&\bovigo\callmap\ClassProxy
+     */
     private function createQueryResult(): QueryResult
     {
         $statement   = NewInstance::of(Statement::class);
@@ -57,7 +60,7 @@ class DatabaseTest extends TestCase
      * @test
      * @since   3.1.0
      */
-    public function queryExecutesQueryAndReturnsAmountOfAffectedRecords()
+    public function queryExecutesQueryAndReturnsAmountOfAffectedRecords(): void
     {
         $this->createQueryResult()->returns(['count' => 1]);
         assertThat(
@@ -73,7 +76,7 @@ class DatabaseTest extends TestCase
      * @test
      * @since   3.1.0
      */
-    public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn()
+    public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn(): void
     {
         $this->createQueryResult()->returns(['fetchOne' => 'bar']);
         assertThat(
@@ -88,7 +91,7 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function fetchAllExecutesQueryAndFetchesCompleteResult()
+    public function fetchAllExecutesQueryAndFetchesCompleteResult(): void
     {
         $this->createQueryResult()->returns([
                 'fetch' => onConsecutiveCalls(
@@ -114,7 +117,7 @@ class DatabaseTest extends TestCase
      * @test
      * @since  2.4.0
      */
-    public function fetchRowExecutesQueryAndFetchesFirstResultRow()
+    public function fetchRowExecutesQueryAndFetchesFirstResultRow(): void
     {
         $this->createQueryResult()->returns([
                 'fetch' => ['foo' => 'bar'],
@@ -133,7 +136,7 @@ class DatabaseTest extends TestCase
      * @test
      * @since  9.0.2
      */
-    public function fetchRowReturnsNullWhenUnderlyingConnectionReturnsFalse()
+    public function fetchRowReturnsNullWhenUnderlyingConnectionReturnsFalse(): void
     {
         $this->createQueryResult()->returns([
             'fetch' => false,
@@ -150,7 +153,7 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn()
+    public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn(): void
     {
         $this->createQueryResult()->returns([
                 'fetchOne' => onConsecutiveCalls('bar', 'baz', false),

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1627fdbe4d695eb810b8c6aad268b01",
+    "content-hash": "bac60d1fb7b07911a33b61182d268910",
     "packages": [
         {
             "name": "stubbles/ioc",
@@ -191,16 +191,16 @@
     "packages-dev": [
         {
             "name": "bovigo/assert",
-            "version": "v5.0.0",
+            "version": "v5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bovigo/assert.git",
-                "reference": "6bd98242163f1257b706a6cf7a4e9e5e1a8c1f5e"
+                "reference": "3fc2999ac451d07cee9393b8d14befcb248ae048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bovigo/assert/zipball/6bd98242163f1257b706a6cf7a4e9e5e1a8c1f5e",
-                "reference": "6bd98242163f1257b706a6cf7a4e9e5e1a8c1f5e",
+                "url": "https://api.github.com/repos/bovigo/assert/zipball/3fc2999ac451d07cee9393b8d14befcb248ae048",
+                "reference": "3fc2999ac451d07cee9393b8d14befcb248ae048",
                 "shasum": ""
             },
             "require": {
@@ -209,13 +209,13 @@
                 "sebastian/exporter": "^3.1"
             },
             "require-dev": {
-                "mikey179/vfsstream": "^1.6",
+                "mikey179/vfsstream": "^1.6.8",
                 "phpunit/phpunit": "^8.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0.x-dev"
+                    "dev-master": "5.1.x-dev"
                 }
             },
             "autoload": {
@@ -232,27 +232,27 @@
                 "BSD-3-Clause"
             ],
             "description": "Provides assertions for unit tests.",
-            "time": "2019-04-08T11:44:39+00:00"
+            "time": "2019-12-10T13:13:28+00:00"
         },
         {
             "name": "bovigo/callmap",
-            "version": "v5.1.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bovigo/callmap.git",
-                "reference": "0f7a11dfafc01fa7d2b2fbfb83f2c975aa1951a5"
+                "reference": "e94dc6a17186f29533f79bdf6625c025d3b210f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bovigo/callmap/zipball/0f7a11dfafc01fa7d2b2fbfb83f2c975aa1951a5",
-                "reference": "0f7a11dfafc01fa7d2b2fbfb83f2c975aa1951a5",
+                "url": "https://api.github.com/repos/bovigo/callmap/zipball/e94dc6a17186f29533f79bdf6625c025d3b210f8",
+                "reference": "e94dc6a17186f29533f79bdf6625c025d3b210f8",
                 "shasum": ""
             },
             "require": {
+                "bovigo/assert": "^5.1",
                 "php": "^7.2"
             },
             "require-dev": {
-                "bovigo/assert": " ^5.0",
                 "phpunit/phpunit": "^8.0",
                 "xp-framework/unittest": "^9.7"
             },
@@ -264,7 +264,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1.x-dev"
+                    "dev-master": "5.2.x-dev"
                 }
             },
             "autoload": {
@@ -280,7 +280,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Allows to stub and mock method calls by applying a callmap.",
-            "time": "2019-11-19T15:38:28+00:00"
+            "time": "2019-12-12T09:39:03+00:00"
         },
         {
             "name": "doctrine/instantiator",

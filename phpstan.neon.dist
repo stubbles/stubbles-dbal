@@ -1,12 +1,14 @@
+includes:
+  - vendor/bovigo/assert/src/main/resources/phpstan/bovigo-assert.neon
 parameters:
+  inferPrivatePropertyTypeFromConstructor: true
   level: 7
   paths:
       - ./src
   ignoreErrors:
       # False positive
       - '#Call to an undefined method stubbles\\reflect\\annotation\\Annotation::#'
-      - '#Call to an undefined method stubbles\\db\\(.)+::returns\(\).#'
-      - '#bovigo\\callmap\\ClassProxy given#'
+    # Test is explicit test that this will fail and throw an exception
       -
-          message: '#Method stubbles\\db\\DatabaseTest::createQueryResult\(\) should return stubbles\\db\\QueryResult but returns bovigo\\callmap\\ClassProxy#'
-          path: src/test/php/DatabaseTest.php
+        message: '#Call to an undefined method stubbles\\db\\pdo\\PdoDatabaseConnection::foo\(\)#'
+        path: src/test/php/pdo/PdoDatabaseConnectionTest.php

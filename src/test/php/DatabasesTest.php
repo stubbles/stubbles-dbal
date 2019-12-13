@@ -24,7 +24,7 @@ class DatabasesTest extends TestCase
     /**
      * instance to test
      *
-     * @type  \stubbles\db\Databases
+     * @var  \stubbles\db\Databases
      */
     private $databases;
 
@@ -41,7 +41,7 @@ class DatabasesTest extends TestCase
     /**
      * @test
      */
-    public function isProviderForDatabase()
+    public function isProviderForDatabase(): void
     {
         assertThat(
                 annotationsOf(Database::class)
@@ -55,7 +55,7 @@ class DatabasesTest extends TestCase
     /**
      * @test
      */
-    public function returnsRequestedDatabase()
+    public function returnsRequestedDatabase(): void
     {
         assertThat($this->databases->get('foo')->dsn(), equals('dsn:bar'));
     }
@@ -63,7 +63,7 @@ class DatabasesTest extends TestCase
     /**
      * @test
      */
-    public function usesDefaultWhenNoNameGiven()
+    public function usesDefaultWhenNoNameGiven(): void
     {
         assertThat($this->databases->get()->dsn(), equals('dsn:baz'));
     }
@@ -72,7 +72,7 @@ class DatabasesTest extends TestCase
      * @test
      * @since  4.0.0
      */
-    public function canIterateOverAvailableDatabases()
+    public function canIterateOverAvailableDatabases(): void
     {
         $result = [];
         foreach ($this->databases as $database) {

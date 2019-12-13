@@ -30,12 +30,12 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     /**
      * instance to test
      *
-     * @type  \stubbles\db\config\PropertyBasedDatabaseConfigurations
+     * @var  \stubbles\db\config\PropertyBasedDatabaseConfigurations
      */
     private $propertyBasedConfigurations;
     /**
      *
-     * @type  \org\bovigo\vfs\vfsStreamFile
+     * @var  \org\bovigo\vfs\vfsStreamFile
      */
     private $configFile;
 
@@ -56,7 +56,7 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     /**
      * @test
      */
-    public function annotationsPresentOnClass()
+    public function annotationsPresentOnClass(): void
     {
         assertTrue(
                 annotationsOf($this->propertyBasedConfigurations)
@@ -64,6 +64,9 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
         );
     }
 
+    /**
+     * @return  array<string[]>
+     */
     public function annotatedParameters(): array
     {
         return [
@@ -80,7 +83,7 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     public function annotationsPresentOnConstructor(
             string $parameterName,
             string $expectedName
-    ) {
+    ): void {
         $annotations = annotationsOfConstructorParameter(
                 $parameterName,
                 $this->propertyBasedConfigurations
@@ -95,7 +98,7 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     /**
      * @test
      */
-    public function isDefaultImplementationForDatabaseInitializerInterface()
+    public function isDefaultImplementationForDatabaseInitializerInterface(): void
     {
         assertThat(
                 annotationsOf(DatabaseConfigurations::class)
@@ -107,7 +110,7 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     /**
      * @test
      */
-    public function containsConfigWhenPresentInFile()
+    public function containsConfigWhenPresentInFile(): void
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
@@ -117,7 +120,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function containsConfigWhenNotPresentInFileButDefaultAndFallbackEnabled()
+    public function containsConfigWhenNotPresentInFileButDefaultAndFallbackEnabled(): void
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
@@ -127,7 +130,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function doesNotContainConfigWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
+    public function doesNotContainConfigWhenNotPresentInFileAndNoDefaultAndFallbackEnabled(): void
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
@@ -137,7 +140,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function doesNotContainConfigWhenNotPresentInFileAndFallbackDisabled()
+    public function doesNotContainConfigWhenNotPresentInFileAndFallbackDisabled(): void
     {
         $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
                 $this->createConfigFolder() ,
@@ -152,7 +155,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function throwsConfigurationExceptionWhenDsnPropertyMissing()
+    public function throwsConfigurationExceptionWhenDsnPropertyMissing(): void
     {
         $this->configFile->setContent('[foo]
 username="root"');
@@ -164,7 +167,7 @@ username="root"');
     /**
      * @test
      */
-    public function returnsConfigWhenPresentInFile()
+    public function returnsConfigWhenPresentInFile(): void
     {
         $this->configFile->setContent('[foo]
 dsn="mysql:host=localhost;dbname=example"');
@@ -177,7 +180,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function returnsDefaultConfigWhenNotPresentInFileButDefaultAndFallbackEnabled()
+    public function returnsDefaultConfigWhenNotPresentInFileButDefaultAndFallbackEnabled(): void
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"');
@@ -190,7 +193,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function throwsConfigurationExceptionWhenNotPresentInFileAndNoDefaultAndFallbackEnabled()
+    public function throwsConfigurationExceptionWhenNotPresentInFileAndNoDefaultAndFallbackEnabled(): void
     {
         $this->configFile->setContent('[bar]
 dsn="mysql:host=localhost;dbname=example"');
@@ -202,7 +205,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled()
+    public function throwsConfigurationExceptionWhenNotPresentInFileAndFallbackDisabled(): void
     {
         $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
                 $this->createConfigFolder() ,
@@ -221,7 +224,7 @@ dsn="mysql:host=localhost;dbname=example"');
     /**
      * @test
      */
-    public function usesDifferentFileWhenDescriptorChanged()
+    public function usesDifferentFileWhenDescriptorChanged(): void
     {
         $propertyBasedConfigurations = new PropertyBasedDatabaseConfigurations(
                 $this->createConfigFolder('rdbms-test.ini'),
@@ -239,7 +242,7 @@ dsn="mysql:host=localhost;dbname=example"');
      * @test
      * @since  4.0.0
      */
-    public function canIterateOverConfigurations()
+    public function canIterateOverConfigurations(): void
     {
         $this->configFile->setContent('[default]
 dsn="mysql:host=localhost;dbname=example"

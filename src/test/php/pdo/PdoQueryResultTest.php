@@ -36,13 +36,13 @@ class PdoQueryResultTest extends TestCase
     /**
      * instance to test
      *
-     * @type  \stubbles\db\pdo\PdoQueryResult
+     * @var  \stubbles\db\pdo\PdoQueryResult
      */
     private $pdoQueryResult;
     /**
      * mock for pdo
      *
-     * @type  \bovigo\callmap\Proxy
+     * @var  \PDOStatement<mixed>&\bovigo\callmap\ClassProxy
      */
     private $basePdoStatement;
 
@@ -55,7 +55,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function bindColumnPassesValuesCorrectly()
+    public function bindColumnPassesValuesCorrectly(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(['bindColumn' => true]);
@@ -67,7 +67,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingBindColumnThrowsDatabaseException()
+    public function failingBindColumnThrowsDatabaseException(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(
@@ -81,7 +81,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchPassesValuesCorrectlyWithoutArguments()
+    public function fetchPassesValuesCorrectlyWithoutArguments(): void
     {
         $this->basePdoStatement->returns(['fetch' => true]);
         assertTrue($this->pdoQueryResult->fetch());
@@ -92,7 +92,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchPassesValuesCorrectlyWithFetchAssoc()
+    public function fetchPassesValuesCorrectlyWithFetchAssoc(): void
     {
         $this->basePdoStatement->returns(['fetch' => false]);
         assertFalse(
@@ -108,7 +108,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchPassesValuesCorrectlyWithFetchObj()
+    public function fetchPassesValuesCorrectlyWithFetchObj(): void
     {
         $this->basePdoStatement->returns(['fetch' => []]);
         assertEmptyArray($this->pdoQueryResult->fetch(
@@ -122,7 +122,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchPassesValuesCorrectlyWithFetchBoth()
+    public function fetchPassesValuesCorrectlyWithFetchBoth(): void
     {
         $this->basePdoStatement->returns(['fetch' => 50]);
         assertThat(
@@ -142,7 +142,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingFetchThrowsDatabaseException()
+    public function failingFetchThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['fetch' => throws(new \PDOException('error'))]
@@ -154,7 +154,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchOnePassesValuesCorrectly()
+    public function fetchOnePassesValuesCorrectly(): void
     {
         $this->basePdoStatement->returns(['fetchColumn' => true]);
         assertTrue($this->pdoQueryResult->fetchOne());
@@ -166,7 +166,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingFetchOneThrowsDatabaseException()
+    public function failingFetchOneThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['fetchColumn' => throws(new \PDOException('error'))]
@@ -178,7 +178,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchAllWithoutArguments()
+    public function fetchAllWithoutArguments(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray($this->pdoQueryResult->fetchAll());
@@ -188,7 +188,7 @@ class PdoQueryResultTest extends TestCase
      * @test
      * @group  bug248
      */
-    public function fetchAllWithFetchColumnUsesColumnZeroIsDefault()
+    public function fetchAllWithFetchColumnUsesColumnZeroIsDefault(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray($this->pdoQueryResult->fetchAll(\PDO::FETCH_COLUMN));
@@ -200,7 +200,7 @@ class PdoQueryResultTest extends TestCase
      * @test
      * @group  bug248
      */
-    public function fetchAllWithFetchColumnUsesGivenColumn()
+    public function fetchAllWithFetchColumnUsesGivenColumn(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray(
@@ -216,7 +216,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function fetchAllWithFetchObject()
+    public function fetchAllWithFetchObject(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray($this->pdoQueryResult->fetchAll(\PDO::FETCH_OBJ));
@@ -229,7 +229,7 @@ class PdoQueryResultTest extends TestCase
      * @since  1.3.2
      * @group  bug248
      */
-    public function fetchAllWithFetchClassWithoutClassThrowsIllegalArgumentException()
+    public function fetchAllWithFetchClassWithoutClassThrowsIllegalArgumentException(): void
     {
         expect(function() { $this->pdoQueryResult->fetchAll(\PDO::FETCH_CLASS); })
                 ->throws(\InvalidArgumentException::class);
@@ -240,7 +240,7 @@ class PdoQueryResultTest extends TestCase
      * @since  1.3.2
      * @group  bug248
      */
-    public function fetchAllWithFetchClassWithoutArguments()
+    public function fetchAllWithFetchClassWithoutArguments(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray(
@@ -258,7 +258,7 @@ class PdoQueryResultTest extends TestCase
      * @since  1.3.2
      * @group  bug248
      */
-    public function fetchAllWithFetchClassWithArguments()
+    public function fetchAllWithFetchClassWithArguments(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray(
@@ -276,7 +276,7 @@ class PdoQueryResultTest extends TestCase
      * @since  1.3.2
      * @group  bug248
      */
-    public function fetchAllWithFetchFunc()
+    public function fetchAllWithFetchFunc(): void
     {
         $this->basePdoStatement->returns(['fetchAll' => []]);
         assertEmptyArray(
@@ -294,7 +294,7 @@ class PdoQueryResultTest extends TestCase
      * @since  1.3.2
      * @group  bug248
      */
-    public function fetchAllWithFetchFuncWithMissingFunctionThrowsIllegalArgumentException()
+    public function fetchAllWithFetchFuncWithMissingFunctionThrowsIllegalArgumentException(): void
     {
         expect(function() { $this->pdoQueryResult->fetchAll(\PDO::FETCH_FUNC); })
                 ->throws(\InvalidArgumentException::class);
@@ -303,7 +303,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingFetchAllThrowsDatabaseException()
+    public function failingFetchAllThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['fetchAll' => throws(new \PDOException('error'))]
@@ -315,7 +315,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function nextPassesValuesCorrectly()
+    public function nextPassesValuesCorrectly(): void
     {
         $this->basePdoStatement->returns(['nextRowset' => true]);
         assertTrue($this->pdoQueryResult->next());
@@ -324,7 +324,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingNextThrowsDatabaseException()
+    public function failingNextThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['nextRowset' => throws(new \PDOException('error'))]
@@ -336,7 +336,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function rowCountPassesValuesCorrectly()
+    public function rowCountPassesValuesCorrectly(): void
     {
         $this->basePdoStatement->returns(['rowCount' => 5]);
         assertThat($this->pdoQueryResult->count(), equals(5));
@@ -345,7 +345,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingRowCountThrowsDatabaseException()
+    public function failingRowCountThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['rowCount' => throws(new \PDOException('error'))]
@@ -357,7 +357,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function freeClosesResultCursor()
+    public function freeClosesResultCursor(): void
     {
         $this->basePdoStatement->returns(['closeCursor' => true]);
         assertTrue($this->pdoQueryResult->free());
@@ -366,7 +366,7 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function failingFreeThrowsDatabaseException()
+    public function failingFreeThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['closeCursor' => throws(new \PDOException('error'))]

@@ -25,7 +25,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * mocked result to iterate over
      *
-     * @type  \bovigo\callmap\Proxy
+     * @var  QueryResult&\bovigo\callmap\ClassProxy
      */
     private $queryResult;
 
@@ -37,7 +37,9 @@ class QueryResultIteratorTest extends TestCase
     /**
      * create an instance for the test
      *
-     * @param   mixed[]  $results
+     * @param   mixed[]              $results
+     * @param   int                  $fetchMode
+     * @param   array<string,mixed>  $driverOptions
      * @return  \stubbles\db\QueryResultIterator
      */
     private function createIterator(
@@ -62,7 +64,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * @test
      */
-    public function fetchColumnWithGivenColumn()
+    public function fetchColumnWithGivenColumn(): void
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN, ['columnIndex' => 1]) as $result) {
@@ -73,7 +75,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * @test
      */
-    public function fetchColumnWithoutGivenColumn()
+    public function fetchColumnWithoutGivenColumn(): void
     {
         $results = [['foo', 'bar']];
         foreach ($this->createIterator($results, \PDO::FETCH_COLUMN) as $result) {
@@ -84,7 +86,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * @test
      */
-    public function canHandleEmptyResultSet()
+    public function canHandleEmptyResultSet(): void
     {
         $rounds = 0;
         foreach ($this->createIterator([]) as $result) {
@@ -97,7 +99,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * @test
      */
-    public function canIterateOnce()
+    public function canIterateOnce(): void
     {
         $results = [['foo'], ['bar']];
         $rounds = 0;
@@ -112,7 +114,7 @@ class QueryResultIteratorTest extends TestCase
     /**
      * @test
      */
-    public function canNotIterateMoreThanOnce()
+    public function canNotIterateMoreThanOnce(): void
     {
         $iterator = $this->createIterator([['foo'], ['bar']]);
         foreach ($iterator as $result) {

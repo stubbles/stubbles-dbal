@@ -33,13 +33,13 @@ class PdoStatementTest extends TestCase
     /**
      * instance to test
      *
-     * @type  PdoStatement
+     * @var  PdoStatement
      */
     private $pdoStatement;
     /**
      * mock for pdo
      *
-     * @type  \bovigo\callmap\Proxy
+     * @var  \PDOStatement<mixed>&\bovigo\callmap\ClassProxy
      */
     private $basePdoStatement;
 
@@ -52,7 +52,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function bindParamPassesValuesCorrectly()
+    public function bindParamPassesValuesCorrectly(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(['bindParam' => true]);
@@ -64,7 +64,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function failingBindParamThrowsDatabaseException()
+    public function failingBindParamThrowsDatabaseException(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(
@@ -78,7 +78,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function bindValuePassesValuesCorrectly()
+    public function bindValuePassesValuesCorrectly(): void
     {
         $this->basePdoStatement->returns(['bindValue' => true]);
         assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
@@ -89,7 +89,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function failingBindValueThrowsDatabaseException()
+    public function failingBindValueThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['bindValue' => throws(new \PDOException('error'))]
@@ -102,7 +102,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function executeReturnsPdoQueryResult()
+    public function executeReturnsPdoQueryResult(): void
     {
         $this->basePdoStatement->returns(['execute' => true]);
         $result = $this->pdoStatement->execute([]);
@@ -112,7 +112,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function executePassesArguments()
+    public function executePassesArguments(): void
     {
         $this->basePdoStatement->returns(['execute' => true]);
         $this->pdoStatement->execute([':roland' => 303]);
@@ -123,7 +123,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function wrongExecuteThrowsDatabaseException()
+    public function wrongExecuteThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(['execute' => false]);
         expect(function() { $this->pdoStatement->execute([]); })
@@ -133,7 +133,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function failingExecuteThrowsDatabaseException()
+    public function failingExecuteThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['execute' => throws(new \PDOException('error'))]
@@ -145,7 +145,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function cleanClosesResultCursor()
+    public function cleanClosesResultCursor(): void
     {
         $this->basePdoStatement->returns(['closeCursor' => true]);
         assertTrue($this->pdoStatement->clean());
@@ -154,7 +154,7 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function failingCleanThrowsDatabaseException()
+    public function failingCleanThrowsDatabaseException(): void
     {
         $this->basePdoStatement->returns(
                 ['closeCursor' => throws(new \PDOException('error'))]

@@ -30,7 +30,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * instance to test
      *
-     * @type  DatabaseConfiguration
+     * @var  DatabaseConfiguration
      */
     private $dbConfig;
 
@@ -42,7 +42,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasGivenId()
+    public function hasGivenId(): void
     {
         assertThat($this->dbConfig->getId(), equals('foo'));
     }
@@ -50,7 +50,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasGivenDsn()
+    public function hasGivenDsn(): void
     {
         assertThat($this->dbConfig->getDsn(), equals('dsn:bar'));
     }
@@ -58,7 +58,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasNoUserNameByDefault()
+    public function hasNoUserNameByDefault(): void
     {
         assertNull($this->dbConfig->getUserName());
     }
@@ -66,7 +66,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function userNameCanBeSet()
+    public function userNameCanBeSet(): void
     {
         assertThat(
                 $this->dbConfig->setUserName('mikey')->getUserName(),
@@ -77,7 +77,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasNoPasswordByDefault()
+    public function hasNoPasswordByDefault(): void
     {
         assertNull($this->dbConfig->getPassword());
     }
@@ -85,7 +85,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function passwordCanBeSet()
+    public function passwordCanBeSet(): void
     {
         assertThat(
                 $this->dbConfig->setPassword(Secret::create('secret'))->getPassword(),
@@ -96,7 +96,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasNoDriverOptionsByDefault()
+    public function hasNoDriverOptionsByDefault(): void
     {
         assertFalse($this->dbConfig->hasDriverOptions());
         assertEmptyArray($this->dbConfig->getDriverOptions());
@@ -105,7 +105,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function driverOptionsCanBeSet()
+    public function driverOptionsCanBeSet(): void
     {
          $this->dbConfig->setDriverOptions(['foo' => 'bar']);
          assertTrue($this->dbConfig->hasDriverOptions());
@@ -115,7 +115,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function hasNoInitialQueryByDefault()
+    public function hasNoInitialQueryByDefault(): void
     {
         assertFalse($this->dbConfig->hasInitialQuery());
         assertEmptyString($this->dbConfig->getInitialQuery());
@@ -124,7 +124,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function initialQueryCanBeSet()
+    public function initialQueryCanBeSet(): void
     {
          $this->dbConfig->setInitialQuery('set names utf8');
          assertTrue($this->dbConfig->hasInitialQuery());
@@ -135,7 +135,7 @@ class DatabaseConfigurationTest extends TestCase
      * @test
      * @since  2.1.0
      */
-    public function hasNoDetailsByDefault()
+    public function hasNoDetailsByDefault(): void
     {
         assertNull($this->dbConfig->getDetails());
     }
@@ -144,7 +144,7 @@ class DatabaseConfigurationTest extends TestCase
      * @test
      * @since  2.1.0
      */
-    public function hasDetailsWhenSet()
+    public function hasDetailsWhenSet(): void
     {
         assertThat(
                 $this->dbConfig->setDetails('some interesting details about the db')
@@ -156,7 +156,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function createFromArrayMinimalProperties()
+    public function createFromArrayMinimalProperties(): void
     {
         $dbConfig = DatabaseConfiguration::fromArray('foo', 'dsn:bar', []);
         assertThat($dbConfig->getId(), equals('foo'));
@@ -173,7 +173,7 @@ class DatabaseConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function createFromArrayFullProperties()
+    public function createFromArrayFullProperties(): void
     {
         $dbConfig = DatabaseConfiguration::fromArray(
                 'foo',
@@ -199,7 +199,7 @@ class DatabaseConfigurationTest extends TestCase
      * @test
      * @since  2.2.0
      */
-    public function returnsNullIfPropertyNotSet()
+    public function returnsNullIfPropertyNotSet(): void
     {
         assertNull(
                 DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
@@ -211,7 +211,7 @@ class DatabaseConfigurationTest extends TestCase
      * @test
      * @since  2.2.0
      */
-    public function returnsDefaultIfPropertyNotSet()
+    public function returnsDefaultIfPropertyNotSet(): void
     {
         assertThat(
                 DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
@@ -224,7 +224,7 @@ class DatabaseConfigurationTest extends TestCase
      * @test
      * @since  2.2.0
      */
-    public function returnsValueIfPropertySet()
+    public function returnsValueIfPropertySet(): void
     {
         assertThat(
                 DatabaseConfiguration::fromArray('foo', 'dsn:bar', ['baz' => 'example'])
