@@ -20,25 +20,25 @@ class PropertyBasedDatabaseConfigurations implements \IteratorAggregate, Databas
     /**
      * path to config files
      *
-     * @type  string
+     * @var  string
      */
     private $configPath;
     /**
      * descriptor to be used
      *
-     * @type  string
+     * @var  string
      */
     private $descriptor;
     /**
      * switch whether to fallback to default connection if no named connection exists
      *
-     * @type  bool
+     * @var  bool
      */
     private $fallback;
     /**
      * properties for database connections
      *
-     * @type  \stubbles\lang\Properties
+     * @var  \stubbles\values\Properties
      */
     private $dbProperties;
 
