@@ -11,6 +11,7 @@ namespace stubbles\db\config;
  * Represents a list of available database configurations.
  *
  * @ImplementedBy(stubbles\db\config\PropertyBasedDatabaseConfigurations.class)
+ * @extends  \Traversable<string,DatabaseConfiguration>
  */
 interface DatabaseConfigurations extends \Traversable
 {
