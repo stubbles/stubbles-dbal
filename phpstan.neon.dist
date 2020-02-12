@@ -14,8 +14,8 @@ parameters:
         path: src/test/php/pdo/PdoDatabaseConnectionTest.php
       # Official documentation says otherwise
       -
-        message: '#seqname of method PDO::lastInsertId\(\) expects string, string|null given#'
+        message: '#seqname of method PDO::lastInsertId\(\) expects string, string\|null given#'
         path: src/main/php/pdo/PdoDatabaseConnection.php
       -
-        message: '#Method stubbles\\db\\pdo\\PdoQueryResult::fetchOne\(\) should return string|false but returns string|false|null#'
+        message: '#Method stubbles\\db\\pdo\\PdoQueryResult::fetchOne\(\) should return string\|false but returns string\|false\|null#'
         path: src/main/php/pdo/PdoQueryResult.php
