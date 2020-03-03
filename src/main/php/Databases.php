@@ -41,7 +41,7 @@ class Databases implements \IteratorAggregate, InjectionProvider
      * If a name is provided and a connection with this name exists this
      * connection will be used. If fallback is enabled and the named
      * connection does not exist the default connection will be used, if
-     * fallback is disabled a DatabaseException will be thrown.
+     * fallback is disabled a \OutOfBoundsException will be thrown.
      *
      * If no name is provided the default connection will be used.
      *
