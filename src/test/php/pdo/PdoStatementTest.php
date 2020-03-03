@@ -52,7 +52,19 @@ class PdoStatementTest extends TestCase
     /**
      * @test
      */
-    public function bindParamPassesValuesCorrectly(): void
+    public function bindParamPassesMinimumValuesCorrectly(): void
+    {
+        $bar = 'world';
+        $this->basePdoStatement->returns(['bindParam' => true]);
+        assertTrue($this->pdoStatement->bindParam('hello', $bar));
+        verify($this->basePdoStatement, 'bindParam')
+                ->received('hello', $bar, \PDO::PARAM_STR);
+    }
+
+    /**
+     * @test
+     */
+    public function bindParamPassesAllValuesCorrectly(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(['bindParam' => true]);
@@ -81,9 +93,9 @@ class PdoStatementTest extends TestCase
     public function bindValuePassesValuesCorrectly(): void
     {
         $this->basePdoStatement->returns(['bindValue' => true]);
-        assertTrue($this->pdoStatement->bindValue('foo', 1, \PDO::PARAM_INT));
+        assertTrue($this->pdoStatement->bindValue('hello', 'world'));
         verify($this->basePdoStatement, 'bindValue')
-                ->received('foo', 1, \PDO::PARAM_INT);
+                ->received('hello', 'world', \PDO::PARAM_STR);
     }
 
     /**

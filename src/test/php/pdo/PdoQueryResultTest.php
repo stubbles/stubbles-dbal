@@ -55,7 +55,19 @@ class PdoQueryResultTest extends TestCase
     /**
      * @test
      */
-    public function bindColumnPassesValuesCorrectly(): void
+    public function bindColumnPassesWithoutTypeValuesCorrectly(): void
+    {
+        $bar = 'world';
+        $this->basePdoStatement->returns(['bindColumn' => true]);
+        assertTrue($this->pdoQueryResult->bindColumn('hello', $bar));
+        verify($this->basePdoStatement, 'bindColumn')
+                ->received('hello', $bar);
+    }
+
+    /**
+     * @test
+     */
+    public function bindColumnPassesWithTypeValuesCorrectly(): void
     {
         $bar = 1;
         $this->basePdoStatement->returns(['bindColumn' => true]);
