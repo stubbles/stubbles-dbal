@@ -14,6 +14,7 @@ use function bovigo\assert\assertThat;
 use function bovigo\assert\expect;
 use function bovigo\assert\predicate\equals;
 use function bovigo\callmap\onConsecutiveCalls;
+use function bovigo\callmap\throws;
 /**
  * Test for stubbles\db\QueryResultIterator.
  *
@@ -128,5 +129,16 @@ class QueryResultIteratorTest extends TestCase
         })
                 ->throws(\BadMethodCallException::class)
                 ->withMessage('Can not rewind database result set');
+    }
+
+    /**
+     * @test
+     */
+    public function exceptionOnDestructionIsSwallowed(): void
+    {
+        $queryResultIterator = new QueryResultIterator($this->queryResult);
+        $this->queryResult->returns(['free' => throws(new DatabaseException('failure'))]);
+        expect(function() use ($queryResultIterator) { $queryResultIterator = null; })
+            ->doesNotThrow();
     }
 }
