@@ -125,7 +125,7 @@ class PdoDatabaseConnectionTest extends TestCase
     public function connectWithoutInitialQuery(): void
     {
         $this->pdoConnection->connect();
-        assertTrue(verify($this->pdo, 'query')->wasNeverCalled());
+        verify($this->pdo, 'query')->wasNeverCalled();
     }
 
     /**
@@ -148,7 +148,7 @@ class PdoDatabaseConnectionTest extends TestCase
         $this->pdo->returns(['query' => true]);
         $this->pdoConnection->connect();
         $this->pdoConnection->connect();
-        assertTrue(verify($this->pdo, 'query')->wasCalledOnce());
+        verify($this->pdo, 'query')->wasCalledOnce();
     }
 
     /**
