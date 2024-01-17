@@ -67,7 +67,7 @@ class PropertyBasedDatabaseConfigurationsTest extends TestCase
     /**
      * @return  array<string[]>
      */
-    public function annotatedParameters(): array
+    public static function annotatedParameters(): array
     {
         return [
             ['configPath', 'stubbles.config.path'],

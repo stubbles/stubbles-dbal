@@ -171,7 +171,7 @@ class PdoDatabaseConnectionTest extends TestCase
     /**
      * @return  array<mixed[]>
      */
-    public function methodCalls(): array
+    public static function methodCalls(): array
     {
         return [['beginTransaction',
                  true,
