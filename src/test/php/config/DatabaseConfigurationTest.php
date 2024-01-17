@@ -7,6 +7,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db\config;
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stubbles\values\Secret;
 
@@ -21,90 +24,68 @@ use function bovigo\assert\{
 };
 /**
  * Test for stubbles\db\config\DatabaseConfiguration.
- *
- * @group  db
- * @group  config
  */
+#[Group('db')]
+#[Group('config')]
 class DatabaseConfigurationTest extends TestCase
 {
-    /**
-     * instance to test
-     *
-     * @var  DatabaseConfiguration
-     */
-    private $dbConfig;
+    private DatabaseConfiguration $dbConfig;
 
     protected function setUp(): void
     {
         $this->dbConfig = new DatabaseConfiguration('foo', 'dsn:bar');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasGivenId(): void
     {
         assertThat($this->dbConfig->getId(), equals('foo'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasGivenDsn(): void
     {
         assertThat($this->dbConfig->getDsn(), equals('dsn:bar'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasNoUserNameByDefault(): void
     {
         assertNull($this->dbConfig->getUserName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function userNameCanBeSet(): void
     {
         assertThat(
-                $this->dbConfig->setUserName('mikey')->getUserName(),
-                equals('mikey')
+            $this->dbConfig->setUserName('mikey')->getUserName(),
+            equals('mikey')
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasNoPasswordByDefault(): void
     {
         assertNull($this->dbConfig->getPassword());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function passwordCanBeSet(): void
     {
         assertThat(
-                $this->dbConfig->setPassword(Secret::create('secret'))->getPassword(),
-                equals('secret')
+            $this->dbConfig->setPassword(Secret::create('secret'))->getPassword(),
+            equals('secret')
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasNoDriverOptionsByDefault(): void
     {
         assertFalse($this->dbConfig->hasDriverOptions());
         assertEmptyArray($this->dbConfig->getDriverOptions());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function driverOptionsCanBeSet(): void
     {
          $this->dbConfig->setDriverOptions(['foo' => 'bar']);
@@ -112,18 +93,14 @@ class DatabaseConfigurationTest extends TestCase
          assertThat($this->dbConfig->getDriverOptions(), equals(['foo' => 'bar']));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hasNoInitialQueryByDefault(): void
     {
         assertFalse($this->dbConfig->hasInitialQuery());
         assertEmptyString($this->dbConfig->getInitialQuery());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function initialQueryCanBeSet(): void
     {
          $this->dbConfig->setInitialQuery('set names utf8');
@@ -132,18 +109,18 @@ class DatabaseConfigurationTest extends TestCase
     }
 
     /**
-     * @test
      * @since  2.1.0
      */
+    #[Test]
     public function hasNoDetailsByDefault(): void
     {
         assertNull($this->dbConfig->getDetails());
     }
 
     /**
-     * @test
      * @since  2.1.0
      */
+    #[Test]
     public function hasDetailsWhenSet(): void
     {
         assertThat(
@@ -153,9 +130,7 @@ class DatabaseConfigurationTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createFromArrayMinimalProperties(): void
     {
         $dbConfig = DatabaseConfiguration::fromArray('foo', 'dsn:bar', []);
@@ -170,19 +145,18 @@ class DatabaseConfigurationTest extends TestCase
         assertNull($this->dbConfig->getDetails());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createFromArrayFullProperties(): void
     {
         $dbConfig = DatabaseConfiguration::fromArray(
-                'foo',
-                'dsn:bar',
-                ['username'      => 'root',
-                 'password'      => 'secret',
-                 'initialQuery'  => 'SET names utf8',
-                 'details'       => 'some interesting details about the db'
-                ]
+            'foo',
+            'dsn:bar',
+            [
+                'username'      => 'root',
+                'password'      => 'secret',
+                'initialQuery'  => 'SET names utf8',
+                'details'       => 'some interesting details about the db'
+            ]
         );
         assertThat($dbConfig->getId(), equals('foo'));
         assertThat($dbConfig->getDSN(), equals('dsn:bar'));
@@ -196,40 +170,40 @@ class DatabaseConfigurationTest extends TestCase
     }
 
     /**
-     * @test
      * @since  2.2.0
      */
+    #[Test]
     public function returnsNullIfPropertyNotSet(): void
     {
         assertNull(
-                DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
-                        ->getProperty('baz')
+            DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
+                ->getProperty('baz')
         );
     }
 
     /**
-     * @test
      * @since  2.2.0
      */
+    #[Test]
     public function returnsDefaultIfPropertyNotSet(): void
     {
         assertThat(
-                DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
-                        ->getProperty('baz', 'bar'),
-                equals('bar')
+            DatabaseConfiguration::fromArray('foo', 'dsn:bar', [])
+                ->getProperty('baz', 'bar'),
+            equals('bar')
         );
     }
 
     /**
-     * @test
      * @since  2.2.0
      */
+    #[Test]
     public function returnsValueIfPropertySet(): void
     {
         assertThat(
-                DatabaseConfiguration::fromArray('foo', 'dsn:bar', ['baz' => 'example'])
-                        ->getProperty('baz', 'bar'),
-                equals('example')
+            DatabaseConfiguration::fromArray('foo', 'dsn:bar', ['baz' => 'example'])
+                ->getProperty('baz', 'bar'),
+            equals('example')
         );
     }
 }

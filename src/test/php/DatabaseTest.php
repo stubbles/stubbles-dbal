@@ -7,7 +7,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use bovigo\callmap\ClassProxy;
 use bovigo\callmap\NewInstance;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use stubbles\sequence\assert\Provides;
 
@@ -17,23 +21,13 @@ use function bovigo\callmap\onConsecutiveCalls;
 /**
  * Test for stubbles\db\Database.
  *
- * @group  db
  * @since  2.1.0
  */
+#[Group('db')]
 class DatabaseTest extends TestCase
 {
-    /**
-     * instance to test
-     *
-     * @var  Database
-     */
-    private $database;
-    /**
-     * mocked database connection
-     *
-     * @var  DatabaseConnection&\bovigo\callmap\ClassProxy
-     */
-    private $dbConnection;
+    private Database $database;
+    private DatabaseConnection&ClassProxy $dbConnection;
 
     /**
      * set up test environment
@@ -44,10 +38,7 @@ class DatabaseTest extends TestCase
         $this->database     = new Database($this->dbConnection);
     }
 
-    /**
-     * @return  QueryResult&\bovigo\callmap\ClassProxy
-     */
-    private function createQueryResult(): QueryResult
+    private function createQueryResult(): QueryResult&ClassProxy
     {
         $statement   = NewInstance::of(Statement::class);
         $queryResult = NewInstance::of(QueryResult::class);
@@ -57,85 +48,83 @@ class DatabaseTest extends TestCase
     }
 
     /**
-     * @test
-     * @since   3.1.0
+     * @since  3.1.0
      */
+    #[Test]
     public function queryExecutesQueryAndReturnsAmountOfAffectedRecords(): void
     {
         $this->createQueryResult()->returns(['count' => 1]);
         assertThat(
-                $this->database->query(
-                        'INSERT INTO baz VALUES (:col)',
-                        [':col' => 'yes']
-                ),
-                equals(1)
+            $this->database->query(
+                'INSERT INTO baz VALUES (:col)',
+                [':col' => 'yes']
+            ),
+            equals(1)
         );
     }
 
     /**
-     * @test
-     * @since   3.1.0
+     * @since  3.1.0
      */
+    #[Test]
     public function fetchOneExecutesQueryAndReturnsOneValueFromGivenColumn(): void
     {
         $this->createQueryResult()->returns(['fetchOne' => 'bar']);
         assertThat(
-                $this->database->fetchOne(
-                        'SELECT foo FROM baz WHERE col = :col',
-                        [':col' => 'yes']
-                ),
-                equals('bar')
+            $this->database->fetchOne(
+                'SELECT foo FROM baz WHERE col = :col',
+                [':col' => 'yes']
+            ),
+            equals('bar')
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fetchAllExecutesQueryAndFetchesCompleteResult(): void
     {
         $this->createQueryResult()->returns([
-                'fetch' => onConsecutiveCalls(
-                        ['foo' => 'bar', 'blubb' => '303'],
-                        ['foo' => 'baz', 'blubb' => '909'],
-                        false
-                ),
-                'free'  => true
+            'fetch' => onConsecutiveCalls(
+                ['foo' => 'bar', 'blubb' => '303'],
+                ['foo' => 'baz', 'blubb' => '909'],
+                false
+            ),
+            'free'  => true
         ]);
         assertThat(
-                $this->database->fetchAll(
-                        'SELECT foo, blubb FROM baz WHERE col = :col',
-                        [':col' => 'yes']
-                ),
-                Provides::data([
-                        ['foo' => 'bar', 'blubb' => '303'],
-                        ['foo' => 'baz', 'blubb' => '909']
-                ])
+            $this->database->fetchAll(
+                'SELECT foo, blubb FROM baz WHERE col = :col',
+                [':col' => 'yes']
+            ),
+            Provides::data([
+                ['foo' => 'bar', 'blubb' => '303'],
+                ['foo' => 'baz', 'blubb' => '909']
+            ])
         );
     }
 
     /**
-     * @test
      * @since  2.4.0
      */
+    #[Test]
     public function fetchRowExecutesQueryAndFetchesFirstResultRow(): void
     {
         $this->createQueryResult()->returns([
-                'fetch' => ['foo' => 'bar'],
-                'free'  => true
+            'fetch' => ['foo' => 'bar'],
+            'free'  => true
         ]);
         assertThat(
-                $this->database->fetchRow(
-                        'SELECT foo, blubb FROM baz WHERE col = :col',
-                        [':col' => 'yes']
-                ),
-                equals(['foo' => 'bar'])
+            $this->database->fetchRow(
+                'SELECT foo, blubb FROM baz WHERE col = :col',
+                [':col' => 'yes']
+            ),
+            equals(['foo' => 'bar'])
         );
     }
 
     /**
-     * @test
      * @since  9.0.2
      */
+    #[Test]
     public function fetchRowReturnsNullWhenUnderlyingConnectionReturnsFalse(): void
     {
         $this->createQueryResult()->returns([
@@ -150,21 +139,19 @@ class DatabaseTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fetchColumnExecutesQueryAndReturnsAllValuesFromColumn(): void
     {
         $this->createQueryResult()->returns([
-                'fetchOne' => onConsecutiveCalls('bar', 'baz', false),
-                'free'     => true
+            'fetchOne' => onConsecutiveCalls('bar', 'baz', false),
+            'free'     => true
         ]);
         assertThat(
-                $this->database->fetchColumn(
-                        'SELECT foo FROM baz WHERE col = :col',
-                        [':col' => 'yes']
-                ),
-                Provides::data(['bar', 'baz'])
+            $this->database->fetchColumn(
+                'SELECT foo FROM baz WHERE col = :col',
+                [':col' => 'yes']
+            ),
+            Provides::data(['bar', 'baz'])
         );
     }
 }

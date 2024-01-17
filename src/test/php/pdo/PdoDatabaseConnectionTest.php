@@ -7,8 +7,21 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db\pdo;
+
+use BadMethodCallException;
+use bovigo\callmap\ClassProxy;
 use bovigo\callmap\NewInstance;
+use Generator;
+use InvalidArgumentException;
+use PDO;
+use PDOException;
+use PDOStatement as PhpPdoStatement;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use stubbles\db\DatabaseException;
 use stubbles\db\config\DatabaseConfiguration;
 
@@ -24,47 +37,26 @@ use function bovigo\callmap\throws;
 use function bovigo\callmap\verify;
 /**
  * Test for stubbles\db\pdo\PdoDatabaseConnection.
- *
- * @group     db
- * @group     pdo
- * @requires  extension pdo
- * @requires  extension pdo_sqlite
  */
+#[Group('db')]
+#[Group('pdo')]
+#[RequiresPhpExtension('pdo')]
+#[RequiresPhpExtension('pdo_sqlite')]
 class PdoDatabaseConnectionTest extends TestCase
 {
-    /**
-     * instance to test
-     *
-     * @var  \stubbles\db\pdo\PdoDatabaseConnection
-     */
-    private $pdoConnection;
-    /**
-     * configuration instance
-     *
-     * @var  \stubbles\db\config\DatabaseConfiguration
-     */
-    private $dbConfig;
-    /**
-     * mock for pdo
-     *
-     * @var  (\PDO&\bovigo\callmap\ClassProxy)
-     */
-    private $pdo;
+    private PdoDatabaseConnection $pdoConnection;
+    private DatabaseConfiguration $dbConfig;
+    private PDO&ClassProxy $pdo;
 
     protected function setUp(): void
     {
-        $this->pdo      = NewInstance::of('\PDO', ['sqlite::memory:']);
+        $this->pdo      = NewInstance::of(PDO::class, ['sqlite::memory:']);
         $this->dbConfig = DatabaseConfiguration::fromArray(
-                'foo',
-                'dsn:bar',
-                ['baz' => 'bar']
+            'foo', 'dsn:bar', ['baz' => 'bar']
         );
         $this->pdoConnection = new PdoDatabaseConnection(
-                $this->dbConfig,
-                function()
-                {
-                    return $this->pdo;
-                }
+            $this->dbConfig,
+            fn(): PDO&ClassProxy => $this->pdo
         );
     }
 
@@ -74,18 +66,18 @@ class PdoDatabaseConnectionTest extends TestCase
     }
 
     /**
-     * @test
      * @since  2.1.0
      */
+    #[Test]
     public function dsnReturnsDsnFromConfiguration(): void
     {
         assertThat($this->pdoConnection->dsn(), equals('dsn:bar'));
     }
 
     /**
-     * @test
      * @since  2.1.0
      */
+    #[Test]
     public function detailsReturnsDetailsFromConfiguration(): void
     {
         $this->dbConfig->setDetails('some interesting details about the db');
@@ -96,9 +88,9 @@ class PdoDatabaseConnectionTest extends TestCase
     }
 
     /**
-     * @test
      * @since  2.2.0
      */
+    #[Test]
     public function propertyReturnsPropertyFromConfiguration(): void
     {
         assertThat($this->pdoConnection->property('baz'), equals('bar'));
@@ -106,31 +98,26 @@ class PdoDatabaseConnectionTest extends TestCase
 
     /**
      * assert that a call to an undefined pdo method throws a MethodInvocationException
-     *
-     * @test
      */
+    #[Test]
     public function undefinedMethod(): void
     {
         expect(function() { $this->pdoConnection->foo('bar'); })
-                ->throws(\BadMethodCallException::class)
-                ->withMessage(
-                        'Call to undefined method ' . PdoDatabaseConnection::class
-                        . '::foo()'
-                );
+            ->throws(BadMethodCallException::class)
+            ->withMessage(
+                'Call to undefined method ' . PdoDatabaseConnection::class
+                . '::foo()'
+            );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function connectWithoutInitialQuery(): void
     {
         $this->pdoConnection->connect();
         verify($this->pdo, 'query')->wasNeverCalled();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function connectExecutesInitialQuery(): void
     {
         $this->dbConfig->setInitialQuery('set names utf8');
@@ -139,9 +126,7 @@ class PdoDatabaseConnectionTest extends TestCase
         verify($this->pdo, 'query')->received('set names utf8');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function connectExecutesInitialQueryOnlyOnce(): void
     {
         $this->dbConfig->setInitialQuery('set names utf8');
@@ -151,91 +136,84 @@ class PdoDatabaseConnectionTest extends TestCase
         verify($this->pdo, 'query')->wasCalledOnce();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function connectThrowsDatabaseExceptionWhenPdoFails(): void
     {
         $this->pdoConnection = new PdoDatabaseConnection(
-                $this->dbConfig,
-                function()
-                {
-                    throw new \PDOException('error');
-                }
+            $this->dbConfig,
+            function()
+            {
+                throw new \PDOException('error');
+            }
         );
         expect(function() { $this->pdoConnection->connect(); })
-                ->throws(DatabaseException::class)
-                ->message(contains('error'));
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 
-    /**
-     * @return  array<mixed[]>
-     */
-    public static function methodCalls(): array
+    public static function methodCalls(): Generator
     {
-        return [['beginTransaction',
-                 true,
-                 function(PdoDatabaseConnection $pdoConnection)
-                 {
-                     assertTrue($pdoConnection->beginTransaction());
-                 }
-                ],
-                ['commit',
-                 true,
-                 function(PdoDatabaseConnection $pdoConnection)
-                 {
-                     assertTrue($pdoConnection->commit());
-                 }
-                ],
-                ['rollBack',
-                 true,
-                 function(PdoDatabaseConnection $pdoConnection)
-                 {
-                     assertTrue($pdoConnection->rollback());
-                 }
-                ],
-                ['exec',
-                 66,
-                 function(PdoDatabaseConnection $pdoConnection)
-                 {
-                     assertThat($pdoConnection->exec('foo'), equals(66));
-                 }
-                ],
-                ['lastInsertId',
-                 '5',
-                 function(PdoDatabaseConnection $pdoConnection)
-                 {
-                     $pdoConnection->connect(); // must be connected
-                     assertThat($pdoConnection->getLastInsertId(), equals(5));
-                 }
-                ]
+        yield [
+            'beginTransaction',
+            true,
+            function(PdoDatabaseConnection $pdoConnection)
+            {
+                assertTrue($pdoConnection->beginTransaction());
+            }
+        ];
+        yield [
+            'commit',
+            true,
+            function(PdoDatabaseConnection $pdoConnection)
+            {
+                assertTrue($pdoConnection->commit());
+            }
+        ];
+        yield [
+            'rollBack',
+            true,
+            function(PdoDatabaseConnection $pdoConnection)
+            {
+                assertTrue($pdoConnection->rollback());
+            }
+        ];
+        yield [
+            'exec',
+            66,
+            function(PdoDatabaseConnection $pdoConnection)
+            {
+                assertThat($pdoConnection->exec('foo'), equals(66));
+            }
+        ];
+        yield ['lastInsertId',
+            '5',
+            function(PdoDatabaseConnection $pdoConnection)
+            {
+                $pdoConnection->connect(); // must be connected
+                assertThat($pdoConnection->getLastInsertId(), equals(5));
+            }
         ];
     }
 
-    /**
-     * @param  string    $method       method to be called
-     * @param  mixed     $returnValue  value to return from method call
-     * @param  callable  $assertion    assertion to apply on connection after method call
-     * @test
-     * @dataProvider  methodCalls
-     */
-    public function delegatesMethodCallsToPdoInstance(string $method, $returnValue, callable $assertion): void
-    {
+    #[Test]
+    #[DataProvider('methodCalls')]
+    public function delegatesMethodCallsToPdoInstance(
+        string $method,
+        mixed $returnValue,
+        callable $assert
+    ): void {
         $this->pdo->returns([$method => $returnValue]);
-        $assertion($this->pdoConnection);
-
+        $assert($this->pdoConnection);
     }
 
     private function callThrowsException(string $method): void
     {
         $this->pdo->returns([
-                $method => throws(new \PDOException('error'))
+            $method => throws(new PDOException('error'))
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function delegatedMethodCallWrapsPdoExceptionToDatabaseException(): void
     {
         $this->callThrowsException('commit');
@@ -244,202 +222,171 @@ class PdoDatabaseConnectionTest extends TestCase
             ->message(contains('error'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function prepareDelegatesToPdoInstanceAndReturnsPdoStatement(): void
     {
-        $this->pdo->returns(['prepare' => NewInstance::of('\PdoStatement')]);
+        $this->pdo->returns(['prepare' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->prepare('foo'),
-                isInstanceOf(PdoStatement::class)
+            $this->pdoConnection->prepare('foo'),
+            isInstanceOf(PdoStatement::class)
         );
         verify($this->pdo, 'prepare')->received('foo', []);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function prepareThrowsDatabaseExceptionWhenStatementCreationFails(): void
     {
         $this->callThrowsException('prepare');
         expect(function() { $this->pdoConnection->prepare('foo'); })
-                ->throws(DatabaseException::class)
-                ->message(contains('error'));
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithOutFetchMode(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->query('foo'),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query('foo'),
+            isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')->received('foo');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithNoSpecialFetchMode(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->query(
-                        'foo',
-                        ['fetchMode' => \PDO::FETCH_ASSOC]
-                ),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query(
+                'foo',
+                ['fetchMode' => \PDO::FETCH_ASSOC]
+            ),
+            isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')->received('foo', \PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeColumn(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->query(
-                        'foo',
-                        ['fetchMode' => \PDO::FETCH_COLUMN, 'colNo' => 5]
-                ),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query(
+                'foo',
+                ['fetchMode' => PDO::FETCH_COLUMN, 'colNo' => 5]
+            ),
+            isInstanceOf(PdoQueryResult::class)
         );
-        verify($this->pdo, 'query')->received('foo', \PDO::FETCH_COLUMN, 5);
+        verify($this->pdo, 'query')->received('foo', PDO::FETCH_COLUMN, 5);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeColumnButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
-                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_COLUMN]);
+            $this->pdoConnection->query('foo', ['fetchMode' => PDO::FETCH_COLUMN]);
         })->throws(\InvalidArgumentException::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeInto(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
-        $class = new \stdClass();
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
+        $class = new stdClass();
         assertThat(
-                $this->pdoConnection->query(
-                        'foo',
-                        ['fetchMode' => \PDO::FETCH_INTO, 'object' => $class]
-                ),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query(
+                'foo',
+                ['fetchMode' => PDO::FETCH_INTO, 'object' => $class]
+            ),
+            isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
-                ->received('foo', \PDO::FETCH_INTO, $class);
+            ->received('foo', PDO::FETCH_INTO, $class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeIntoButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
-                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_INTO]);
-        })->throws(\InvalidArgumentException::class);
+            $this->pdoConnection->query('foo', ['fetchMode' => PDO::FETCH_INTO]);
+        })->throws(InvalidArgumentException::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeClass(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->query(
-                        'foo',
-                        ['fetchMode' => \PDO::FETCH_CLASS, 'classname' => 'MyClass']
-                ),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query(
+                'foo',
+                ['fetchMode' => PDO::FETCH_CLASS, 'classname' => 'MyClass']
+            ),
+            isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
-                ->received('foo', \PDO::FETCH_CLASS, 'MyClass', []);
+                ->received('foo', PDO::FETCH_CLASS, 'MyClass', []);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeClassButMissingOptionThrowsIllegalArgumentException(): void
     {
         expect(function() {
-                $this->pdoConnection->query('foo', ['fetchMode' => \PDO::FETCH_CLASS]);
-        })->throws(\InvalidArgumentException::class);
+            $this->pdoConnection->query('foo', ['fetchMode' => PDO::FETCH_CLASS]);
+        })->throws(InvalidArgumentException::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryWithFetchModeClassWithCtorArgs(): void
     {
-        $this->pdo->returns(['query' => NewInstance::of('\PDOStatement')]);
+        $this->pdo->returns(['query' => NewInstance::of(PhpPdoStatement::class)]);
         assertThat(
-                $this->pdoConnection->query(
-                        'foo',
-                        ['fetchMode' => \PDO::FETCH_CLASS,
-                         'classname' => 'MyClass',
-                         'ctorargs' => ['foo']
-                        ]
-                ),
-                isInstanceOf(PdoQueryResult::class)
+            $this->pdoConnection->query(
+                'foo',
+                [
+                    'fetchMode' => PDO::FETCH_CLASS,
+                    'classname' => 'MyClass',
+                    'ctorargs' => ['foo']
+                ]
+            ),
+            isInstanceOf(PdoQueryResult::class)
         );
         verify($this->pdo, 'query')
-                ->received('foo', \PDO::FETCH_CLASS, 'MyClass', ['foo']);
+            ->received('foo', PDO::FETCH_CLASS, 'MyClass', ['foo']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function queryThrowsDatabaseExceptionOnFailure(): void
     {
         $this->callThrowsException('query');
-        expect(function() { $this->pdoConnection->query('foo'); })
-                ->throws(DatabaseException::class)
-                ->message(contains('error'));
+        expect(fn() => $this->pdoConnection->query('foo'))
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function execThrowsDatabaseExceptionOnFailure(): void
     {
         $this->callThrowsException('exec');
-        expect(function() { $this->pdoConnection->exec('foo'); })
-                ->throws(DatabaseException::class)
-                ->message(contains('error'));
+        expect(fn() => $this->pdoConnection->exec('foo'))
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLastInsertIdThrowsDatabaseExceptionWhenNotConnected(): void
     {
-        expect(function() { $this->pdoConnection->getLastInsertId(); })
-                ->throws(DatabaseException::class)
-                ->withMessage('Not connected: can not retrieve last insert id');
+        expect(fn() => $this->pdoConnection->getLastInsertId())
+            ->throws(DatabaseException::class)
+            ->withMessage('Not connected: can not retrieve last insert id');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getLastInsertIdThrowsDatabaseExceptionWhenPdoCallFails(): void
     {
         $this->callThrowsException('lastInsertId');
-        expect(function() {
-                $this->pdoConnection->connect()->getLastInsertId();
-        })
-                ->throws(DatabaseException::class)
-                ->message(contains('error'));
+        expect(fn() => $this->pdoConnection->connect()->getLastInsertId())
+            ->throws(DatabaseException::class)
+            ->message(contains('error'));
     }
 }

@@ -7,7 +7,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use bovigo\callmap\ClassProxy;
 use bovigo\callmap\NewInstance;
+use PDO;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 use function bovigo\assert\assertThat;
@@ -18,17 +23,12 @@ use function bovigo\callmap\throws;
 /**
  * Test for stubbles\db\QueryResultIterator.
  *
- * @group  db
  * @since  5.0.0
  */
+#[Group('db')]
 class QueryResultIteratorTest extends TestCase
 {
-    /**
-     * mocked result to iterate over
-     *
-     * @var  QueryResult&\bovigo\callmap\ClassProxy
-     */
-    private $queryResult;
+    private QueryResult&ClassProxy $queryResult;
 
     protected function setUp(): void
     {
@@ -39,32 +39,27 @@ class QueryResultIteratorTest extends TestCase
      * create an instance for the test
      *
      * @param   mixed[]              $results
-     * @param   int                  $fetchMode
      * @param   array<string,mixed>  $driverOptions
-     * @return  \stubbles\db\QueryResultIterator
      */
     private function createIterator(
             array $results,
-            int $fetchMode = \PDO::FETCH_ASSOC,
+            int $fetchMode = PDO::FETCH_ASSOC,
             array $driverOptions = []
     ): QueryResultIterator {
         $results[] = false;
         $this->queryResult->returns([
-                'fetch'    => onConsecutiveCalls(...$results),
-                'fetchOne' => onConsecutiveCalls('baz', false),
-                'free'     => true
+            'fetch'    => onConsecutiveCalls(...$results),
+            'fetchOne' => onConsecutiveCalls('baz', false),
+            'free'     => true
         ]);
-        $queryResultIterator = new QueryResultIterator(
+        return new QueryResultIterator(
                 $this->queryResult,
                 $fetchMode,
                 $driverOptions
         );
-        return $queryResultIterator;
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fetchColumnWithGivenColumn(): void
     {
         $results = [['foo', 'bar']];
@@ -73,9 +68,7 @@ class QueryResultIteratorTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fetchColumnWithoutGivenColumn(): void
     {
         $results = [['foo', 'bar']];
@@ -84,9 +77,7 @@ class QueryResultIteratorTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canHandleEmptyResultSet(): void
     {
         $rounds = 0;
@@ -97,9 +88,7 @@ class QueryResultIteratorTest extends TestCase
         assertThat($rounds, equals(0));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canIterateOnce(): void
     {
         $results = [['foo'], ['bar']];
@@ -112,9 +101,7 @@ class QueryResultIteratorTest extends TestCase
         assertThat($rounds, equals(2));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canNotIterateMoreThanOnce(): void
     {
         $iterator = $this->createIterator([['foo'], ['bar']]);
@@ -123,17 +110,15 @@ class QueryResultIteratorTest extends TestCase
         }
 
         expect(function() use($iterator) {
-                foreach ($iterator as $result) {
-                    // do nothing
-                }
+            foreach ($iterator as $result) {
+                // do nothing
+            }
         })
-                ->throws(\BadMethodCallException::class)
-                ->withMessage('Can not rewind database result set');
+            ->throws(\BadMethodCallException::class)
+            ->withMessage('Can not rewind database result set');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function exceptionOnDestructionIsSwallowed(): void
     {
         $queryResultIterator = new QueryResultIterator($this->queryResult);
