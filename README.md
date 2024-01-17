@@ -5,7 +5,6 @@ Database abstraction layer without abstraction.
 ## Build status
 
 ![Tests](https://github.com/stubbles/stubbles-dbal/workflows/Tests/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/stubbles/stubbles-dbal/badge.svg?branch=master)](https://coveralls.io/github/stubbles/stubbles-dbal?branch=master)
 
 [![Latest Stable Version](https://poser.pugx.org/stubbles/dbal/version.png)](https://packagist.org/packages/stubbles/dbal)
 [![Latest Unstable Version](https://poser.pugx.org/stubbles/dbal/v/unstable.png)](//packagist.org/packages/stubbles/dbal)
