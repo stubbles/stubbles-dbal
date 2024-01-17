@@ -7,6 +7,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use BadMethodCallException;
+
 /**
  * Allows to iterate over the query result.
  *
@@ -15,47 +18,18 @@ namespace stubbles\db;
  */
 class QueryResultIterator implements \Iterator
 {
-    /**
-     * @var  \stubbles\db\QueryResult
-     */
-    private $queryResult;
-    /**
-     * @var  int|null
-     */
-    private $fetchMode;
-    /**
-     * @var  array<string,mixed>
-     */
-    private $driverOptions;
-    /**
-     * @var  mixed
-     */
-    private $current;
-    /**
-     * @var  int
-     */
-    private $key = -1;
+    private mixed $current = null;
+    private int $key = -1;
 
     /**
-     * constructor
-     *
-     * @param  \stubbles\db\QueryResult  $queryResult    actual query result
-     * @param  int                       $fetchMode      mode to use for fetching the data
-     * @param  array<string,mixed>       $driverOptions  map of driver specific arguments
+     * @param  array<string,mixed>  $driverOptions  map of driver specific arguments
      */
     public function __construct(
-            QueryResult $queryResult,
-            int $fetchMode = null,
-            array $driverOptions = []
-    ) {
-        $this->queryResult   = $queryResult;
-        $this->fetchMode     = $fetchMode;
-        $this->driverOptions = $driverOptions;
-    }
+            private QueryResult $queryResult,
+            private ?int $fetchMode = null,
+            private array $driverOptions = []
+    ) { }
 
-    /**
-     * destructor
-     */
     public function __destruct()
     {
         try {
@@ -67,18 +41,14 @@ class QueryResultIterator implements \Iterator
 
     /**
      * returns current result entry
-     *
-     * @return  mixed
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->current;
     }
 
     /**
      * returns current result key
-     *
-     * @return  int
      */
     public function key(): int
     {
@@ -93,12 +63,12 @@ class QueryResultIterator implements \Iterator
         $this->key++;
         if (\PDO::FETCH_COLUMN !== $this->fetchMode) {
             $this->current = $this->queryResult->fetch(
-                    $this->fetchMode,
-                    $this->driverOptions
+                $this->fetchMode,
+                $this->driverOptions
             );
         } else {
             $this->current = $this->queryResult->fetchOne(
-                    $this->driverOptions['columnIndex'] ?? 0
+                $this->driverOptions['columnIndex'] ?? 0
             );
         }
     }
@@ -106,21 +76,19 @@ class QueryResultIterator implements \Iterator
     /**
      * it's not possible to rewind a query result because you can't reset a database result set
      *
-     * @throws  \BadMethodCallException
+     * @throws  BadMethodCallException
      */
     public function rewind(): void
     {
         if (null === $this->current) {
             $this->next();
         } else {
-            throw new \BadMethodCallException('Can not rewind database result set');
+            throw new BadMethodCallException('Can not rewind database result set');
         }
     }
 
     /**
      * checks if current result entry is valid
-     *
-     * @return  bool
      */
     public function valid(): bool
     {

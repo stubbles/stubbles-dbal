@@ -16,28 +16,12 @@ use stubbles\sequence\Sequence;
  */
 class Database
 {
-    /**
-     * actual connection to be used
-     *
-     * @var  \stubbles\db\DatabaseConnection
-     */
-    private $dbConnection;
-
-    /**
-     * constructor
-     *
-     * @param  \stubbles\db\DatabaseConnection  $dbConnection
-     */
-    public function __construct(DatabaseConnection $dbConnection)
-    {
-        $this->dbConnection = $dbConnection;
-    }
+    public function __construct(private DatabaseConnection $dbConnection) { }
 
     /**
      * returns dsn of database connection
      *
-     * @return  string
-     * @since   4.0.0
+     * @since  4.0.0
      */
     public function dsn(): string
     {
@@ -47,33 +31,30 @@ class Database
     /**
      * sends a query to the database and returns amount of affected records
      *
-     * @param   string                   $sql
-     * @param   array<int|string,mixed>  $values
-     * @return  int
-     * @since   3.1.0
+     * @param  array<int|string,mixed>  $values
+     * @since  3.1.0
      */
     public function query(string $sql, array $values = []): int
     {
         return $this->dbConnection->prepare($sql)
-                ->execute($values)
-                ->count();
+            ->execute($values)
+            ->count();
     }
 
     /**
      * fetch single value from a result set
      *
-     * @param   string                   $sql            sql query to fetch data with
-     * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
-     * @param   int                      $columnNumber  optional  the column number to fetch, default is first column
-     * @return  string|false
-     * @throws  \stubbles\db\DatabaseException
+     * @param   string                   $sql           sql query to fetch data with
+     * @param   array<int|string,mixed>  $values        map of values in case $sql contains a prepared statement
+     * @param   int                      $columnNumber  the column number to fetch, default is first column
+     * @throws  DatabaseException
      * @since   3.1.0
      */
-    public function fetchOne(string $sql, array $values = [], int $columnNumber = 0)
+    public function fetchOne(string $sql, array $values = [], int $columnNumber = 0): string|false
     {
         return $this->dbConnection->prepare($sql)
-                ->execute($values)
-                ->fetchOne($columnNumber);
+            ->execute($values)
+            ->fetchOne($columnNumber);
     }
 
     /**
@@ -87,20 +68,20 @@ class Database
      *
      * @param   string                   $sql            sql query to fetch data with
      * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
-     * @param   int                      $fetchMode      optional  the mode to use for fetching the data
-     * @param   array<string,mixed>      $driverOptions  optional  driver specific arguments
-     * @return  \stubbles\sequence\Sequence<mixed>
+     * @param   int                      $fetchMode      the mode to use for fetching the data
+     * @param   array<string,mixed>      $driverOptions  driver specific arguments
+     * @return  Sequence<mixed>
      */
     public function fetchAll(
-            string $sql,
-            array $values = [],
-            int $fetchMode = null,
-            array $driverOptions = []
+        string $sql,
+        array $values = [],
+        int $fetchMode = null,
+        array $driverOptions = []
     ): Sequence {
         return Sequence::of(new QueryResultIterator(
-                $this->dbConnection->prepare($sql)->execute($values),
-                $fetchMode,
-                $driverOptions
+            $this->dbConnection->prepare($sql)->execute($values),
+            $fetchMode,
+            $driverOptions
         ));
     }
 
@@ -109,17 +90,17 @@ class Database
      *
      * @param   string                   $sql            sql query to fetch data with
      * @param   array<int|string,mixed>  $values         map of values in case $sql contains a prepared statement
-     * @param   int                      $fetchMode      optional  the mode to use for fetching the data
-     * @param   array<string,mixed>      $driverOptions  optional  driver specific arguments
+     * @param   int                      $fetchMode      the mode to use for fetching the data
+     * @param   array<string,mixed>      $driverOptions  driver specific arguments
      * @return  mixed
      * @since   2.4.0
      */
     public function fetchRow(
-            string $sql,
-            array $values = [],
-            int $fetchMode = null,
-            array $driverOptions = []
-    ) {
+        string $sql,
+        array $values = [],
+        int $fetchMode = null,
+        array $driverOptions = []
+    ): mixed {
         $result = $this->dbConnection->prepare($sql)
             ->execute($values)
             ->fetch($fetchMode, $driverOptions);
@@ -141,18 +122,18 @@ class Database
      * @param   string                   $sql          sql query to fetch data with
      * @param   array<int|string,mixed>  $values       map of values in case $sql contains a prepared statement
      * @param   int                      $columnIndex  number of column to fetch
-     * @return  \stubbles\sequence\Sequence<mixed>
+     * @return  Sequence<mixed>
      */
     public function fetchColumn(
-            string $sql,
-            array $values = [],
-            int $columnIndex = 0
+        string $sql,
+        array $values = [],
+        int $columnIndex = 0
     ): Sequence {
         return $this->fetchAll(
-                $sql,
-                $values,
-                \PDO::FETCH_COLUMN,
-                ['columnIndex' => $columnIndex]
+            $sql,
+            $values,
+            \PDO::FETCH_COLUMN,
+            ['columnIndex' => $columnIndex]
         );
     }
 }

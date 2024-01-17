@@ -7,10 +7,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db\pdo;
+
+use InvalidArgumentException;
+use Override;
 use stubbles\db\DatabaseException;
 use stubbles\db\QueryResult;
 use PDO;
 use PDOException;
+use PDOStatement as PhpPdoStatement;
 /**
  * Wrapper around the pdo connection.
  *
@@ -18,34 +22,16 @@ use PDOException;
  */
 class PdoQueryResult implements QueryResult
 {
-    /**
-     * result set
-     *
-     * @type  \PDOStatement<mixed>
-     */
-    private $pdoStatement;
-
-    /**
-     * constructor
-     *
-     * @param  \PDOStatement<mixed>  $pdoStatement
-     */
-    public function __construct(\PDOStatement $pdoStatement)
-    {
-        $this->pdoStatement = $pdoStatement;
-    }
+    public function __construct(private PhpPdoStatement $pdoStatement) { }
 
     /**
      * bind a result column to a variable
      *
-     * @param   int|string  $column    column number or name to bind the variable to
-     * @param   mixed       $variable  the variable to bind to the column
-     * @param   int         $type      optional  type of the bounded variable
-     * @return  bool        true on success, false on failure
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-bindColumn
      */
-    public function bindColumn($column, &$variable, int $type = null): bool
+    #[Override]
+    public function bindColumn(int|string $column, &$variable, int $type = null): bool
     {
         try {
             if (null === $type) {
@@ -61,13 +47,11 @@ class PdoQueryResult implements QueryResult
     /**
      * fetch a result
      *
-     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
-     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
-     * @return  mixed
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-fetch
      */
-    public function fetch(int $fetchMode = null, array $driverOptions = [])
+    #[Override]
+    public function fetch(int $fetchMode = null, array $driverOptions = []): mixed
     {
         if (null === $fetchMode) {
             $fetchMode = PDO::FETCH_ASSOC;
@@ -87,12 +71,11 @@ class PdoQueryResult implements QueryResult
     /**
      * fetch single column from the next row from a result set
      *
-     * @param   int     $columnNumber  optional  the column number to fetch, default is first column
-     * @return  string|false
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-fetchColumn
      */
-    public function fetchOne(int $columnNumber = 0)
+    #[Override]
+    public function fetchOne(int $columnNumber = 0): mixed
     {
         try {
             return $this->pdoStatement->fetchColumn($columnNumber);
@@ -104,13 +87,11 @@ class PdoQueryResult implements QueryResult
     /**
      * returns an array containing all of the result set rows
      *
-     * @param   int                  $fetchMode      optional  the mode to use for fetching the data
-     * @param   array<string,mixed>  $driverOptions  optional  driver specific arguments
-     * @return  array<string,mixed>
-     * @throws  \stubbles\db\DatabaseException
-     * @throws  \InvalidArgumentException
+     * @throws  DatabaseException
+     * @throws  InvalidArgumentException
      * @see     http://php.net/pdostatement-fetchAll
      */
+    #[Override]
     public function fetchAll(int $fetchMode = null, array $driverOptions = []): array
     {
         try {
@@ -127,7 +108,9 @@ class PdoQueryResult implements QueryResult
 
             if (PDO::FETCH_CLASS == $fetchMode) {
                 if (!isset($driverOptions['classname'])) {
-                    throw new \InvalidArgumentException('Tried to use PDO::FETCH_CLASS but no classname given in driver options.');
+                    throw new InvalidArgumentException(
+                        'Tried to use PDO::FETCH_CLASS but no classname given in driver options.'
+                    );
                 }
 
                 return $this->wrapResult($this->pdoStatement->fetchAll(
@@ -139,7 +122,9 @@ class PdoQueryResult implements QueryResult
 
             if (PDO::FETCH_FUNC == $fetchMode) {
                 if (!isset($driverOptions['function'])) {
-                    throw new \InvalidArgumentException('Tried to use PDO::FETCH_FUNC but no function given in driver options.');
+                    throw new InvalidArgumentException(
+                        'Tried to use PDO::FETCH_FUNC but no function given in driver options.'
+                    );
                 }
 
                 return $this->wrapResult($this->pdoStatement->fetchAll(
@@ -158,7 +143,7 @@ class PdoQueryResult implements QueryResult
      * @param   array<string,mixed>|false  $result
      * @return  array<string,mixed>
      */
-    private function wrapResult($result): array
+    private function wrapResult(array|false $result): array
     {
         if (false === $result) {
             throw new DatabaseException('An unknown error occurred.');
@@ -170,8 +155,7 @@ class PdoQueryResult implements QueryResult
     /**
      * moves the internal result pointer to the next result row
      *
-     * @return  bool  true on success, false on failure
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-nextRowset
      */
     public function next(): bool
@@ -186,8 +170,7 @@ class PdoQueryResult implements QueryResult
     /**
      * returns the number of rows affected by the last SQL statement
      *
-     * @return  int
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-rowCount
      */
     public function count(): int
@@ -202,8 +185,7 @@ class PdoQueryResult implements QueryResult
     /**
      * releases resources allocated of the result set
      *
-     * @return  bool  true on success, false on failure
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      * @see     http://php.net/pdostatement-closeCursor
      */
     public function free(): bool

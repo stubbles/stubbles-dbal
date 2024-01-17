@@ -7,8 +7,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use IteratorAggregate;
 use stubbles\ioc\InjectionProvider;
 use stubbles\sequence\iterator\MappingIterator;
+use Traversable;
+
 /**
  * IoC provider for database instances.
  *
@@ -16,24 +20,9 @@ use stubbles\sequence\iterator\MappingIterator;
  * @implements  \IteratorAggregate<Database>
  * @implements  InjectionProvider<Database>
  */
-class Databases implements \IteratorAggregate, InjectionProvider
+class Databases implements IteratorAggregate, InjectionProvider
 {
-    /**
-     * actual connection provider
-     *
-     * @type  \stubbles\db\DatabaseConnections
-     */
-    private $connections;
-
-    /**
-     * constructor
-     *
-     * @param  \stubbles\db\DatabaseConnections  $connections
-     */
-    public function __construct(DatabaseConnections $connections)
-    {
-        $this->connections = $connections;
-    }
+    public function __construct(private DatabaseConnections $connections) { }
 
     /**
      * returns the database
@@ -44,9 +33,6 @@ class Databases implements \IteratorAggregate, InjectionProvider
      * fallback is disabled a \OutOfBoundsException will be thrown.
      *
      * If no name is provided the default connection will be used.
-     *
-     * @param   string  $name
-     * @return  \stubbles\db\Database
      */
     public function get(string $name = null): Database
     {
@@ -58,14 +44,11 @@ class Databases implements \IteratorAggregate, InjectionProvider
      *
      * @return  \Iterator<Database>
      */
-    public function getIterator(): \Iterator
+    public function getIterator(): Traversable
     {
         return new MappingIterator(
-                $this->connections,
-                function($value, $key)
-                {
-                    return $this->get($key);
-                }
+            $this->connections,
+            fn($_, string $key): Database => $this->get($key)
         );
     }
 }

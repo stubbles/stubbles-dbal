@@ -7,18 +7,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use Exception;
+
 /**
  * Exceptions on calls to the database.
  */
 class DatabaseException extends \Exception
 {
-    /**
-     * constructor
-     *
-     * @param  string      $message   exception message
-     * @param  \Exception  $previous  exception that caused this exception
-     */
-    public function __construct(string $message, \Exception $previous = null)
+    public function __construct(string $message, Exception $previous = null)
     {
         parent::__construct($message, 0, $previous);
     }

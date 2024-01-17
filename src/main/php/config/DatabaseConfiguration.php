@@ -16,19 +16,7 @@ class DatabaseConfiguration
     /**
      * id of the default connection
      */
-    const DEFAULT_ID         = 'default';
-    /**
-     * id to use for the connection
-     *
-     * @var  string
-     */
-    private $id;
-    /**
-     * Data Source Name, or DSN, contains the information required to connect to the database
-     *
-     * @var  string
-     */
-    private $dsn;
+    public const DEFAULT_ID = 'default';
     /**
      * user name
      *
@@ -72,10 +60,7 @@ class DatabaseConfiguration
      * Please note that this method does not support driver options. Driver
      * options must be set separately.
      *
-     * @param   string               $id
-     * @param   string               $dsn
-     * @param   array<string,mixed>  $properties
-     * @return  \stubbles\db\config\DatabaseConfiguration
+     * @param  array<string,mixed>  $properties
      */
     public static function fromArray(string $id, string $dsn, array $properties): DatabaseConfiguration
     {
@@ -110,11 +95,7 @@ class DatabaseConfiguration
      * @param  string  $id   id of connection
      * @param  string  $dsn  data source name
      */
-    public function __construct(string $id, string $dsn)
-    {
-        $this->id  = $id;
-        $this->dsn = $dsn;
-    }
+    public function __construct(private string $id, private string $dsn) { }
 
     /**
      * return the id to use for the connection
@@ -122,8 +103,6 @@ class DatabaseConfiguration
      * Warning: two instances will be the same if they have the same id,
      * regardless whether the concrete connection data is differant or not.
      * You should never use the same id for differant connection datasets.
-     *
-     * @return  string
      */
     public function getId(): string
     {
@@ -132,8 +111,6 @@ class DatabaseConfiguration
 
     /**
      * returns the Data Source Name
-     *
-     * @return  string
      */
     public function getDsn(): string
     {
@@ -142,9 +119,6 @@ class DatabaseConfiguration
 
     /**
      * sets user name for database login
-     *
-     * @param   string  $userName
-     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setUserName(string $userName): self
     {
@@ -154,8 +128,6 @@ class DatabaseConfiguration
 
     /**
      * returns the user name
-     *
-     * @return  string
      */
     public function getUserName(): ?string
     {
@@ -164,9 +136,6 @@ class DatabaseConfiguration
 
     /**
      * sets user password for database login
-     *
-     * @param   \stubbles\values\Secret  $password
-     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setPassword(Secret $password): self
     {
@@ -176,8 +145,6 @@ class DatabaseConfiguration
 
     /**
      * returns the user password
-     *
-     * @return  string
      */
     public function getPassword(): ?string
     {
@@ -191,8 +158,7 @@ class DatabaseConfiguration
     /**
      * sets driver-specific connection options for database
      *
-     * @param   array<string,mixed>  $driverOptions
-     * @return  \stubbles\db\config\DatabaseConfiguration
+     * @param  array<string,mixed>  $driverOptions
      */
     public function setDriverOptions(array $driverOptions): self
     {
@@ -202,8 +168,6 @@ class DatabaseConfiguration
 
     /**
      * checks if any driver-specific connection options are present
-     *
-     * @return  bool
      */
     public function hasDriverOptions(): bool
     {
@@ -222,9 +186,6 @@ class DatabaseConfiguration
 
     /**
      * sets initial query to be send after establishing the connection
-     *
-     * @param   string  $initialQuery
-     * @return  \stubbles\db\config\DatabaseConfiguration
      */
     public function setInitialQuery(string $initialQuery): self
     {
@@ -234,18 +195,14 @@ class DatabaseConfiguration
 
     /**
      * checks if an initial query should be send
-     *
-     * @return  bool
      */
     public function hasInitialQuery(): bool
     {
-        return (null != $this->initialQuery);
+        return null != $this->initialQuery;
     }
 
     /**
      * returns initial query to be send after establishing the connection
-     *
-     * @return  string
      */
     public function getInitialQuery(): string
     {
@@ -255,9 +212,7 @@ class DatabaseConfiguration
     /**
      * sets details about the database
      *
-     * @param   string  $details
-     * @return  \stubbles\db\config\DatabaseConfiguration
-     * @since   2.1.0
+     * @since  2.1.0
      */
     public function setDetails(string $details): self
     {
@@ -268,8 +223,7 @@ class DatabaseConfiguration
     /**
      * returns details about the database
      *
-     * @return  string
-     * @since   2.1.0
+     * @since  2.1.0
      */
     public function getDetails(): ?string
     {
@@ -279,12 +233,9 @@ class DatabaseConfiguration
     /**
      * returns property with given name or given default if property not set
      *
-     * @param   string  $name
-     * @param   string  $default  optional  value to return if property not set
-     * @return  string
-     * @since   2.2.0
+     * @since  2.2.0
      */
-    public function getProperty(string $name, $default = null)
+    public function getProperty(string $name, mixed $default = null)
     {
         return $this->properties[$name] ?? $default;
     }

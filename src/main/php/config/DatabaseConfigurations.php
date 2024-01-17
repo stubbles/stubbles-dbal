@@ -7,27 +7,24 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db\config;
+
+use Traversable;
+
 /**
  * Represents a list of available database configurations.
  *
  * @ImplementedBy(stubbles\db\config\PropertyBasedDatabaseConfigurations.class)
- * @extends  \Traversable<string,DatabaseConfiguration>
+ * @extends  Traversable<string,DatabaseConfiguration>
  */
-interface DatabaseConfigurations extends \Traversable
+interface DatabaseConfigurations extends Traversable
 {
     /**
      * checks whether database configuration for given id exists
-     *
-     * @param   string  $id
-     * @return  bool
      */
     public function contain(string $id): bool;
 
     /**
      * returns database configuration for given id
-     *
-     * @param   string  $id
-     * @return  \stubbles\db\config\DatabaseConfiguration
      */
-    public function get(string $id);
+    public function get(string $id): DatabaseConfiguration;
 }

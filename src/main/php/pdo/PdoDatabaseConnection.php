@@ -7,6 +7,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db\pdo;
+
+use BadMethodCallException;
+use InvalidArgumentException;
 use stubbles\db\DatabaseConnection;
 use stubbles\db\DatabaseException;
 use stubbles\db\QueryResult;
@@ -14,6 +17,8 @@ use stubbles\db\Statement;
 use stubbles\db\config\DatabaseConfiguration;
 use PDO;
 use PDOException;
+use PDOStatement as PhpPdoStatement;
+
 /**
  * Wrapper around the pdo connection.
  *
@@ -22,38 +27,20 @@ use PDOException;
 class PdoDatabaseConnection implements DatabaseConnection
 {
     /**
-     * database configuration required to establish the connection
-     *
-     * @var  \stubbles\db\config\DatabaseConfiguration
-     */
-    private $configuration;
-    /**
      * closure to create a pdo instance
      *
      * @var  callable|null
      */
     private $pdoCreator;
-    /**
-     * instance of pdo
-     *
-     * @var  \PDO
-     */
-    private  $pdo = null;
+    private ?PDO $pdo = null;
 
-    /**
-     * constructor
-     *
-     * @param   \stubbles\db\config\DatabaseConfiguration  $configuration  database configuration required to establish the connection
-     */
-    public function __construct(DatabaseConfiguration $configuration, callable $pdoCreator = null)
-    {
-        $this->configuration = $configuration;
+    public function __construct(
+        private DatabaseConfiguration $configuration,
+        callable $pdoCreator = null
+    ) {
         $this->pdoCreator    = $pdoCreator;
     }
 
-    /**
-     * destructor
-     */
     public function __destruct()
     {
         $this->disconnect();
@@ -62,8 +49,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * returns dsn of connection
      *
-     * @return  string
-     * @since   2.1.0
+     * @since  2.1.0
      */
     public function dsn(): string
     {
@@ -73,8 +59,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * returns details about the connection
      *
-     * @return  string
-     * @since   2.1.0
+     * @since  2.1.0
      */
     public function details(): ?string
     {
@@ -84,12 +69,9 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * returns property with given name or given default if property not set
      *
-     * @param   string  $name
-     * @param   string  $default  optional  value to return if property not set
-     * @return  string
-     * @since   2.2.0
+     * @since  2.2.0
      */
-    public function property(string $name, $default = null)
+    public function property(string $name, mixed $default = null): mixed
     {
         return $this->configuration->getProperty($name, $default);
     }
@@ -97,8 +79,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * establishes the connection
      *
-     * @return  \stubbles\db\pdo\PdoDatabaseConnection
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      */
     public function connect(): DatabaseConnection
     {
@@ -121,10 +102,6 @@ class PdoDatabaseConnection implements DatabaseConnection
         return $this;
     }
 
-    /**
-     *
-     * @return  callable
-     */
     private function getPdoCreator(): callable
     {
         if (null !== $this->pdoCreator) {
@@ -135,24 +112,21 @@ class PdoDatabaseConnection implements DatabaseConnection
         {
             if (!$configuration->hasDriverOptions()) {
                 return new PDO(
-                        $configuration->getDsn(),
-                        $configuration->getUserName(),
-                        $configuration->getPassword()
+                    $configuration->getDsn(),
+                    $configuration->getUserName(),
+                    $configuration->getPassword()
                 );
             }
 
             return new PDO(
-                    $configuration->getDsn(),
-                    $configuration->getUserName(),
-                    $configuration->getPassword(),
-                    $configuration->getDriverOptions()
+                $configuration->getDsn(),
+                $configuration->getUserName(),
+                $configuration->getPassword(),
+                $configuration->getDriverOptions()
             );
         };
     }
 
-    /**
-     * disconnects the database
-     */
     public function disconnect(): void
     {
         unset($this->pdo);
@@ -161,21 +135,19 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * redirects calls on non-existing methods to the pdo object
      *
-     * @param   string   $method     name of the method to call
      * @param   mixed[]  $arguments  list of arguments for the method call
-     * @return  mixed
-     * @throws  \stubbles\db\DatabaseException
-     * @throws  \BadMethodCallException
+     * @throws  DatabaseException
+     * @throws  BadMethodCallException
      */
-    public function __call(string $method, array $arguments)
+    public function __call(string $method, array $arguments): mixed
     {
         if (null === $this->pdo) {
             $this->connect();
         }
 
         if (!method_exists($this->pdo, $method)) {
-            throw new \BadMethodCallException(
-                    'Call to undefined method ' . __CLASS__ . '::' . $method . '()'
+            throw new BadMethodCallException(
+                'Call to undefined method ' . __CLASS__ . '::' . $method . '()'
             );
         }
 
@@ -188,8 +160,6 @@ class PdoDatabaseConnection implements DatabaseConnection
 
     /**
      * start a transaction
-     *
-     * @return  bool
      */
     public function beginTransaction(): bool
     {
@@ -198,8 +168,6 @@ class PdoDatabaseConnection implements DatabaseConnection
 
     /**
      * commit a transaction
-     *
-     * @return  bool
      */
     public function commit(): bool
     {
@@ -208,8 +176,6 @@ class PdoDatabaseConnection implements DatabaseConnection
 
     /**
      * rollback a transaction
-     *
-     * @return  bool
      */
     public function rollback(): bool
     {
@@ -217,12 +183,8 @@ class PdoDatabaseConnection implements DatabaseConnection
     }
 
     /**
-     * creates a prepared statement
-     *
-     * @param   string               $statement      SQL statement
-     * @param   array<string,mixed>  $driverOptions  optional  one or more key=>value pairs to set attribute values for the Statement object
-     * @return  \stubbles\db\pdo\PdoStatement
-     * @throws  \stubbles\db\DatabaseException
+     * @param   array<string,mixed>  $driverOptions
+     * @throws  DatabaseException
      * @see     http://php.net/pdo-prepare
      */
     public function prepare(string $statement, array $driverOptions = []): Statement
@@ -233,7 +195,7 @@ class PdoDatabaseConnection implements DatabaseConnection
 
         try {
             return new PdoStatement(
-                    $this->pdo->prepare($statement, $driverOptions)
+                $this->pdo->prepare($statement, $driverOptions)
             );
         } catch (PDOException $pdoe) {
             throw new DatabaseException($pdoe->getMessage(), $pdoe);
@@ -249,14 +211,13 @@ class PdoDatabaseConnection implements DatabaseConnection
      * colNo     => if fetchMode == PDO::FETCH_COLUMN this denotes the column number to fetch
      * object    => if fetchMode == PDO::FETCH_INTO this denotes the object to fetch the data into
      * classname => if fetchMode == PDO::FETCH_CLASS this denotes the class to create and fetch the data into
-     * ctorargs  => (optional) if fetchMode == PDO::FETCH_CLASS this denotes the list of arguments for the constructor of the class to create and fetch the data into
+     * ctorargs  => (optional) if fetchMode == PDO::FETCH_CLASS this denotes the list of arguments
+     *              for the constructor of the class to create and fetch the data into
      * </code>
      *
-     * @param   string               $sql            the sql query to use
-     * @param   array<string,mixed>  $driverOptions  optional  how to fetch the data
-     * @return  \stubbles\db\pdo\PdoQueryResult
-     * @throws  \stubbles\db\DatabaseException
-     * @throws  \InvalidArgumentException
+     * @param   array<string,mixed>  $driverOptions
+     * @throws  DatabaseException
+     * @throws  InvalidArgumentException
      * @see     http://php.net/pdo-query
      * @see     http://php.net/pdostatement-setfetchmode for the details on the fetch mode options
      */
@@ -274,51 +235,51 @@ class PdoDatabaseConnection implements DatabaseConnection
             switch ($driverOptions['fetchMode']) {
                 case PDO::FETCH_COLUMN:
                     if (!isset($driverOptions['colNo'])) {
-                        throw new \InvalidArgumentException(
-                                'Fetch mode COLUMN requires driver option colNo.'
+                        throw new InvalidArgumentException(
+                            'Fetch mode COLUMN requires driver option colNo.'
                         );
                     }
 
                     $pdoStatement = $this->pdo->query(
-                            $sql,
-                            $driverOptions['fetchMode'],
-                            $driverOptions['colNo']
+                        $sql,
+                        $driverOptions['fetchMode'],
+                        $driverOptions['colNo']
                     );
                     break;
 
                 case PDO::FETCH_INTO:
                     if (!isset($driverOptions['object'])) {
-                        throw new \InvalidArgumentException(
-                                'Fetch mode INTO requires driver option object.'
+                        throw new InvalidArgumentException(
+                            'Fetch mode INTO requires driver option object.'
                         );
                     }
 
                     $pdoStatement = $this->pdo->query(
-                            $sql,
-                            $driverOptions['fetchMode'],
-                            $driverOptions['object']
+                        $sql,
+                        $driverOptions['fetchMode'],
+                        $driverOptions['object']
                     );
                     break;
 
                 case PDO::FETCH_CLASS:
                     if (!isset($driverOptions['classname'])) {
                         throw new \InvalidArgumentException(
-                                'Fetch mode CLASS requires driver option classname.'
+                            'Fetch mode CLASS requires driver option classname.'
                         );
                     }
 
                     $pdoStatement = $this->pdo->query(
-                            $sql,
-                            $driverOptions['fetchMode'],
-                            $driverOptions['classname'],
-                            $driverOptions['ctorargs'] ?? []
+                        $sql,
+                        $driverOptions['fetchMode'],
+                        $driverOptions['classname'],
+                        $driverOptions['ctorargs'] ?? []
                     );
                     break;
 
                 default:
                     $pdoStatement = $this->pdo->query(
-                            $sql,
-                            $driverOptions['fetchMode']
+                        $sql,
+                        $driverOptions['fetchMode']
                     );
             }
 
@@ -329,10 +290,10 @@ class PdoDatabaseConnection implements DatabaseConnection
     }
 
     /**
-     * @param   \PDOStatement<mixed>|false  $pdoStatement
-     * @return  \PDOStatement<mixed>
+     * @param   PhpPdoStatement<mixed>|false  $pdoStatement
+     * @return  PhpPdoStatement<mixed>
      */
-    private function handleFalse($pdoStatement): \PDOStatement
+    private function handleFalse(PhpPdoStatement|false $pdoStatement): PhpPdoStatement
     {
         if (false === $pdoStatement) {
             throw new DatabaseException('An unknown error occurred.');
@@ -344,9 +305,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * execute an SQL statement and return the number of affected rows
      *
-     * @param   string  $statement      the sql statement to execute d
-     * @return  int     number of effected rows
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      */
     public function exec(string $statement): int
     {
@@ -362,11 +321,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     }
 
     /**
-     * returns the last insert id
-     *
-     * @param   string  $name  name of the sequence object from which the ID should be returned.
-     * @return  string
-     * @throws  \stubbles\db\DatabaseException
+     * @throws  DatabaseException
      */
     public function getLastInsertId(string $name = null): string
     {
