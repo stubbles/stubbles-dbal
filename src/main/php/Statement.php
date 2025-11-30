@@ -29,8 +29,8 @@ interface Statement
     public function bindParam(
         int|string $param,
         mixed &$variable,
-        int $type = null,
-        int $length = null
+        ?int $type = null,
+        ?int $length = null
     ): bool;
 
     /**
@@ -44,7 +44,7 @@ interface Statement
      * @param   int         $type   optional  type of the parameter
      * @return  bool        true on success, false on failure
      */
-    public function bindValue(int|string $param, mixed $value, int $type = null): bool;
+    public function bindValue(int|string $param, mixed $value, ?int $type = null): bool;
 
     /**
      * executes a prepared statement

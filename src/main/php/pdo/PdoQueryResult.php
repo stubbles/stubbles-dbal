@@ -31,7 +31,7 @@ class PdoQueryResult implements QueryResult
      * @see     http://php.net/pdostatement-bindColumn
      */
     #[Override]
-    public function bindColumn(int|string $column, &$variable, int $type = null): bool
+    public function bindColumn(int|string $column, &$variable, ?int $type = null): bool
     {
         try {
             if (null === $type) {
@@ -51,7 +51,7 @@ class PdoQueryResult implements QueryResult
      * @see     http://php.net/pdostatement-fetch
      */
     #[Override]
-    public function fetch(int $fetchMode = null, array $driverOptions = []): mixed
+    public function fetch(?int $fetchMode = null, array $driverOptions = []): mixed
     {
         if (null === $fetchMode) {
             $fetchMode = PDO::FETCH_ASSOC;
@@ -92,7 +92,7 @@ class PdoQueryResult implements QueryResult
      * @see     http://php.net/pdostatement-fetchAll
      */
     #[Override]
-    public function fetchAll(int $fetchMode = null, array $driverOptions = []): array
+    public function fetchAll(?int $fetchMode = null, array $driverOptions = []): array
     {
         try {
             if (null === $fetchMode) {

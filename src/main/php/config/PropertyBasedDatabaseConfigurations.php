@@ -34,9 +34,9 @@ class PropertyBasedDatabaseConfigurations implements IteratorAggregate, Database
      * @Named{fallback}('stubbles.db.fallback')
      */
     public function  __construct(
-            private string $configPath,
-            private string $descriptor = 'rdbms',
-            private bool $fallback = true
+        private string $configPath,
+        private string $descriptor = 'rdbms',
+        private bool $fallback = true
     ) { }
 
     /**

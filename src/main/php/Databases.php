@@ -34,7 +34,7 @@ class Databases implements IteratorAggregate, InjectionProvider
      *
      * If no name is provided the default connection will be used.
      */
-    public function get(string $name = null): Database
+    public function get(?string $name = null): Database
     {
         return new Database($this->connections->get($name));
     }

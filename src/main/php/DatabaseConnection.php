@@ -82,5 +82,5 @@ interface DatabaseConnection
     /**
      * returns the last insert id
      */
-    public function getLastInsertId(string $name = null): string;
+    public function getLastInsertId(?string $name = null): string;
 }

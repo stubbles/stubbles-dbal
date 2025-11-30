@@ -20,7 +20,7 @@ interface QueryResult
      * @param   int         $type      type of the variable to bind
      * @return  bool        true on success, false on failure
      */
-    public function bindColumn(int|string $column, &$variable, int $type = null): bool;
+    public function bindColumn(int|string $column, &$variable, ?int $type = null): bool;
 
     /**
      * fetch a result
@@ -28,7 +28,7 @@ interface QueryResult
      * @param  int                  $fetchMode      the mode to use for fetching the data
      * @param  array<string,mixed>  $driverOptions  driver specific arguments
      */
-    public function fetch(int $fetchMode = null, array $driverOptions = []): mixed;
+    public function fetch(?int $fetchMode = null, array $driverOptions = []): mixed;
 
     /**
      * fetch single column from the next row from a result set
@@ -44,7 +44,7 @@ interface QueryResult
      * @param   array<string,mixed>  $driverOptions  driver specific arguments
      * @return  array<string,mixed>
      */
-    public function fetchAll(int $fetchMode = null, array $driverOptions = []): array;
+    public function fetchAll(?int $fetchMode = null, array $driverOptions = []): array;
 
     /**
      * moves the internal result pointer to the next result row

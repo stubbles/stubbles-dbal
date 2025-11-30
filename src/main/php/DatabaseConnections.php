@@ -43,7 +43,7 @@ class DatabaseConnections implements IteratorAggregate, InjectionProvider
      *
      * If no name is provided the default connection will be returned.
      */
-    public function get(string $name = null): DatabaseConnection
+    public function get(?string $name = null): DatabaseConnection
     {
         if (null == $name) {
             $name = DatabaseConfiguration::DEFAULT_ID;

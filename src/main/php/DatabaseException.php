@@ -9,13 +9,14 @@ declare(strict_types=1);
 namespace stubbles\db;
 
 use Exception;
+use Throwable;
 
 /**
  * Exceptions on calls to the database.
  */
 class DatabaseException extends \Exception
 {
-    public function __construct(string $message, Exception $previous = null)
+    public function __construct(string $message, ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
     }

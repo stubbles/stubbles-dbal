@@ -36,7 +36,7 @@ class PdoDatabaseConnection implements DatabaseConnection
 
     public function __construct(
         private DatabaseConfiguration $configuration,
-        callable $pdoCreator = null
+        ?callable $pdoCreator = null
     ) {
         $this->pdoCreator    = $pdoCreator;
     }
@@ -323,7 +323,7 @@ class PdoDatabaseConnection implements DatabaseConnection
     /**
      * @throws  DatabaseException
      */
-    public function getLastInsertId(string $name = null): string
+    public function getLastInsertId(?string $name = null): string
     {
         if (null === $this->pdo) {
             throw new DatabaseException('Not connected: can not retrieve last insert id');

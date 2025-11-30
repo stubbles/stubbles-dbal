@@ -75,7 +75,7 @@ class Database
     public function fetchAll(
         string $sql,
         array $values = [],
-        int $fetchMode = null,
+        ?int $fetchMode = null,
         array $driverOptions = []
     ): Sequence {
         return Sequence::of(new QueryResultIterator(
@@ -98,7 +98,7 @@ class Database
     public function fetchRow(
         string $sql,
         array $values = [],
-        int $fetchMode = null,
+        ?int $fetchMode = null,
         array $driverOptions = []
     ): mixed {
         $result = $this->dbConnection->prepare($sql)

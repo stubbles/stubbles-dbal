@@ -51,7 +51,7 @@ class PdoStatement implements Statement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindParam
      */
-    public function bindParam($param, &$variable, int $type = null, int $length = null): bool
+    public function bindParam($param, &$variable, ?int $type = null, ?int $length = null): bool
     {
         if (null === $type) {
             $type = \PDO::PARAM_STR;
@@ -81,7 +81,7 @@ class PdoStatement implements Statement
      * @throws  \stubbles\db\DatabaseException
      * @see     http://php.net/pdostatement-bindValue
      */
-    public function bindValue($param, $value, int $type = null): bool
+    public function bindValue($param, $value, ?int $type = null): bool
     {
         if (null === $type) {
             $type = \PDO::PARAM_STR;
