@@ -15,8 +15,8 @@ _stubbles/dbal_ is distributed as [Composer](https://getcomposer.org/)
 package. To install it as a dependency of your package use the following
 command:
 
-    composer require "stubbles/dbal": "^11.0"
+    composer require "stubbles/dbal": "^12.0"
 
 ## Requirements
 
-_stubbles/dbal_ requires at least PHP 8.2.
+_stubbles/dbal_ requires at least PHP 8.3.
