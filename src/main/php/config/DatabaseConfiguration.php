@@ -16,43 +16,29 @@ class DatabaseConfiguration
     /**
      * id of the default connection
      */
-    public const DEFAULT_ID = 'default';
-    /**
-     * user name
-     *
-     * @var  string
-     */
-    private $userName;
-    /**
-     * password
-     *
-     * @var  \stubbles\values\Secret
-     */
-    private $password;
+    public const string DEFAULT_ID = 'default';
+    private ?string $userName = null;
+    private ?Secret $password = null;
     /**
      * a key=>value array of driver-specific connection options
      *
      * @var  array<string,mixed>
      */
-    private $driverOptions   = [];
+    private array $driverOptions   = [];
     /**
      * initial query to be executed after commit
-     *
-     * @var  string
      */
-    private $initialQuery = '';
+    private string $initialQuery = '';
     /**
      * some details about the database
-     *
-     * @var  string
      */
-    private $details;
+    private ?string $details = null;
     /**
      * list of other properties for this connection
      *
      * @var  array<string,mixed>
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * create connection data instance from an array
