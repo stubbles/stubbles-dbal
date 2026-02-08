@@ -7,11 +7,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use stubbles\ioc\attributes\ProvidedBy;
+
 /**
  * Interface for database connections.
  *
  * @ProvidedBy(stubbles\db\DatabaseConnections.class)
  */
+#[ProvidedBy(DatabaseConnections::class)]
 interface DatabaseConnection
 {
     /**

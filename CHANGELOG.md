@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.1.0 (2026-??-??)
+
+* Added ioc attributes from stubbles/ioc-attributes, replaces ioc annotations. IoC annotations are kept for backward compatibility in the 12.x series, but will be removed with 13.0.0.
+
 ## 12.0.0 (2025-11-29)
 
 ### BC breaks

@@ -7,6 +7,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 namespace stubbles\db;
+
+use stubbles\ioc\attributes\ProvidedBy;
 use stubbles\sequence\Sequence;
 /**
  * Convenience access to database data to prevent fiddling with query results.
@@ -14,6 +16,7 @@ use stubbles\sequence\Sequence;
  * @since  2.1.0
  * @ProvidedBy(stubbles\db\Databases.class)
  */
+#[ProvidedBy(Databases::class)]
 class Database
 {
     public function __construct(private DatabaseConnection $dbConnection) { }
