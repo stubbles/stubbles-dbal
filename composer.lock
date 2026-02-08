@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b16a316585d8645c5ccf50f94fd97771",
+    "content-hash": "3d78e0adb26cabe2cb3b7cc05b0a6186",
     "packages": [
         {
             "name": "stubbles/sequence",
@@ -2042,5 +2042,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
